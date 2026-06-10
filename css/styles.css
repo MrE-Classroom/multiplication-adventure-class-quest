@@ -16,3 +16,60 @@ button{font:inherit;font-weight:900;border:1px solid var(--line);border-radius:1
 .modal-backdrop{position:fixed;inset:0;background:#000a;display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}.modal{width:min(720px,96vw);max-height:88dvh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:18px}.modal-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:14px}.preview-layout{display:grid;grid-template-columns:250px 1fr;gap:16px;align-items:center}.hero-select{min-height:100dvh;overflow:auto;padding:24px;display:flex;align-items:center;justify-content:center}.select-card{width:min(1220px,100%);background:rgba(31,37,61,.98);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:22px}.select-card h1{font-size:clamp(2rem,4vw,4rem);margin:.2rem 0}.start-row{position:sticky;top:0;z-index:5;background:rgba(31,37,61,.98);padding:8px 0}.start-game-btn{font-size:1.1rem}.avatar-picks{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:12px 0}.choice-btn{min-width:200px;display:flex;flex-direction:column;align-items:center;gap:8px}.choice-btn.active,.class-choice.active{outline:3px solid var(--accent);background:#423b59}.class-choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.class-choice{padding:14px;background:var(--panel2);border:1px solid var(--line);border-radius:18px;display:flex;flex-direction:column;gap:8px}.mini-start{margin-top:auto}
 @media(max-width:1100px){body{overflow:hidden}.layout{grid-template-columns:1fr}.topbar{flex-wrap:wrap}.top-left,.top-right{width:100%}.panel{min-height:260px}.hero-side{max-height:360px}.scene-panel{min-height:500px}.class-choices{grid-template-columns:1fr}.preview-layout{grid-template-columns:1fr}.answers{grid-template-columns:1fr}.statusbar{justify-content:flex-start;overflow:auto;flex-wrap:nowrap}.grid2{grid-template-columns:1fr}}
 @media(max-height:740px) and (min-width:1100px){.battle-layout{grid-template-rows:auto 88px minmax(235px,1fr)}.boss-layout{grid-template-rows:auto 22px 98px minmax(235px,1fr)}.fighter-box{height:74px}.enemy-art{height:74px}.question{font-size:2.7rem}.answers button{min-height:40px}.question-card{padding:8px 12px}.portrait-stack.big{--pw:270px;--ph:136px}}
+
+
+/* v20 panel rebuild: compact hero portrait + larger center panel */
+.layout{grid-template-columns:150px minmax(0,1.7fr) 330px;}
+.hero-mini-panel .panel-body{padding:8px;overflow:hidden;display:flex;align-items:flex-start;justify-content:center;}
+.hero-mini-wrap{width:100%;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;}
+.hero-mini-name{font-weight:1000;font-size:.95rem;line-height:1.1;}
+.hero-mini-class{font-size:.82rem;color:var(--muted);}
+.portrait-stack.hero-mini{--pw:124px;--ph:104px;border-radius:15px;}
+.portrait-stack.hero-mini .hero-img{width:72px;height:72px;border-radius:12px;}
+.portrait-stack.battle-portrait{--pw:150px;--ph:94px;border-radius:16px;}
+.portrait-stack.battle-portrait .hero-img{width:64px;height:64px;border-radius:12px;}
+.quest-panel{min-width:0;}
+.center-panel{min-width:0;}
+.combat-screen{height:100%;min-height:0;display:grid;grid-template-rows:minmax(0,1fr) minmax(255px,1fr);padding:0;overflow:hidden;background-size:cover;background-position:center;}
+.combat-screen:before{background:linear-gradient(180deg,#00000020,#000000a8);}
+.combat-stage{position:relative;min-height:0;padding:10px 14px 6px 14px;display:grid;grid-template-rows:auto auto 1fr;gap:8px;align-items:stretch;background:transparent;overflow:hidden;}
+.transparent-stage{background:transparent;}
+.combat-area-badge{justify-self:start;align-self:start;border:1px solid #ffffff55;border-radius:999px;background:#0d112099;padding:.3rem .75rem;font-weight:1000;text-shadow:0 2px 4px #000;}
+.combat-hp{width:100%;height:24px;align-self:start;}
+.combat-fighters{height:100%;min-height:120px;display:grid;grid-template-columns:minmax(115px,1fr) 64px minmax(150px,1.15fr);gap:10px;align-items:center;}
+.combat-hero,.combat-enemy{min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center;text-shadow:0 2px 4px #000;}
+.combat-hero span{font-size:.9rem;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.combat-versus{font-size:clamp(2rem,5vw,4rem);font-weight:1000;color:var(--accent);text-align:center;text-shadow:0 0 18px #000,0 0 16px #ffe07a;}
+.combat-enemy .enemy-art{width:min(220px,100%);height:min(150px,24vh);background:#11182799;border-color:#ffffff30;}
+.combat-enemy .boss-art{width:min(260px,100%);height:min(170px,26vh);}
+.combat-question-zone{min-height:0;padding:10px 14px 14px;background:linear-gradient(180deg,#101528ee,#0c1020f7);border-top:1px solid #ffffff25;display:flex;align-items:center;justify-content:center;overflow:auto;}
+.combat-question-zone .question-card{background:#11162bf2;box-shadow:0 10px 24px #0008;padding:10px 14px;margin:0;width:min(980px,100%);}
+.combat-question-zone .question{font-size:clamp(2.2rem,6vh,4.1rem);margin:8px 0;}
+.combat-question-zone .answers{gap:9px;}
+.combat-question-zone .answers button{min-height:42px;}
+.battle-layout,.boss-layout{display:contents;}
+.fighters{height:auto;}
+@media(max-width:1100px){
+  .layout{grid-template-columns:92px minmax(0,1fr);grid-template-areas:"hero center" "quests center";}
+  .hero-mini-panel{grid-area:hero;min-height:auto;max-height:180px;}
+  .center-panel{grid-area:center;min-height:0;}
+  .quest-panel{grid-area:quests;max-height:calc(100dvh - 260px);}
+  .portrait-stack.hero-mini{--pw:76px;--ph:76px;}
+  .portrait-stack.hero-mini .hero-img{width:58px;height:58px;}
+  .hero-mini-name,.hero-mini-class{font-size:.68rem;}
+  .combat-screen{min-height:520px;grid-template-rows:minmax(210px,42%) minmax(300px,58%);}
+  .combat-fighters{grid-template-columns:1fr 42px 1fr;gap:5px;min-height:120px;}
+  .combat-versus{font-size:2rem;}
+  .combat-enemy .enemy-art{height:120px;}
+  .combat-question-zone .answers{grid-template-columns:1fr;}
+}
+@media(max-height:720px) and (min-width:900px){
+  .combat-screen{grid-template-rows:minmax(160px,45%) minmax(230px,55%);}
+  .combat-stage{padding:7px 12px 4px;gap:5px;}
+  .combat-fighters{min-height:100px;}
+  .combat-enemy .enemy-art{height:110px;}
+  .combat-question-zone{padding:8px 12px;}
+  .combat-question-zone .question-card{padding:8px 12px;}
+  .combat-question-zone .question{font-size:2.7rem;}
+  .combat-question-zone .answers button{min-height:38px;}
+}
