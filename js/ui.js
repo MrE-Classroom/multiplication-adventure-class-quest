@@ -28,24 +28,32 @@ window.UI = (() => {
     return box;
   }
   function heroFigure(baseCls){
-    const s=Game.getState(); const c=Game.cls();
-    const frame = Game.getItem(s?.equipped?.frame);
-    const aura = Game.getItem(s?.equipped?.aura);
-    const trail = Game.getItem(s?.equipped?.cosmetic);
+    const s=Game.getState();
+    return heroFigureStack(baseCls, {
+      frame: Game.getItem(s?.equipped?.frame),
+      aura: Game.getItem(s?.equipped?.aura),
+      trail: Game.getItem(s?.equipped?.cosmetic),
+      pet: Game.getItem(s?.equipped?.pet)
+    });
+  }
+
+  function heroFigureStack(baseCls, cosmetics={}){
+    const c=Game.cls();
+    const frame = cosmetics.frame || null;
+    const aura = cosmetics.aura || null;
+    const trail = cosmetics.trail || null;
     const auraClass = aura ? ` aura-${aura.id}` : '';
     const frameClass = frame ? ` frame-${frame.id}` : '';
     const trailClass = trail?.type === 'trail' ? ` trail-${trail.id}` : '';
     const box = el('div', `${baseCls || ''} hero-cosmetic-wrap ${frame ? 'has-frame' : ''} ${aura ? 'has-aura' : ''}${auraClass}${frameClass}${trailClass}`.trim());
 
-    // Aura is rendered as a CSS glow layer, not a square image layer. This prevents
-    // non-transparent aura files from covering the hero while still giving a clear glow.
+    // Aura is CSS-driven and only exists when an aura item is equipped/previewed.
     if(aura) box.setAttribute('data-aura', aura.name);
 
     const heroImg = image(Game.heroImage(), 'asset-img hero-main-img', c.icon);
     heroImg.onerror = () => { heroImg.remove(); box.appendChild(el('span','asset-fallback hero-main-img', c.icon)); };
     box.appendChild(heroImg);
 
-    // Frame stays above the hero image. It should be a transparent PNG overlay.
     if(frame?.image){
       const frameImg = image(frame.image, 'cosmetic-frame-img', frame.name);
       frameImg.onerror = () => frameImg.remove();
@@ -53,6 +61,25 @@ window.UI = (() => {
     }
     return box;
   }
+
+  function previewHeroForItem(item){
+    const s=Game.getState();
+    const cosmetics={
+      frame: Game.getItem(s?.equipped?.frame),
+      aura: Game.getItem(s?.equipped?.aura),
+      trail: Game.getItem(s?.equipped?.cosmetic),
+      pet: Game.getItem(s?.equipped?.pet)
+    };
+    if(item?.slot==='frame') cosmetics.frame=item;
+    if(item?.slot==='aura') cosmetics.aura=item;
+    if(item?.slot==='cosmetic') cosmetics.trail=item;
+    if(item?.slot==='pet') cosmetics.pet=item;
+    const wrap=el('div','hero-preview-card');
+    wrap.appendChild(heroFigureStack('profile-portrait preview-portrait', cosmetics));
+    if(cosmetics.pet) wrap.appendChild(figure(cosmetics.pet.image,'pet-companion', '🐾'));
+    return wrap;
+  }
+
   function petFigure(){ const s=Game.getState(); return s?.equipped?.pet==='tiny_dragon' ? figure(Game.getItem('tiny_dragon')?.image,'pet-companion','🐉') : null; }
   function renderClassSelect(){
     app().innerHTML='';
@@ -160,7 +187,7 @@ window.UI = (() => {
   }
   function btn(text, cls='', fn=null){ const b=el('button',cls,text); if(fn)b.onclick=fn; return b; }
   function title(t){return String(t).replace(/([A-Z])/g,' $1').replace(/[_-]/g,' ').replace(/^./,m=>m.toUpperCase());}
-  function center(titleText){ document.getElementById('centerTitle').textContent=titleText; const b=document.querySelector('.center-panel .panel-body'); b.innerHTML=''; b.className='panel-body'; return b; }
+  function center(titleText){ document.getElementById('centerTitle').textContent=titleText; const b=document.querySelector('.center-panel .panel-body'); b.innerHTML=''; b.className='panel-body'; b.removeAttribute('style'); return b; }
   function renderCenter(){ const s=Game.getState(); if(s.mode==='town') return showTown(); if(s.mode==='battle'||s.mode==='training'||s.mode==='boss') return showQuestion(); if(s.mode==='results') return showResults(); return showTown(); }
 
   function refreshChrome(){
@@ -189,7 +216,14 @@ window.UI = (() => {
     const s=Game.getState(), q=s.session.question; const c=Game.cls(); const area = s.currentArea ? Game.areaById(s.currentArea) : null;
     const isBoss = s.mode==='boss';
     const b=center(s.mode==='training'?'Training Area':isBoss?'Boss Battle':'Adventure');
-    b.classList.add('battle-bg-panel');
+    b.classList.add('battle-bg-panel','scene-body');
+    const bg=currentBackground();
+    if(bg){
+      b.style.backgroundImage=`linear-gradient(180deg,rgba(7,10,18,.50),rgba(7,10,18,.72)), url("${bg}")`;
+      b.style.backgroundSize='cover';
+      b.style.backgroundPosition='center';
+      b.style.backgroundRepeat='no-repeat';
+    }
     const scene=el('div', isBoss?'battle-scene epic-boss-scene':'battle-scene');
     const opponentSrc = isBoss ? area?.bossImage : (area?.enemies?.[s.session.total % (area.enemies.length || 1)] || '');
     const heroSide=el('div','combat-side hero-side');
@@ -216,7 +250,7 @@ window.UI = (() => {
     if(s.selectedClass==='archer') ability.innerHTML='<span class="pill">Streak Shot: +2 coins every 3-correct streak</span>';
     box.appendChild(ability);
     const answers=el('div','answers'); s.session.choices.forEach(v=>{const removed=s.session.hiddenChoices?.includes(v); const ab=btn(removed?'✦':String(v), removed?'secondary removed-choice':'',()=>manualAnswer(v)); if(s.session.answered || removed) ab.disabled=true; answers.appendChild(ab);}); box.appendChild(answers);
-    if(s.session.answered){ const fb=el('div','feedback '+(s.session.lastCorrect?'good':'bad'), s.session.lastCorrect?(isBoss?'Critical hit!':'Correct!'):'Not yet. Correct answer: '+q.product); box.appendChild(fb); box.appendChild(btn(Game.getState().session.total>=Game.getState().session.target || (s.mode==='boss'&&(s.session.bossHp<=0||s.hp<=0))?'Finish':'Next Question','',()=>{Game.continueAfterAnswer();refresh();})); }
+    if(s.session.answered){ const fb=el('div','feedback '+(s.session.lastCorrect?'good':'bad'), s.session.lastCorrect?(isBoss?'Critical hit!':'Correct!'):'Not yet. Correct answer: '+q.product+((s.mode==='battle'||s.mode==='boss')?' · -1 HP':'')); box.appendChild(fb); box.appendChild(btn(Game.getState().session.total>=Game.getState().session.target || ((s.mode==='boss'||s.mode==='battle')&&(s.session.bossHp<=0||s.hp<=0))?'Finish':'Next Question','',()=>{Game.continueAfterAnswer();refresh();})); }
     b.appendChild(box); if(isBoss) b.appendChild(el('p','muted boss-note','Class changes and Town travel are locked during boss battles.'));
   }
   function manualAnswer(v){ Game.submitAnswer(v); refresh(); }
@@ -253,7 +287,11 @@ window.UI = (() => {
     function select(item,currentType='all'){
       const unlocked=Game.itemUnlocked(item);
       const content=el('div','item-modal-content');
-      content.appendChild(figure(item.image,'item-preview-img',''));
+      if(['frame','aura','pet','cosmetic'].includes(item.slot)){
+        content.appendChild(previewHeroForItem(item));
+      } else {
+        content.appendChild(figure(item.image,'item-preview-img',''));
+      }
       content.insertAdjacentHTML('beforeend',`<h3>${item.name}</h3><p>${item.desc}</p><p>Class: ${item.cls.join(', ')}</p><p>Unlock: <b>${Game.itemUnlockText(item)}</b></p><p>Stats: ${Object.entries(item.stats||{}).map(([k,v])=>`${k}+${v}`).join(', ')||'Cosmetic only'}</p>`);
       const actions=[['Close',closeModal,'secondary']];
       if(!Game.owned(item.id) && unlocked){
@@ -317,16 +355,25 @@ window.UI = (() => {
     closeModal();
     const back=el('div','modal-backdrop'); back.id='modal';
     const m=el('div','modal');
-    m.appendChild(el('h2','',esc(title)));
+    const body=el('div','modal-body');
     const a=el('div','modal-actions');
-    (actions||[['OK',closeModal,'']]).forEach(([t,fn,cls])=>a.appendChild(btn(t,cls||'',fn)));
-    back.appendChild(m); document.body.appendChild(back);
-    return {back,m,a};
+    m.appendChild(el('h2','',esc(title)));
+    m.appendChild(body);
+    (actions||[['OK',closeModal,'']]).forEach(([t,fn,cls])=>{
+      const actionBtn=btn(t,cls||'',fn||closeModal);
+      a.appendChild(actionBtn);
+    });
+    m.appendChild(a);
+    back.appendChild(m);
+    back.addEventListener('click', e=>{ if(e.target===back) closeModal(); });
+    document.body.appendChild(back);
+    return {back,m,body,a};
   }
-  function showModal(title,msg,actions=null){ const {m,a}=modalBase(title,actions); m.insertBefore(el('p','',esc(msg)),a); m.appendChild(a); }
-  function showModalNode(title,node,actions=null){ const {m,a}=modalBase(title,actions); m.insertBefore(node,a); m.appendChild(a); }
+  function showModal(title,msg='',actions=null){ const {body}=modalBase(title,actions); body.appendChild(el('p','',esc(msg||''))); }
+  function showModalNode(title,node,actions=null){ const {body}=modalBase(title,actions); body.appendChild(node); }
   function closeModal(){ const m=document.getElementById('modal'); if(m)m.remove(); }
-  function showToast(msg){ showModal('Notice',msg); }
+  function showToast(msg){ showModal('Notice',msg || 'Done.'); }
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
   return { render, refresh };
 })();
 document.addEventListener('DOMContentLoaded', UI.render);

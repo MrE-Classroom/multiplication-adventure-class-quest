@@ -445,3 +445,89 @@ html,body{height:100%;margin:0;overflow:hidden;}
 .item-modal-content .item-preview-img{margin-inline:auto;}
 .disabled-action{opacity:.5;cursor:not-allowed;}
 
+
+/* Version 7 fixes: modal rendering, no default aura, full scene background, preview stacks */
+.hero-cosmetic-wrap::before{
+  opacity:0!important;
+  animation:none!important;
+}
+.hero-cosmetic-wrap.has-aura::before{
+  opacity:.95!important;
+  animation:auraGlowPulse 2s ease-in-out infinite!important;
+}
+.scene-body{
+  min-height:100%;
+  background-size:cover!important;
+  background-position:center!important;
+  background-repeat:no-repeat!important;
+  padding:12px!important;
+}
+.scene-body .battle-scene,
+.scene-body .question-box{
+  background:rgba(20,24,40,.82)!important;
+  backdrop-filter:blur(2px);
+}
+.center-panel .scene-body{
+  flex:1 1 auto;
+}
+.modal-backdrop{
+  z-index:9999!important;
+  background:rgba(0,0,0,.72)!important;
+}
+.modal{
+  width:min(680px,96vw)!important;
+  max-height:min(86dvh,760px)!important;
+  overflow:auto!important;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.modal h2{margin:0 0 4px;}
+.modal-body{display:block;line-height:1.35;}
+.modal-body p{margin:.45rem 0;}
+.modal-actions{
+  display:flex!important;
+  gap:8px!important;
+  justify-content:flex-end!important;
+  flex-wrap:wrap!important;
+  margin-top:8px!important;
+}
+.hero-preview-card{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  margin:4px auto 12px;
+  padding:12px;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:rgba(255,255,255,.045);
+}
+.preview-portrait.hero-cosmetic-wrap{
+  width:256px!important;
+  height:180px!important;
+  min-height:180px!important;
+  margin:0 auto!important;
+  padding:0!important;
+  background:linear-gradient(180deg,#394060,#24283c)!important;
+}
+.preview-portrait.hero-cosmetic-wrap .hero-main-img{
+  width:auto!important;
+  height:72%!important;
+  max-height:72%!important;
+  max-width:72%!important;
+}
+.preview-portrait.hero-cosmetic-wrap.has-frame .hero-main-img{
+  height:64%!important;
+  max-height:64%!important;
+  max-width:64%!important;
+}
+.preview-portrait .cosmetic-frame-img{
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+}
+.item-modal-content .item-preview-img{
+  margin-inline:auto;
+}

@@ -6,7 +6,7 @@ window.Game = (() => {
     const questProgress = {}; GameData.quests.forEach(q=>questProgress[q.id]=0);
     const activeIds = GameData.quests.slice(0, GameData.activeQuestCount || 4).map(q=>q.id);
     return {
-      version:13, selectedClass:null, avatarModel:null, freeClassChange:true, coins:50, level:1, xp:0, hp:0, mana:0,
+      version:14, selectedClass:null, avatarModel:null, freeClassChange:true, coins:50, level:1, xp:0, hp:0, mana:0,
       area:'town', mode:'classSelect', currentArea:null, inBoss:false,
       inventory:[], equipped:Object.fromEntries(slots.map(s=>[s,null])), mastery:Mastery.init(), progress,
       quests:{claimed:{}, progress:questProgress, activeIds, cycleIndex:0},
@@ -93,6 +93,7 @@ window.Game = (() => {
     const area=areaById(areaId); if(!area) return {ok:false,msg:'Area not found.'};
     if(!isAreaUnlocked(areaId)) return {ok:false,msg:'Locked. Defeat the previous boss to unlock this area.'};
     state.mode='battle'; state.area=area.name; state.currentArea=areaId; state.inBoss=false;
+    state.hp=cls().hp; state.mana=cls().mana;
     startRound('area', areaId, 10); save(); return {ok:true};
   }
   function startTraining(){ state.mode='training'; state.area='Training Area'; state.currentArea=null; state.inBoss=false; startRound('training', null, 10); save(); return {ok:true}; }
@@ -154,6 +155,9 @@ window.Game = (() => {
         if(state.selectedClass==='knight' && !state.session.shieldUsed){ state.session.shieldUsed=true; }
         else state.hp=Math.max(0,state.hp-1);
       }
+      if(state.session.mode==='area'){
+        state.hp=Math.max(0,state.hp-1);
+      }
     }
     state.session.lastCorrect=correct; state.session.roundAccuracy=Math.round((state.session.correct/state.session.total)*100);
     updateQuestProgress('answers',1); if(rec.improved) updateQuestProgress('improvedFacts',1);
@@ -164,14 +168,18 @@ window.Game = (() => {
     if(isRoundDone()) return finishRound();
     nextQuestion(); save(); return {ok:true};
   }
-  function isRoundDone(){ return (state.hp<=0 && state.session.mode==='boss') || state.session.total >= state.session.target || (state.session.mode==='boss' && state.session.bossHp<=0); }
+  function isRoundDone(){ return (state.hp<=0 && (state.session.mode==='boss' || state.session.mode==='area')) || state.session.total >= state.session.target || (state.session.mode==='boss' && state.session.bossHp<=0); }
   function finishRound(){
     const s=state.session; const acc=s.total?Math.round((s.correct/s.total)*100):0; let msg='Round complete.';
     state.coins += s.rewardCoins; state.records.coinsRound=Math.max(state.records.coinsRound,s.rewardCoins); state.records.bestAccuracy=Math.max(state.records.bestAccuracy,acc); state.xp += s.correct*5; while(state.xp>=100){state.xp-=100; state.level++;}
     if(s.mode==='training'){ state.records.trainingSets++; updateQuestProgress('trainingSets',1); msg='Training set complete.'; }
     if(s.total>0 && s.correct===s.total) updateQuestProgress('perfectRounds',1);
     if(s.mode==='area'){
-      const p=state.progress[s.areaId]; p.rounds++; p.bestAccuracy=Math.max(p.bestAccuracy,acc); updateQuestProgress('areaRounds',1); updateBossKey(s.areaId); msg = p.key ? 'Area round complete. Boss key ready!' : 'Area round complete.';
+      if(state.hp<=0){
+        msg='Adventure attempt ended. Return to Town and try again.';
+      } else {
+        const p=state.progress[s.areaId]; p.rounds++; p.bestAccuracy=Math.max(p.bestAccuracy,acc); updateQuestProgress('areaRounds',1); updateBossKey(s.areaId); msg = p.key ? 'Area round complete. Boss key ready!' : 'Area round complete.';
+      }
     }
     if(s.mode==='boss'){
       if(s.bossHp<=0){ const p=state.progress[s.areaId]; p.bossDefeated=true; p.key=false; unlockNext(s.areaId); state.records.bossesDefeated++; updateQuestProgress('bossesDefeated',1); msg='Boss defeated! New area and gear tier unlocked.'; }

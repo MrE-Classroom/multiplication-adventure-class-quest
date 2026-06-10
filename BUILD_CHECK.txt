@@ -1,13 +1,12 @@
-Build: multiplication-adventure-class-quest v6
-Assets folder included: No
-
-Checked:
-- JavaScript syntax passed with node --check.
-- Game runtime smoke test passed: class selection, training question, answer submit/continue, shop buy/equip/unequip frame.
-- Cosmetic rendering logic updated: aura is CSS glow around the portrait; frame is layered over hero portrait; hero portrait remains in the stack.
-- Center question panel uses the current area background across the full center panel with contrast overlay.
-- Shop preview changed from bottom inline preview to centered modal.
-- Side panel scrolling remains available as a small-device fallback.
-
-Important asset note:
-- Frame PNGs must have real transparent centers/backgrounds. If a frame image has a checkerboard baked into the image, the code cannot remove that automatically; upload transparent PNG frame overlays.
+Version: v7 no-assets rebuild
+Checks completed:
+- JavaScript syntax check passed for js/ui.js and js/game.js.
+- Logic smoke test passed in Node VM:
+  * fresh player starts with Aura = None
+  * wrong answer in Adventure reduces HP by 1
+  * wrong answer in Training does not reduce HP
+  * quest reward claim returns a valid reward message
+- Modal system rebuilt so body text/content/buttons render inside modal.
+- Preview modal now shows hero portrait stack for frames, auras, pets, and trails.
+- Center question panel now sets area background directly on the panel body.
+- ZIP intentionally excludes assets folder; upload assets separately to GitHub.
