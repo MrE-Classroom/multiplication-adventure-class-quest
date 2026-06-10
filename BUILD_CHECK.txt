@@ -1,14 +1,24 @@
-Multiplication Adventure: Class Quest v2 layout/mechanics check
+Build: multiplication-adventure-class-quest v3
+Assets folder included: NO
+Repository target: multiplication-adventure-class-quest
 
-No assets folder is included in this ZIP.
-Expected asset folders must be uploaded separately to /assets/ in the GitHub repo.
+Updated in v3:
+- Character selection fills the full viewport instead of sitting in a small centered card.
+- Boss battle scene redesigned to feel more epic.
+- Boss portrait is intentionally larger than the hero portrait.
+- Boss name and boss HP bar added to the battle scene.
+- Combat side panels are compact during battle/training/boss modes to avoid scrolling.
+- Gold Name Frame now adds a visible gold frame/glow to hero portraits and hero name.
+- Sparkle Aura and Fire Trail now create visual effects when equipped.
+- Tiny Dragon Pet appears beside the hero when equipped.
+- Quest system changed from 3 one-time quests to rotating active quests.
+- There are 4 active quests at a time.
+- A new set of quests appears after all active quest rewards are claimed.
+- JavaScript files syntax-checked with node --check.
 
-Layout fixes included:
-- Start screen: no required scroll at normal desktop/laptop height.
-- Battle/training/boss screen: center battle panel set to fit without internal scroll.
-- Images: object-fit contain for portraits, UI icons, item icons, and profile images.
-- Area/background thumbnails keep cover behavior only where intentional.
-
-Smoke checks performed:
-- JavaScript syntax checked with node --check.
-- File structure checked.
+Required GitHub structure:
+index.html
+css/styles.css
+js/*.js
+data/gameData.js
+assets/  <-- user uploads separately

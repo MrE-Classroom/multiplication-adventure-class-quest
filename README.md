@@ -1,41 +1,32 @@
-# Multiplication Adventure: Class Quest — Version 2
+# Multiplication Adventure Class Quest
 
-Static GitHub Pages game build. This ZIP intentionally does **not** include the `assets/` folder.
+Version 3 rebuild for the `multiplication-adventure-class-quest` repository.
+
+This ZIP does not include the `assets/` folder. Upload your generated assets to GitHub using the paths listed in `ASSET_PATHS.json`.
+
+## What changed in v3
+
+- Full-screen character selection layout.
+- Boy/Girl hero choice remains at the start.
+- Improved image sizing to prevent stretching.
+- More epic boss battle layout with larger boss art, boss title, and HP bar.
+- Gold frame, sparkle aura, fire trail, and pet cosmetics now visibly affect the hero display.
+- Quest system now uses 4 active quests at a time.
+- New quests appear after all active quest rewards are claimed.
 
 ## Upload to GitHub
-Upload these files and folders to the repository root:
+
+Upload/replace these files in your repository:
 
 - `index.html`
-- `css/`
-- `js/`
-- `data/`
+- `css/styles.css`
+- `js/game.js`
+- `js/ui.js`
+- `js/mastery.js`
+- `js/storage.js`
+- `data/gameData.js`
+- `ASSET_PATHS.json`
+- `BUILD_CHECK.txt`
 - `README.md`
-- `ASSET_PATHS.json` (reference only)
 
-Then upload your separate `assets/` folder beside them:
-
-```text
-assets/heroes/
-assets/backgrounds/
-assets/bosses/
-assets/enemies/
-assets/items/
-assets/cosmetics/
-assets/ui/
-```
-
-## Version 2 fixes
-
-- Start page fits without scrolling on normal laptop/tablet browser heights.
-- Battle/training/boss question screen fits without internal scrolling.
-- Asset images use `object-fit: contain` where appropriate so icons and portraits are not stretched.
-- UI cards no longer crop shop, backpack, mastery, and quest icons as banner strips.
-- Hero fallback emoji now only appears when an image fails to load.
-- Mage Focus Spell button now shows the correct cost: 1 mana.
-
-## Main mechanics checked
-
-- Boy/Girl hero choice is saved with class choice.
-- Knight, Archer, and Mage classes load correct portraits.
-- Training, area battles, boss battles, boss keys, quests, mastery tracking, shop, inventory, equipment, class changes, and reset flow are still connected.
-- Local save key: `multiplicationAdventureClassQuestV2`.
+Do not delete your existing `assets/` folder. This build references assets but does not include them.

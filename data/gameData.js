@@ -81,9 +81,19 @@ window.GameData = (() => {
 
   const quests = [
     { id:'q_answer10', title:'Answer 10 Facts', target:10, metric:'answers', reward:20 },
+    { id:'q_correct15', title:'Get 15 Correct', target:15, metric:'correctAnswers', reward:30 },
     { id:'q_train1', title:'Complete 1 Training Set', target:1, metric:'trainingSets', reward:25 },
-    { id:'q_improve1', title:'Improve 1 Fact', target:1, metric:'improvedFacts', reward:20 }
+    { id:'q_improve1', title:'Improve 1 Fact', target:1, metric:'improvedFacts', reward:20 },
+    { id:'q_answer25', title:'Answer 25 Facts', target:25, metric:'answers', reward:40 },
+    { id:'q_streak3', title:'Build a 3-Correct Streak', target:1, metric:'streak3', reward:25 },
+    { id:'q_area2', title:'Complete 2 Adventure Rounds', target:2, metric:'areaRounds', reward:45 },
+    { id:'q_train3', title:'Complete 3 Training Sets', target:3, metric:'trainingSets', reward:55 },
+    { id:'q_improve3', title:'Improve 3 Facts', target:3, metric:'improvedFacts', reward:45 },
+    { id:'q_perfect', title:'Finish a Perfect Round', target:1, metric:'perfectRounds', reward:60 },
+    { id:'q_boss1', title:'Defeat 1 Boss', target:1, metric:'bossesDefeated', reward:75 },
+    { id:'q_correct30', title:'Get 30 Correct', target:30, metric:'correctAnswers', reward:65 }
   ];
+  const activeQuestCount = 4;
 
-  return { classes, areas, items, quests, unlockLabels, ui, townBackground, trainingBackground, itemAssets };
+  return { classes, areas, items, quests, activeQuestCount, unlockLabels, ui, townBackground, trainingBackground, itemAssets };
 })();

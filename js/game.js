@@ -4,11 +4,12 @@ window.Game = (() => {
     const progress = {};
     GameData.areas.forEach((a,i)=> progress[a.id] = {unlocked:i===0, rounds:0, bestAccuracy:0, key:false, bossDefeated:false});
     const questProgress = {}; GameData.quests.forEach(q=>questProgress[q.id]=0);
+    const activeIds = GameData.quests.slice(0, GameData.activeQuestCount || 4).map(q=>q.id);
     return {
-      version:12, selectedClass:null, avatarModel:null, freeClassChange:true, coins:50, level:1, xp:0, hp:0, mana:0,
+      version:13, selectedClass:null, avatarModel:null, freeClassChange:true, coins:50, level:1, xp:0, hp:0, mana:0,
       area:'town', mode:'classSelect', currentArea:null, inBoss:false,
       inventory:[], equipped:Object.fromEntries(slots.map(s=>[s,null])), mastery:Mastery.init(), progress,
-      quests:{claimed:{}, progress:questProgress},
+      quests:{claimed:{}, progress:questProgress, activeIds, cycleIndex:0},
       records:{bestAccuracy:0,longestStreak:0,coinsRound:0,bossesDefeated:0,trainingSets:0,answers:0,correct:0},
       session:{question:null, choices:[], hiddenChoices:[], recent:[], total:0, correct:0, streak:0, target:10, answered:false, mode:null, areaId:null, bossHp:0, abilityUsed:false, shieldUsed:false, improvedFacts:0, rewardCoins:0, lastCorrect:null, roundAccuracy:0}
     };
@@ -32,7 +33,13 @@ window.Game = (() => {
     slots.forEach(s=>{ if(!(s in state.equipped)) state.equipped[s]=null; });
     if(!state.inventory) state.inventory=[];
     if(!state.quests) state.quests=fresh.quests;
+    if(!state.quests.progress) state.quests.progress={};
+    if(!state.quests.claimed) state.quests.claimed={};
+    GameData.quests.forEach(q=>{ if(typeof state.quests.progress[q.id]==='undefined') state.quests.progress[q.id]=0; });
+    if(!Array.isArray(state.quests.activeIds) || !state.quests.activeIds.length) state.quests.activeIds=fresh.quests.activeIds;
+    if(typeof state.quests.cycleIndex==='undefined') state.quests.cycleIndex=0;
     if(!state.records) state.records=fresh.records;
+    ['bestAccuracy','longestStreak','coinsRound','bossesDefeated','trainingSets','answers','correct'].forEach(k=>{ if(typeof state.records[k]==='undefined') state.records[k]=fresh.records[k]; });
   }
   function cls(){ return GameData.classes[state.selectedClass]; }
   function heroImage(){ return cls()?.portraits?.[state.avatarModel || 'boy'] || ''; }
@@ -137,6 +144,8 @@ window.Game = (() => {
     if(rec.improved) state.session.improvedFacts++;
     if(correct){
       state.session.correct++; state.records.correct++; state.session.streak++; state.records.longestStreak=Math.max(state.records.longestStreak,state.session.streak); state.session.rewardCoins += state.session.mode==='training'?1:2;
+      updateQuestProgress('correctAnswers',1);
+      if(state.session.streak===3) updateQuestProgress('streak3',1);
       if(state.selectedClass==='archer' && state.session.streak>0 && state.session.streak%3===0) state.session.rewardCoins += 2;
       if(state.session.mode==='boss') state.session.bossHp--;
     } else {
@@ -160,18 +169,30 @@ window.Game = (() => {
     const s=state.session; const acc=s.total?Math.round((s.correct/s.total)*100):0; let msg='Round complete.';
     state.coins += s.rewardCoins; state.records.coinsRound=Math.max(state.records.coinsRound,s.rewardCoins); state.records.bestAccuracy=Math.max(state.records.bestAccuracy,acc); state.xp += s.correct*5; while(state.xp>=100){state.xp-=100; state.level++;}
     if(s.mode==='training'){ state.records.trainingSets++; updateQuestProgress('trainingSets',1); msg='Training set complete.'; }
+    if(s.total>0 && s.correct===s.total) updateQuestProgress('perfectRounds',1);
     if(s.mode==='area'){
-      const p=state.progress[s.areaId]; p.rounds++; p.bestAccuracy=Math.max(p.bestAccuracy,acc); updateBossKey(s.areaId); msg = p.key ? 'Area round complete. Boss key ready!' : 'Area round complete.';
+      const p=state.progress[s.areaId]; p.rounds++; p.bestAccuracy=Math.max(p.bestAccuracy,acc); updateQuestProgress('areaRounds',1); updateBossKey(s.areaId); msg = p.key ? 'Area round complete. Boss key ready!' : 'Area round complete.';
     }
     if(s.mode==='boss'){
-      if(s.bossHp<=0){ const p=state.progress[s.areaId]; p.bossDefeated=true; p.key=false; unlockNext(s.areaId); state.records.bossesDefeated++; msg='Boss defeated! New area and gear tier unlocked.'; }
+      if(s.bossHp<=0){ const p=state.progress[s.areaId]; p.bossDefeated=true; p.key=false; unlockNext(s.areaId); state.records.bossesDefeated++; updateQuestProgress('bossesDefeated',1); msg='Boss defeated! New area and gear tier unlocked.'; }
       else msg='Boss attempt ended. Train and try again.';
       state.inBoss=false; state.hp=cls().hp; state.mana=cls().mana;
     }
     state.mode='results'; state.area='Results'; state.session.result={msg,accuracy:acc,coins:s.rewardCoins,correct:s.correct,total:s.total,improved:s.improvedFacts,mode:s.mode,areaId:s.areaId}; save(); return {ok:true,result:state.session.result};
   }
-  function updateQuestProgress(metric,n){ GameData.quests.forEach(q=>{ if(q.metric===metric) state.quests.progress[q.id]=Math.min(q.target,(state.quests.progress[q.id]||0)+n); }); }
-  function claimQuest(id){ const q=GameData.quests.find(x=>x.id===id); if(!q) return {ok:false,msg:'Quest not found.'}; if(state.quests.claimed[id]) return {ok:false,msg:'Already claimed.'}; if((state.quests.progress[id]||0)<q.target) return {ok:false,msg:'Quest not complete.'}; state.quests.claimed[id]=true; state.coins+=q.reward; save(); return {ok:true,msg:`Quest complete! +${q.reward} coins.`}; }
+  function activeQuests(){ return (state.quests.activeIds||[]).map(id=>GameData.quests.find(q=>q.id===id)).filter(Boolean); }
+  function rotateQuestsIfReady(){
+    const active = activeQuests();
+    if(!active.length || !active.every(q=>state.quests.claimed[q.id])) return false;
+    const count = GameData.activeQuestCount || 4;
+    const total = GameData.quests.length;
+    state.quests.cycleIndex = ((state.quests.cycleIndex||0) + count) % total;
+    state.quests.activeIds = Array.from({length:count}, (_,i)=>GameData.quests[(state.quests.cycleIndex+i)%total].id);
+    state.quests.activeIds.forEach(id=>{ state.quests.progress[id]=0; state.quests.claimed[id]=false; });
+    return true;
+  }
+  function updateQuestProgress(metric,n){ activeQuests().forEach(q=>{ if(q.metric===metric && !state.quests.claimed[q.id]) state.quests.progress[q.id]=Math.min(q.target,(state.quests.progress[q.id]||0)+n); }); }
+  function claimQuest(id){ const q=GameData.quests.find(x=>x.id===id); if(!q) return {ok:false,msg:'Quest not found.'}; if(!(state.quests.activeIds||[]).includes(id)) return {ok:false,msg:'Quest is not active.'}; if(state.quests.claimed[id]) return {ok:false,msg:'Already claimed.'}; if((state.quests.progress[id]||0)<q.target) return {ok:false,msg:'Quest not complete.'}; state.quests.claimed[id]=true; state.coins+=q.reward; const rotated=rotateQuestsIfReady(); save(); return {ok:true,msg:rotated?`Quest complete! +${q.reward} coins. New quests are ready!`:`Quest complete! +${q.reward} coins.`}; }
   function goTown(){ if(state.inBoss) return {ok:false,msg:'Finish the boss attempt first.'}; state.mode='town'; state.area='Town'; state.currentArea=null; save(); return {ok:true}; }
-  return { load, reset, getState, save, selectClass, changeClass, canChangeClass, cls, heroImage, stats, shopItems, buyItem, equipItem, unequip, owned, getItem, allowed, itemUnlocked, itemUnlockText, useAbility, startArea, startTraining, startBoss, submitAnswer, continueAfterAnswer, finishRound, goTown, isAreaUnlocked, areaById, claimQuest };
+  return { load, reset, getState, save, selectClass, changeClass, canChangeClass, cls, heroImage, stats, shopItems, buyItem, equipItem, unequip, owned, getItem, allowed, itemUnlocked, itemUnlockText, useAbility, startArea, startTraining, startBoss, submitAnswer, continueAfterAnswer, finishRound, goTown, isAreaUnlocked, areaById, claimQuest, activeQuests };
 })();

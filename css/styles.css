@@ -116,3 +116,107 @@ html,body{height:100%;margin:0;overflow:hidden;}
   .town-grid{grid-template-columns:1fr;}
   .answers{grid-template-columns:1fr;}
 }
+
+/* Version 3: full-screen start, stronger cosmetics, epic boss battle layout */
+.class-select{
+  width:100vw;
+  height:100dvh;
+  min-height:100dvh;
+  display:flex;
+  align-items:stretch;
+  justify-content:stretch;
+  padding:0;
+  overflow:hidden;
+}
+.class-card-wrap{
+  width:100%;
+  height:100%;
+  max-height:none;
+  border-radius:0;
+  border:0;
+  box-shadow:none;
+  display:grid;
+  grid-template-rows:auto auto minmax(0,1fr);
+  align-content:stretch;
+  gap:clamp(10px,1.2vh,18px);
+  padding:clamp(18px,2.4vw,36px);
+  background:linear-gradient(140deg,rgba(37,42,64,.98),rgba(24,28,45,.98));
+}
+.class-card-wrap h1{font-size:clamp(2.1rem,4vw,4rem);line-height:1;margin:0;}
+.class-card-wrap>p{font-size:clamp(1rem,1.5vw,1.35rem);margin:0;}
+.avatar-choice{margin:0;grid-template-columns:repeat(2,minmax(180px,300px));align-items:stretch;}
+.avatar-button{min-height:clamp(100px,15vh,155px);}
+.avatar-preview{width:clamp(72px,10vh,116px);height:clamp(72px,10vh,116px);}
+.class-grid{height:100%;min-height:0;align-items:stretch;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,1.6vw,24px);}
+.class-card{height:100%;min-height:0;display:flex;flex-direction:column;padding:clamp(14px,1.5vw,24px);}
+.class-portrait-card{height:clamp(140px,24vh,275px);}
+.class-card h2{font-size:clamp(1.7rem,3vw,2.6rem);}
+.class-card p{font-size:clamp(.95rem,1.35vw,1.22rem);line-height:1.25;}
+.class-card button{font-size:clamp(1rem,1.5vw,1.25rem);min-height:48px;}
+
+/* Cosmetic effects */
+.gold-frame-equipped{position:relative;border:3px solid #ffe47a!important;box-shadow:0 0 0 3px rgba(155,96,14,.6),0 0 26px rgba(255,221,94,.65);background:linear-gradient(180deg,rgba(255,222,99,.14),rgba(255,255,255,.04));}
+.gold-name{color:#ffe47a;text-shadow:0 0 12px rgba(255,221,94,.55);}
+.sparkle-aura-equipped{box-shadow:0 0 24px rgba(169,136,255,.65), inset 0 0 24px rgba(255,255,255,.08);}
+.sparkle-aura-equipped::after{content:'✦';position:absolute;right:10px;top:8px;color:#ffe47a;font-size:1.3rem;animation:sparklePulse 1.4s infinite ease-in-out;}
+.fire-trail-equipped{box-shadow:0 0 26px rgba(255,94,40,.55), inset 0 -12px 20px rgba(255,94,40,.18);}
+.pet-companion{width:54px;height:54px;display:flex;align-items:center;justify-content:center;margin:4px auto;border-radius:50%;background:rgba(255,255,255,.07);border:1px solid var(--line);}
+.pet-companion .asset-img{max-width:100%;max-height:100%;object-fit:contain;}
+@keyframes sparklePulse{0%,100%{transform:scale(1);opacity:.75}50%{transform:scale(1.3);opacity:1}}
+
+/* Combat panel is information-dense but should not scroll. */
+.mode-battle .left-panel .panel-body,
+.mode-boss .left-panel .panel-body,
+.mode-training .left-panel .panel-body,
+.mode-battle .right-panel .panel-body,
+.mode-boss .right-panel .panel-body,
+.mode-training .right-panel .panel-body{overflow:hidden;}
+.mode-battle .hero-portrait.image-portrait,
+.mode-boss .hero-portrait.image-portrait,
+.mode-training .hero-portrait.image-portrait{height:clamp(86px,15vh,135px);}
+.mode-battle .left-panel h3,.mode-boss .left-panel h3,.mode-training .left-panel h3{font-size:clamp(.95rem,1.2vw,1.15rem);}
+.mode-battle .left-panel p,.mode-boss .left-panel p,.mode-training .left-panel p{font-size:clamp(.74rem,.95vw,.9rem);line-height:1.14;margin:.35rem 0;}
+
+/* Epic boss scene: the boss should feel much larger and more important than the hero. */
+.epic-boss-scene{
+  height:clamp(190px,34vh,330px);
+  min-height:190px;
+  padding:clamp(12px,1.6vw,24px);
+  gap:clamp(14px,2vw,34px);
+  background:
+    radial-gradient(circle at 75% 42%,rgba(255,83,47,.32),transparent 38%),
+    radial-gradient(circle at 22% 38%,rgba(122,160,255,.2),transparent 34%),
+    linear-gradient(180deg,rgba(255,255,255,.08),rgba(0,0,0,.12));
+  border:2px solid rgba(255,224,122,.28);
+}
+.combat-side{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-width:0;}
+.hero-side{flex:0 0 clamp(110px,16vw,210px);}
+.enemy-side{flex:0 0 clamp(230px,32vw,440px);}
+.combat-label{font-size:clamp(.72rem,1vw,.95rem);font-weight:800;color:var(--muted);text-align:center;}
+.epic-boss-scene .hero-combat{width:clamp(92px,13vw,175px);height:clamp(92px,13vw,175px);}
+.epic-boss-scene .boss-combat{width:clamp(170px,23vw,320px);height:clamp(170px,23vw,320px);border-radius:26px;box-shadow:0 0 30px rgba(255,204,92,.35);}
+.epic-boss-scene .versus{font-size:clamp(2rem,4.3vw,4.5rem);text-shadow:0 0 18px rgba(255,224,122,.7);}
+.boss-name{font-size:clamp(1.05rem,1.9vw,2rem);font-weight:900;color:#ffe47a;text-align:center;text-shadow:0 0 14px rgba(255,224,122,.35);}
+.boss-health{width:min(320px,100%);height:14px;border-radius:999px;border:1px solid rgba(255,255,255,.24);background:rgba(0,0,0,.35);overflow:hidden;}
+.boss-health span{display:block;height:100%;background:linear-gradient(90deg,#ff4747,#ffe47a);border-radius:999px;transition:width .25s ease;}
+.boss-question-box{border-color:rgba(255,224,122,.25);box-shadow:inset 0 0 0 1px rgba(255,224,122,.08);}
+.boss-note{margin:.15rem 0 0;font-size:.9rem;}
+
+@media(max-height:740px){
+  .class-card-wrap{padding:14px;gap:8px;}
+  .class-card-wrap h1{font-size:2rem;}
+  .avatar-button{min-height:92px;}
+  .class-portrait-card{height:115px;}
+  .class-card p{font-size:.82rem;}
+  .epic-boss-scene{height:175px;min-height:175px;}
+  .epic-boss-scene .boss-combat{height:150px;width:150px;}
+  .epic-boss-scene .hero-combat{height:90px;width:90px;}
+  .boss-name{font-size:1rem;}
+}
+@media(max-width:850px){
+  .class-card-wrap{height:auto;min-height:100dvh;border-radius:0;}
+  .class-grid{grid-template-columns:1fr;height:auto;}
+  .avatar-choice{grid-template-columns:1fr 1fr;}
+  .epic-boss-scene{height:auto;min-height:260px;flex-wrap:wrap;}
+  .enemy-side,.hero-side{flex:1 1 40%;}
+}
