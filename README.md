@@ -19,3 +19,5 @@ assets/
 ## Notes
 
 Student progress saves locally in the browser using localStorage. Use the in-game Settings button to reset progress.
+
+ 
