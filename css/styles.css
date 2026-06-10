@@ -44,3 +44,65 @@
   .class-choice h2{font-size:1.25rem;}
   .class-choice p{font-size:.9rem;}
 }
+
+/* v10 layout fix: keep adventure enemies compact and all answer choices visible */
+.scene-content{
+  grid-template-rows: 118px minmax(0, 1fr) !important;
+  gap: 6px !important;
+  padding: 10px 12px !important;
+}
+.battle-strip{
+  height: 118px !important;
+  min-height: 0 !important;
+  max-height: 118px !important;
+  overflow: hidden !important;
+  padding: 6px 14px !important;
+  justify-content: space-around !important;
+}
+.battle-strip .portrait-stack.small{
+  --pw: 150px;
+  --ph: 82px;
+  flex: 0 0 auto;
+}
+.battle-strip .boss-enemy-img{
+  width: 128px !important;
+  height: 96px !important;
+  max-width: 128px !important;
+  max-height: 96px !important;
+  object-fit: contain !important;
+  flex: 0 0 auto;
+}
+.question-wrap{
+  align-items: start !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+}
+.question-card{
+  padding: 10px 16px !important;
+  max-height: none !important;
+}
+.question{
+  font-size: clamp(2.1rem, 4.4vw, 3.55rem) !important;
+  margin: 10px 0 !important;
+}
+.answers{
+  gap: 8px !important;
+}
+.answers button{
+  min-height: 46px !important;
+  padding: .45rem .75rem !important;
+  font-size: 1.15rem !important;
+}
+.feedback{
+  min-height: 20px !important;
+  margin-top: 6px !important;
+}
+@media (max-height:780px) and (min-width:1100px){
+  .scene-content{grid-template-rows: 104px minmax(0,1fr) !important; padding:8px 12px !important; gap:5px !important;}
+  .battle-strip{height:104px !important; max-height:104px !important;}
+  .battle-strip .boss-enemy-img{height:82px !important; max-height:82px !important; width:110px !important; max-width:110px !important;}
+  .battle-strip .portrait-stack.small{--pw:135px;--ph:74px;}
+  .question-card{padding:8px 14px !important;}
+  .question{font-size:clamp(2rem,4vw,3.1rem) !important; margin:8px 0 !important;}
+  .answers button{min-height:42px !important;}
+}

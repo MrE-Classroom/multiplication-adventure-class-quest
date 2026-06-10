@@ -1,18 +1,10 @@
-Multiplication Adventure v9 Fixed Build Check
-
-Checked:
-- JavaScript syntax passed for data/gameData.js, js/storage.js, js/mastery.js, js/game.js.
-- Node render/logic smoke test passed with a fake DOM.
-- Start screen includes a visible sticky Start button, so students can proceed even if class cards are tall.
-- Starting a new game renders the main game shell.
-- Meadow adventure session renders the meadow background path in the center scene panel.
-- Adventure wrong answers reduce HP by 1.
-- Training wrong answers do not reduce HP.
-- Boss battle renders boss HP bar and boss image path.
-- Reset modal renders message, Cancel, and Reset buttons.
-- ZIP intentionally excludes the assets folder.
-
-Important:
-- Upload/update assets separately using the folder paths listed in ASSET_PATHS.json.
-- Replace assets/heroes/mage-girl.png with the updated Hispanic mage girl portrait if you want the new image in-game.
-- Use the corrected transparent frame files in assets/cosmetics/frames/.
+Build: multiplication_adventure_class_quest_v10_layoutfix_no_assets
+Fix focus:
+- Adventure enemy images constrained to fixed compact size.
+- Battle strip constrained to fixed height so enemy art cannot stretch the row.
+- Scene grid changed to fixed battle row + flexible question row.
+- Question card spacing reduced so four answer choices fit in the center panel.
+- Center title now shows Adventure/Boss Battle during active sessions, not stale Map title.
+Checks run:
+- node --check js/game.js
+- ZIP contents checked: no assets folder included.

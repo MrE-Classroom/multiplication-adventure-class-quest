@@ -94,7 +94,7 @@
     </div>`;
   }
   function areaTitle(){ if(state.session?.mode==='boss') return `${areaById(state.session.areaId).name} Boss`; if(state.areaId==='town') return 'Town'; if(state.areaId==='training') return 'Training'; const a = areaById(state.areaId); return a ? a.name : 'Town'; }
-  function centerTitle(){ return state.screen==='shop'?'Class Shop':state.screen==='inventory'?'Inventory':state.screen==='map'?'Adventure Map':state.screen==='mastery'?'Current Mastery':state.screen==='records'?'Personal Records':state.screen==='settings'?'Settings / Reset':state.session?.mode==='boss'?'Boss Battle':state.session?'Adventure':'Town'; }
+  function centerTitle(){ if(state.session) return state.session.mode==='boss'?'Boss Battle':'Adventure'; return state.screen==='shop'?'Class Shop':state.screen==='inventory'?'Inventory':state.screen==='map'?'Adventure Map':state.screen==='mastery'?'Current Mastery':state.screen==='records'?'Personal Records':state.screen==='settings'?'Settings / Reset':'Town'; }
   function bossReadyText(){ const a = areaById(state.areaId); if(!a) return '—'; return readyForBoss(a) ? 'Ready' : 'Not Ready'; }
   function readyForBoss(area){ const p = state.areaProgress[area.id] || {wins:0,acc:0}; return p.wins >= 1 || (p.rounds||0)>=2; }
   function renderHero(){
@@ -196,7 +196,7 @@
     }
     return {...q, answers:[...choices].sort(()=>Math.random()-.5)};
   }
-  function startSession(mode, areaId=null){ restoreVitals(); const q=makeQuestion(mode, areaId); const enemy = areaId ? pick(areaById(areaId).enemies) : null; state.session={mode, areaId, index:0, total:mode==='boss'?8:10, question:q, answers:q.answers, enemy, answered:false, feedback:'', removed:[], focusUsed:false, shieldUsed:false}; if(mode==='boss'){ const a=areaById(areaId); state.session.bossMaxHp=a.bossHp; state.session.bossHp=a.bossHp; } state.areaId=mode==='training'?'training':areaId; state.coach = mode==='training'?'Practice weak facts.': mode==='boss'?'Correct answers damage the boss.':'Adventure wrong answers cost HP.'; save(); render(); }
+  function startSession(mode, areaId=null){ restoreVitals(); const q=makeQuestion(mode, areaId); const enemy = areaId ? pick(areaById(areaId).enemies) : null; state.session={mode, areaId, index:0, total:mode==='boss'?8:10, question:q, answers:q.answers, enemy, answered:false, feedback:'', removed:[], focusUsed:false, shieldUsed:false}; if(mode==='boss'){ const a=areaById(areaId); state.session.bossMaxHp=a.bossHp; state.session.bossHp=a.bossHp; } state.screen = mode==='boss'?'boss':'adventure'; state.areaId=mode==='training'?'training':areaId; state.coach = mode==='training'?'Practice weak facts.': mode==='boss'?'Correct answers damage the boss.':'Adventure wrong answers cost HP.'; save(); render(); }
   function submitAnswer(value){
     const s=state.session; if(!s || s.answered) return; const q=s.question; const correct = value === q.product; s.answered=true; state.totalAttempts++; incQuest('attempts'); state.recentFacts.push(M.key(q.a,q.b)); state.recentFacts = state.recentFacts.slice(-6);
     const rec = M.record(state.mastery,q.a,q.b,correct); if(rec.improved) incQuest('improve');
