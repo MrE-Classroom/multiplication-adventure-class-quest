@@ -262,7 +262,7 @@
  .fighter-box .enemy-art{width:92px!important;height:74px!important;}
 }
 
-/* v16 robust display fix */
+/* v18 robust display fix */
 .content-pad{padding:12px;min-height:100%;}
 .center-panel .panel-body{background:transparent;}
 .shop-content{display:block!important;overflow:visible!important;color:var(--text)!important;}
@@ -271,3 +271,74 @@
 .item-card{overflow:visible!important;min-height:230px!important;}
 .item-card .item-icon{flex:0 0 auto;}
 .center-panel .panel-body > .panel-body{padding:12px;min-height:100%;overflow:visible;}
+
+
+/* v18 persistent top/bottom bars + settings button */
+html, body, #app{
+  width:100%;
+  height:100%;
+  min-height:0;
+  overflow:hidden !important;
+}
+body{
+  overflow:hidden !important;
+}
+.game{
+  height:100dvh !important;
+  max-height:100dvh !important;
+  min-height:0 !important;
+  display:grid !important;
+  grid-template-rows:auto minmax(0,1fr) auto !important;
+  overflow:hidden !important;
+}
+.topbar{
+  position:relative !important;
+  z-index:30 !important;
+  flex-shrink:0 !important;
+  min-height:52px !important;
+}
+.statusbar{
+  position:relative !important;
+  z-index:30 !important;
+  flex-shrink:0 !important;
+  min-height:46px !important;
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+  flex-wrap:nowrap !important;
+  justify-content:flex-start !important;
+}
+.statusbar .pill{flex:0 0 auto !important;}
+.top-left,.top-right{min-width:0 !important;}
+.top-right{flex:0 0 auto !important;}
+.top-left{flex:1 1 auto !important;overflow:hidden !important;}
+.top-left .pill{flex:0 0 auto !important;}
+.settings-btn{
+  border-color:#ffe07a !important;
+  box-shadow:0 0 0 1px #ffe07a55 inset !important;
+}
+.layout{
+  min-height:0 !important;
+  height:100% !important;
+  overflow:hidden !important;
+}
+.panel{
+  min-height:0 !important;
+  overflow:hidden !important;
+}
+.panel-body{
+  min-height:0 !important;
+  overflow:auto !important;
+  -webkit-overflow-scrolling:touch !important;
+}
+.center-panel .panel-body{
+  min-height:0 !important;
+  overflow:auto !important;
+}
+/* Override older mobile rule that made the entire page scroll and hid the top/bottom bars. */
+@media (max-width:1100px){
+  html,body,#app{height:100%;overflow:hidden !important;}
+  body{overflow:hidden !important;}
+  .game{height:100dvh !important;max-height:100dvh !important;grid-template-rows:auto minmax(0,1fr) auto !important;overflow:hidden !important;}
+  .layout{grid-template-columns:1fr !important;overflow:auto !important;min-height:0 !important;}
+  .topbar,.statusbar{position:relative !important;}
+}

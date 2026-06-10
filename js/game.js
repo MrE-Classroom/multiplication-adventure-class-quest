@@ -24,7 +24,7 @@
   function freshState(classId, gender){
     const c = D.classes[classId];
     return {
-      version:16, classId, gender, heroName:c.heroNames[gender], screen:'town', areaId:'town', coins:50,
+      version:18, classId, gender, heroName:c.heroNames[gender], screen:'town', areaId:'town', coins:50,
       hp:c.hp, mana:c.mana, level:1, xp:0, streak:0, totalCorrect:0, totalAttempts:0,
       inventory:[], equipped:Object.fromEntries(slots.map(s => [s,null])), bosses:{}, areaProgress:{}, mastery:M.init(), quests:newQuestSet(1), records:{bestStreak:0,bestAccuracy:0}, recentFacts:[], session:null, coach:'Choose an activity to begin.'
     };
@@ -36,7 +36,7 @@
       if(!['boy','girl'].includes(state.gender)) state.gender = 'girl';
       const c = D.classes[state.classId];
       state.heroName = state.heroName || c.heroNames[state.gender];
-      state.version = 16;
+      state.version = 18;
       state.screen = ['town','map','shop','inventory','mastery','records','settings','adventure','boss'].includes(state.screen) ? state.screen : 'town';
       // Clear in-progress sessions after rebuilds so old session objects cannot crash the new layout.
       state.session = null;
@@ -139,7 +139,7 @@
     app.innerHTML = `<div class="game">
       <div class="topbar"><div class="top-left">
         <span class="pill">${c.icon} ${c.name}</span><span class="pill">${img(D.ui.map,'tiny-icon')} Area: ${areaTitle()}</span><span class="pill">${img(D.ui.coin,'tiny-icon')} ${state.coins}</span><span class="pill">${img(D.ui.key,'tiny-icon')} ${bossReadyText()}</span>
-      </div><div class="top-right"><button onclick="Game.goTown()" ${state.session?.mode==='boss'?'disabled':''}>Town</button><button onclick="Game.goMap()">Map</button><button onclick="Game.goMastery()">Mastery</button></div></div>
+      </div><div class="top-right"><button onclick="Game.goTown()" ${state.session?.mode==='boss'?'disabled':''}>Town</button><button onclick="Game.goMap()">Map</button><button onclick="Game.goMastery()">Mastery</button><button class="settings-btn" onclick="Game.goSettings()" title="Settings and Reset">⚙ Settings</button></div></div>
       <div class="layout">
         <aside class="panel hero-side"><div class="panel-title">Hero</div><div class="panel-body">${renderHero()}</div></aside>
         <main class="panel center-panel"><div class="panel-title">${centerTitle()}</div><div class="panel-body">${renderCenter()}</div></main>
@@ -250,7 +250,7 @@
     return `<div class="panel-body"><div class="grid2"><div class="card">Mastered: ${sum.mastered}/121</div><div class="card">Accuracy: ${sum.accuracy}%</div></div><div style="overflow:auto"><table class="mastery-table"><tr><th>×</th>${Array.from({length:11},(_,i)=>`<th>${i}</th>`).join('')}</tr>${rows}</table></div></div>`;
   }
   function renderRecords(){ const sum=M.summary(state.mastery); return `<div class="panel-body"><div class="card"><h3>Records</h3><p>Best streak: ${state.records.bestStreak||0}</p><p>Best accuracy: ${state.records.bestAccuracy||0}%</p><p>Total attempts: ${sum.attempts}</p></div></div>`; }
-  function renderSettings(){ return `<div class="panel-body"><div class="card"><h3>Reset Game</h3><p class="muted">Erase saved progress and start over.</p><button class="danger" onclick="Game.resetModal()">Reset Game</button></div></div>`; }
+  function renderSettings(){ return `<div class="content-pad"><div class="card"><h3>Settings</h3><p class="muted">Use this screen if a student needs to restart or if the game display is acting strange.</p><div class="divider"></div><h3>Reset Game</h3><p class="muted">Erase saved progress, gear, coins, mastery, quests, and return to the class selection screen.</p><button class="danger" onclick="Game.resetModal()">Reset Game</button><button onclick="Game.goTown()" style="margin-left:8px">Back to Town</button></div></div>`; }
 
   function makeQuestion(mode, areaId){
     const area = areaId ? areaById(areaId) : null;
