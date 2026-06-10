@@ -5,7 +5,7 @@ window.Game = (() => {
     GameData.areas.forEach((a,i)=> progress[a.id] = {unlocked:i===0, rounds:0, bestAccuracy:0, key:false, bossDefeated:false});
     const questProgress = {}; GameData.quests.forEach(q=>questProgress[q.id]=0);
     return {
-      version:11, selectedClass:null, avatarModel:null, freeClassChange:true, coins:50, level:1, xp:0, hp:0, mana:0,
+      version:12, selectedClass:null, avatarModel:null, freeClassChange:true, coins:50, level:1, xp:0, hp:0, mana:0,
       area:'town', mode:'classSelect', currentArea:null, inBoss:false,
       inventory:[], equipped:Object.fromEntries(slots.map(s=>[s,null])), mastery:Mastery.init(), progress,
       quests:{claimed:{}, progress:questProgress},

@@ -18,8 +18,13 @@ window.UI = (() => {
   }
   function figure(src, cls='', fallback=''){
     const box = el('div', cls);
-    if(src) box.appendChild(image(src, 'asset-img', fallback));
-    if(fallback) box.appendChild(el('span','asset-fallback', fallback));
+    if(src){
+      const img = image(src, 'asset-img', fallback);
+      img.onerror = () => { img.remove(); if(fallback) box.appendChild(el('span','asset-fallback', fallback)); };
+      box.appendChild(img);
+    } else if(fallback) {
+      box.appendChild(el('span','asset-fallback', fallback));
+    }
     return box;
   }
   function renderClassSelect(){
@@ -52,7 +57,7 @@ window.UI = (() => {
 
   function renderGame(){
     const s=Game.getState(); app().innerHTML='';
-    const shell=el('div','game');
+    const shell=el('div',`game mode-${s.mode}`);
     const bg = currentBackground();
     if(bg) shell.style.setProperty('--scene-bg', `url("${bg}")`);
     shell.appendChild(topBar());
@@ -149,7 +154,7 @@ window.UI = (() => {
     const box=el('div','question-box');
     box.innerHTML=`<div class="pill">Question ${s.session.total+1}/${s.session.target}${s.mode==='boss'?` · Boss HP ${s.session.bossHp}`:''}</div><div class="question">${q.a} × ${q.b} = ?</div>`;
     const ability=el('div','ability-strip');
-    if(s.selectedClass==='mage'){ const use=btn(`Use ${c.ability} (${s.mana} mana)`,'secondary',()=>{const r=Game.useAbility(); if(!r.ok) showModal('Ability',r.msg); refresh();}); use.disabled=s.session.abilityUsed || s.session.answered || s.mana<1; ability.appendChild(use); ability.appendChild(el('span','muted', s.session.abilityUsed?'Focus Spell used.':'Removes two wrong choices.')); }
+    if(s.selectedClass==='mage'){ const use=btn(`Use ${c.ability} (Cost: 1 mana)`,'secondary',()=>{const r=Game.useAbility(); if(!r.ok) showModal('Ability',r.msg); refresh();}); use.disabled=s.session.abilityUsed || s.session.answered || s.mana<1; ability.appendChild(use); ability.appendChild(el('span','muted', s.session.abilityUsed?'Focus Spell used.':`Removes two wrong choices. Mana left: ${s.mana}.`)); }
     if(s.selectedClass==='knight') ability.innerHTML=`<span class="pill">Shield Block: ${s.session.shieldUsed?'Used':'Ready in boss'}</span>`;
     if(s.selectedClass==='archer') ability.innerHTML='<span class="pill">Streak Shot: +2 coins every 3-correct streak</span>';
     box.appendChild(ability);

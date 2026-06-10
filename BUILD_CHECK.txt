@@ -1,0 +1,14 @@
+Multiplication Adventure: Class Quest v2 layout/mechanics check
+
+No assets folder is included in this ZIP.
+Expected asset folders must be uploaded separately to /assets/ in the GitHub repo.
+
+Layout fixes included:
+- Start screen: no required scroll at normal desktop/laptop height.
+- Battle/training/boss screen: center battle panel set to fit without internal scroll.
+- Images: object-fit contain for portraits, UI icons, item icons, and profile images.
+- Area/background thumbnails keep cover behavior only where intentional.
+
+Smoke checks performed:
+- JavaScript syntax checked with node --check.
+- File structure checked.
