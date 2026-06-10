@@ -24,7 +24,7 @@
   function freshState(classId, gender){
     const c = D.classes[classId];
     return {
-      version:9, classId, gender, heroName:c.heroNames[gender], screen:'town', areaId:'town', coins:50,
+      version:11, classId, gender, heroName:c.heroNames[gender], screen:'town', areaId:'town', coins:50,
       hp:c.hp, mana:c.mana, level:1, xp:0, streak:0, totalCorrect:0, totalAttempts:0,
       inventory:[], equipped:Object.fromEntries(slots.map(s => [s,null])), bosses:{}, areaProgress:{}, mastery:M.init(), quests:newQuestSet(1), records:{bestStreak:0,bestAccuracy:0}, recentFacts:[], session:null, coach:'Choose an activity to begin.'
     };
@@ -154,9 +154,13 @@
   }
   function renderBattle(){
     const s = state.session, a = areaById(s.areaId), q=s.question;
-    return `<section class="scene-panel" id="scenePanel" style="${centerBackground()}"><div class="scene-content">
-      <div class="battle-strip">${portraitStack('small')}<div class="versus">×</div>${img(s.enemy,'boss-enemy-img','enemy')}</div>
-      <div class="question-wrap"><div class="question-card"><div class="progress-pill">Question ${s.index+1}/${s.total}</div><div class="question">${q.a} × ${q.b} = ?</div>${abilityLine()}${answerButtons()}<div class="feedback ${s.feedbackClass||''}">${s.feedback||''}</div>${s.answered?'<button class="primary next-button" onclick="Game.nextQuestion()">Next Question</button>':''}</div></div>
+    return `<section class="scene-panel adventure-scene" id="scenePanel" style="${centerBackground()}"><div class="adventure-layout">
+      <div class="adventure-fighters">
+        <div class="fighter-box hero-fighter">${portraitStack('small')}<div class="fighter-name">${esc(heroName())}</div></div>
+        <div class="versus compact">×</div>
+        <div class="fighter-box enemy-fighter"><img class="enemy-thumb" src="${s.enemy}" alt="enemy" onerror="this.style.display='none'"></div>
+      </div>
+      <div class="compact-question-card"><div class="progress-pill">Question ${s.index+1}/${s.total}</div><div class="question compact-q">${q.a} × ${q.b} = ?</div>${abilityLine()}${answerButtons()}<div class="feedback ${s.feedbackClass||''}">${s.feedback||''}</div>${s.answered?'<button class="primary next-button" onclick="Game.nextQuestion()">Next Question</button>':''}</div>
     </div></section>`;
   }
   function renderBoss(){

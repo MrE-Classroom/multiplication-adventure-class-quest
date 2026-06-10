@@ -1,0 +1,10 @@
+meadow-enemy-1.png: 384x384
+meadow-enemy-2.png: 384x384
+forest-enemy-1.png: 384x384
+forest-enemy-2.png: 384x384
+cave-enemy-1.png: 384x384
+cave-enemy-2.png: 384x384
+castle-enemy-1.png: 384x384
+castle-enemy-2.png: 384x384
+dragon-mountain-enemy-1.png: 384x384
+dragon-mountain-enemy-2.png: 384x384
