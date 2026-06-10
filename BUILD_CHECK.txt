@@ -1,1 +1,6 @@
-v11 fixed adventure layout. Syntax checked; browser screenshot checked with local assets; no assets folder included. Cache-busting query strings added to CSS/JS links.
+v12 layout scroll fix
+- Center panel body overflow is auto.
+- Town/Map/Shop/Inventory/Mastery can scroll.
+- Adventure layout remains compact but content is not trapped off-screen.
+- JS syntax checked.
+- Assets folder intentionally not included.

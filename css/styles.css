@@ -110,7 +110,7 @@
 
 /* v11 hard layout fix: adventure must fit without scroll/cutoff */
 .center-panel{min-width:0!important;}
-.center-panel .panel-body{overflow:hidden!important;}
+.center-panel .panel-body{overflow:auto!important;-webkit-overflow-scrolling:touch!important;}
 .scene-panel.adventure-scene{height:100%!important;min-height:0!important;overflow:hidden!important;background-size:cover!important;background-position:center!important;}
 .adventure-layout{height:100%!important;min-height:0!important;display:grid!important;grid-template-rows:132px minmax(0,1fr)!important;gap:8px!important;padding:10px 14px!important;overflow:hidden!important;background:linear-gradient(180deg,rgba(5,8,18,.20),rgba(5,8,18,.62))!important;}
 .adventure-fighters{height:132px!important;max-height:132px!important;display:grid!important;grid-template-columns:minmax(130px,210px) 70px minmax(130px,210px)!important;align-items:center!important;justify-content:center!important;gap:24px!important;border:1px solid var(--line)!important;border-radius:20px!important;background:rgba(9,13,27,.72)!important;overflow:hidden!important;padding:8px 14px!important;}
@@ -148,4 +148,30 @@
   .center-panel .panel-body{overflow:auto!important;}
   .adventure-layout{min-height:540px!important;}
   .adventure-fighters{grid-template-columns:1fr auto 1fr!important;gap:10px!important;}
+}
+
+
+/* v12 scroll fix: center panel must scroll in Town, Map, Shop, Inventory, and Mastery. */
+.center-panel .panel-body{
+  overflow:auto !important;
+  -webkit-overflow-scrolling:touch !important;
+  min-height:0 !important;
+}
+.center-panel .panel-body > *{
+  min-width:0 !important;
+}
+/* Keep battle compact, but never trap content off-screen. */
+.scene-panel.adventure-scene{
+  height:auto !important;
+  min-height:100% !important;
+  overflow:visible !important;
+}
+.adventure-layout{
+  min-height:100% !important;
+  height:auto !important;
+}
+@media (min-width:1101px){
+  .center-panel .panel-body{
+    max-height:calc(100dvh - 118px) !important;
+  }
 }
