@@ -1,6 +1,6 @@
-V15 display fix
-- CSS-only frame rendering in hero displays/previews/inventory, avoiding broken transparent PNG overlays.
-- CSS-only aura glow rendering in hero displays/previews/inventory, avoiding white-box aura PNGs.
-- Enemy image fallback displays readable enemy label if an asset is missing.
-- Battle and boss screens show area name inside the center panel.
-- Boss questions continue until boss HP reaches 0 or player HP reaches 0.
+v16 robust fix
+- Added saved-state migration so old localStorage states cannot blank the screen.
+- Shop display made robust with explicit content wrapper and sticky tabs.
+- In-progress sessions are cleared after update to avoid stale session crashes.
+- JavaScript syntax checked.
+- No assets folder included.

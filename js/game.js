@@ -19,16 +19,54 @@
   const save = () => S.save(state);
   const setScreen = screen => { state.screen = screen; state.session = null; save(); render(); };
   const isUnlocked = item => item.unlock === 'start' || state.bosses[item.unlock];
-  const canUseItem = item => item.cls.includes('all') || item.cls.includes(state.classId);
+  const canUseItem = item => Array.isArray(item?.cls) && (item.cls.includes('all') || item.cls.includes(state.classId));
 
   function freshState(classId, gender){
     const c = D.classes[classId];
     return {
-      version:15, classId, gender, heroName:c.heroNames[gender], screen:'town', areaId:'town', coins:50,
+      version:16, classId, gender, heroName:c.heroNames[gender], screen:'town', areaId:'town', coins:50,
       hp:c.hp, mana:c.mana, level:1, xp:0, streak:0, totalCorrect:0, totalAttempts:0,
       inventory:[], equipped:Object.fromEntries(slots.map(s => [s,null])), bosses:{}, areaProgress:{}, mastery:M.init(), quests:newQuestSet(1), records:{bestStreak:0,bestAccuracy:0}, recentFacts:[], session:null, coach:'Choose an activity to begin.'
     };
   }
+  function migrateState(){
+    if(!state) return;
+    try{
+      if(!D.classes[state.classId]) state.classId = 'knight';
+      if(!['boy','girl'].includes(state.gender)) state.gender = 'girl';
+      const c = D.classes[state.classId];
+      state.heroName = state.heroName || c.heroNames[state.gender];
+      state.version = 16;
+      state.screen = ['town','map','shop','inventory','mastery','records','settings','adventure','boss'].includes(state.screen) ? state.screen : 'town';
+      // Clear in-progress sessions after rebuilds so old session objects cannot crash the new layout.
+      state.session = null;
+      state.areaId = state.areaId || 'town';
+      state.coins = Number.isFinite(state.coins) ? state.coins : 50;
+      state.hp = Number.isFinite(state.hp) ? state.hp : c.hp;
+      state.mana = Number.isFinite(state.mana) ? state.mana : c.mana;
+      state.level = Number.isFinite(state.level) ? state.level : 1;
+      state.xp = Number.isFinite(state.xp) ? state.xp : 0;
+      state.streak = Number.isFinite(state.streak) ? state.streak : 0;
+      state.totalCorrect = Number.isFinite(state.totalCorrect) ? state.totalCorrect : 0;
+      state.totalAttempts = Number.isFinite(state.totalAttempts) ? state.totalAttempts : 0;
+      state.inventory = Array.isArray(state.inventory) ? state.inventory.filter(id => itemById(id)) : [];
+      state.equipped = state.equipped && typeof state.equipped === 'object' ? state.equipped : {};
+      for(const slot of slots){ if(state.equipped[slot] && !itemById(state.equipped[slot])) state.equipped[slot]=null; if(!(slot in state.equipped)) state.equipped[slot]=null; }
+      state.bosses = state.bosses && typeof state.bosses === 'object' ? state.bosses : {};
+      state.areaProgress = state.areaProgress && typeof state.areaProgress === 'object' ? state.areaProgress : {};
+      state.mastery = state.mastery && typeof state.mastery === 'object' ? state.mastery : M.init();
+      state.quests = state.quests && Array.isArray(state.quests.list) ? state.quests : newQuestSet(1);
+      state.questProgress = state.questProgress && typeof state.questProgress === 'object' ? state.questProgress : {};
+      state.records = state.records && typeof state.records === 'object' ? state.records : {bestStreak:0,bestAccuracy:0};
+      state.recentFacts = Array.isArray(state.recentFacts) ? state.recentFacts : [];
+      state.coach = state.coach || 'Choose an activity to begin.';
+      save();
+    }catch(err){
+      console.error('Migration failed, resetting safely.', err);
+      S.clear(); state = null;
+    }
+  }
+
   function newQuestSet(batch){
     return { batch, list:[
       {id:`q${batch}_facts`, label:'Answer 10 Facts', type:'attempts', target:10, reward:20, claimed:false},
@@ -93,6 +131,7 @@
   }
 
   function render(){
+    try{
     if(!state){ renderSelect(); return; }
     if(!state.equipped.trail) state.equipped.trail = null;
     const sum = M.summary(state.mastery);
@@ -109,6 +148,10 @@
       <div class="statusbar"><span class="pill">${img(D.ui.heart,'tiny-icon')} HP ${state.hp}</span><span class="pill">${img(D.ui.mana,'tiny-icon')} Mana ${state.mana}</span><span class="pill">${img(D.ui.star,'tiny-icon')} Level ${state.level}</span><span class="pill">XP ${state.xp}/100</span><span class="pill">Streak ${state.streak}</span><span class="pill">Accuracy ${sum.accuracy}%</span><span class="pill">${img(D.ui.mastery,'tiny-icon')} Mastered ${sum.mastered}/121</span></div>
       ${modal || ''}
     </div>`;
+    }catch(err){
+      console.error('Render failed:', err);
+      app.innerHTML = `<div class="game"><div class="panel" style="margin:24px;padding:24px;display:block"><h2>Game screen recovered</h2><p>The saved screen had a display problem. Use the button below to return to Town.</p><button class="primary" onclick="Game.goTown()">Return to Town</button></div></div>`;
+    }
   }
   function areaTitle(){ if(state.session?.mode==='boss') return `${areaById(state.session.areaId).name} Boss`; if(state.areaId==='town') return 'Town'; if(state.areaId==='training') return 'Training'; const a = areaById(state.areaId); return a ? a.name : 'Town'; }
   function centerTitle(){ if(state.session) return state.session.mode==='boss'?'Boss Battle':'Adventure'; return state.screen==='shop'?'Class Shop':state.screen==='inventory'?'Inventory':state.screen==='map'?'Adventure Map':state.screen==='mastery'?'Current Mastery':state.screen==='records'?'Personal Records':state.screen==='settings'?'Settings / Reset':'Town'; }
@@ -195,7 +238,7 @@
   function answerButtons(){ const s=state.session; return `<div class="answers">${s.answers.map(v=>`<button class="primary" ${s.answered||s.removed?.includes(v)?'disabled':''} onclick="Game.answer(${v})">${v}</button>`).join('')}</div>`; }
   function renderShop(){
     const items = D.items.filter(it => (shopFilter==='all'||it.slot===shopFilter||it.type===shopFilter) && canUseItem(it));
-    return `<div class="panel-body"><div class="tabs">${filters.map(f=>`<button class="${shopFilter===f?'active':''}" onclick="Game.setShopFilter('${f}')">${cap(f)}</button>`).join('')}</div><div class="item-grid">${items.map(renderItemCard).join('')}</div><button onclick="Game.goTown()">Back to Town</button></div>`;
+    return `<div class="content-pad shop-content"><div class="tabs sticky-tabs">${filters.map(f=>`<button class="${shopFilter===f?'active':''}" onclick="Game.setShopFilter('${f}')">${cap(f)}</button>`).join('')}</div>${items.length?`<div class="item-grid">${items.map(renderItemCard).join('')}</div>`:'<div class="card">No items found for this filter.</div>'}<button onclick="Game.goTown()">Back to Town</button></div>`;
   }
   function renderItemCard(it){ const locked=!isUnlocked(it), owned=state.inventory.includes(it.id); return `<div class="item-card card ${locked?'locked':''}"><div class="item-icon">${cosmeticIcon(it)}</div><h3>${esc(it.name)} ${locked?'🔒':''}</h3><div>${it.rarity} · ${it.cost} coins</div><div class="muted">${esc(it.desc)}</div><div>${locked?'Locked: '+D.unlockLabels[it.unlock]:(owned?'Owned':'Available')}</div><button class="primary" onclick="Game.previewItem('${it.id}')">Preview</button></div>`; }
   function renderInventory(){
@@ -267,5 +310,6 @@
     previewItem, buy, equip, unequip, resetModal, confirmReset:()=>{S.clear();state=null;modal=null;renderSelect();}, closeModal:(e)=>{ if(e && e.target!==e.currentTarget) return; modal=null;render(); }, noop:()=>{},
     _state:()=>state, _sceneBg:()=>centerBackground(), _sceneUrl:()=>sceneUrl()
   };
+  migrateState();
   render();
 })();

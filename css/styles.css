@@ -261,3 +261,13 @@
  .boss-battle-layout{grid-template-rows:24px 22px 92px minmax(220px,1fr)!important;}
  .fighter-box .enemy-art{width:92px!important;height:74px!important;}
 }
+
+/* v16 robust display fix */
+.content-pad{padding:12px;min-height:100%;}
+.center-panel .panel-body{background:transparent;}
+.shop-content{display:block!important;overflow:visible!important;color:var(--text)!important;}
+.sticky-tabs{position:sticky;top:0;z-index:6;background:rgba(31,37,61,.98);padding:4px 0 10px;margin-top:-4px;}
+.item-grid,.inventory-grid,.area-grid{align-items:stretch;}
+.item-card{overflow:visible!important;min-height:230px!important;}
+.item-card .item-icon{flex:0 0 auto;}
+.center-panel .panel-body > .panel-body{padding:12px;min-height:100%;overflow:visible;}
