@@ -1,16 +1,16 @@
 # Multiplication Adventure Class Quest
 
-A browser-based multiplication fluency game for students. Students choose a hero, practice multiplication facts, earn coins, complete quests, unlock gear and cosmetics, and battle bosses.
+A browser-based multiplication fluency game for students.
 
-## Current Build
+## How to Play
 
-**v18 — clean GitHub package**
+Students choose a hero, practice multiplication facts, earn coins, unlock gear, complete quests, and battle bosses.
 
-This build keeps the sticky top panel, sticky bottom stats panel, Settings button, local progress saving, quests, mastery tracking, shop, inventory, adventure areas, and boss battles.
+## Hosting
 
-## Required GitHub Pages Structure
+This game is designed to run on GitHub Pages.
 
-Upload these files and folders at the repository root:
+Required root files and folders:
 
 ```text
 index.html
@@ -20,42 +20,18 @@ data/
 assets/
 ```
 
-Optional support file:
-
-```text
-ASSET_PATHS.json
-```
-
 ## Assets
 
-The game expects image files inside the existing `assets/` folder. Keep the asset folder structure unchanged.
-
-Expected main folders:
-
-```text
-assets/backgrounds/
-assets/bosses/
-assets/cosmetics/
-assets/enemies/
-assets/heroes/
-assets/items/
-assets/ui/
-```
+The game uses image assets stored in the `assets/` folder. Keep the folder structure exactly as listed in `ASSET_PATHS.json`.
 
 ## Saving Progress
 
-Student progress is saved in the browser with `localStorage`. Progress stays on the same device and browser unless site data is cleared or the game is reset.
+Student progress saves locally in the browser using `localStorage`. Progress stays on the same device and browser unless site data is cleared or the game is reset.
 
 ## Resetting Progress
 
-Use the **Settings** button inside the game to reset progress.
+Use the Settings button inside the top panel to reset progress.
 
-## Notes for Updating
+## Current Build
 
-When replacing an older build, upload the new `index.html`, `css/`, `js/`, and `data/` files over the old files. Keep the existing `assets/` folder.
-
-After uploading, hard refresh the browser:
-
-```text
-Ctrl + Shift + R
-```
+v19 — stable rebuild with fixed shop rendering, sticky top/bottom panels, settings reset, safer image fallbacks, and simplified CSS-only frames/auras.
