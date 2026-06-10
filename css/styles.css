@@ -175,3 +175,44 @@
     max-height:calc(100dvh - 118px) !important;
   }
 }
+
+/* v13 hard layout and cosmetics fixes */
+.hero-display{position:relative;isolation:isolate;overflow:visible;background:linear-gradient(180deg,#444c70,#2d3454)!important;}
+.hero-display .portrait-core{position:relative;z-index:3;width:calc(var(--ph) * .72);height:calc(var(--ph) * .72);display:flex;align-items:center;justify-content:center;border-radius:12px;overflow:hidden;box-shadow:0 4px 10px #0007;background:#1b2138;}
+.hero-display .portrait-core .hero-img{width:100%!important;height:100%!important;object-fit:cover!important;border-radius:0!important;box-shadow:none!important;}
+.hero-display>.hero-img{z-index:3;}
+.hero-display .frame-img{position:absolute!important;z-index:6!important;inset:0!important;width:100%!important;height:100%!important;object-fit:fill!important;pointer-events:none!important;}
+.hero-display .aura-css{position:absolute;z-index:1;inset:10%;border-radius:22px;pointer-events:none;opacity:.88;filter:blur(8px);transform:scale(1.08);}
+.hero-display .aura-css::before,.hero-display .aura-css::after{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(ellipse at center,transparent 34%,var(--aura1,#fff176) 48%,var(--aura2,#ff7043) 65%,transparent 76%);}
+.hero-display .aura-css::after{filter:blur(14px);opacity:.85;transform:scale(1.08)}
+.aura-sparkle_aura{--aura1:#fff7a8;--aura2:#ffffff}.aura-fire_aura{--aura1:#ffd166;--aura2:#ff5a36}.aura-ice_aura{--aura1:#d9fbff;--aura2:#5bbcff}.aura-nature_aura{--aura1:#c5ff80;--aura2:#38d86d}.aura-lightning_aura{--aura1:#fff77a;--aura2:#55b7ff}.aura-shadow_aura{--aura1:#9b6bff;--aura2:#241133}.aura-royal_aura{--aura1:#ffe27a;--aura2:#8e55ff}.aura-rainbow_aura{--aura1:#ffed75;--aura2:#62d4ff}.aura-pink_sparkle_aura{--aura1:#ffd2f1;--aura2:#ff5cc8}.aura-galaxy_aura{--aura1:#74e4ff;--aura2:#6b3cff}.aura-bright_sparkle_aura{--aura1:#ffffff;--aura2:#ffe27a}
+.aura-token{width:100%;height:100%;position:relative;border-radius:16px;background:#14182b!important;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.aura-token::before{content:"";position:absolute;inset:22%;border-radius:999px;background:radial-gradient(ellipse at center,transparent 35%,var(--aura1,#fff176) 49%,var(--aura2,#ff7043) 68%,transparent 78%);filter:blur(6px);}
+.aura-token span{position:relative;z-index:2;width:30%;height:30%;border-radius:999px;background:radial-gradient(circle,#fff,#ffffff00 70%);opacity:.8}
+.preview-layout .hero-display.big{--pw:230px;--ph:136px;width:230px;height:136px;}
+
+.boss-scene{height:100%;min-height:0;overflow:hidden!important;}
+.boss-battle-layout{height:100%;min-height:0;display:grid;grid-template-rows:28px minmax(115px,30%) minmax(245px,1fr);gap:8px;padding:10px;background:linear-gradient(180deg,rgba(5,8,18,.25),rgba(5,8,18,.68));}
+.boss-hp-bar{position:relative;height:24px;border-radius:999px;overflow:hidden;background:rgba(0,0,0,.62);border:1px solid #ffffff55;align-self:center;}
+.boss-hp-fill{height:100%;background:linear-gradient(90deg,#ff4060,#ffb347,#ffe07a);transition:width .2s;}
+.boss-hp-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.86rem;font-weight:1000;text-shadow:0 2px 4px #000;}
+.boss-fighters-row{min-height:0;border:1px solid var(--line);border-radius:18px;background:rgba(10,14,28,.68);display:grid;grid-template-columns:minmax(130px,1fr) 84px minmax(150px,1fr);align-items:center;gap:8px;padding:8px;overflow:hidden;}
+.boss-combatant{min-width:0;min-height:0;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;overflow:hidden;}
+.boss-combatant .portrait-stack.small{--pw:132px;--ph:76px;}
+.boss-vs-fixed{font-size:clamp(1.8rem,4vw,3.2rem);font-weight:1000;color:var(--accent);text-align:center;text-shadow:0 0 18px #ffe07a80;line-height:1;}
+.boss-enemy-frame{width:min(160px,100%);height:94px;border-radius:12px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.boss-enemy-frame .boss-enemy-img{max-width:100%!important;max-height:100%!important;width:auto!important;height:auto!important;object-fit:contain!important;filter:drop-shadow(0 6px 12px #0008);}
+.boss-question-zone{min-height:0;display:flex;align-items:start;justify-content:center;overflow:visible;}
+.boss-question-card{width:min(860px,100%);padding:10px 14px!important;}
+.boss-question-card .compact-q{font-size:clamp(2.3rem,5vw,3.8rem)!important;margin:10px 0!important;}
+.boss-question-card .answers{gap:8px!important;}
+.boss-question-card .answers button{min-height:44px!important;font-size:1rem!important;padding:.45rem!important;}
+.boss-question-card .feedback{min-height:22px;margin-top:4px;}
+.boss-question-card .next-button{min-height:40px;margin-top:4px;}
+.boss-stage,.boss-visual,.boss-visual-wrap,.boss-hero,.boss-enemy{all:unset;}
+@media (max-height:760px) and (min-width:900px){
+ .boss-battle-layout{grid-template-rows:24px 105px minmax(225px,1fr);gap:6px;padding:8px;}
+ .boss-fighters-row{padding:6px}.boss-enemy-frame{height:82px}.boss-combatant .portrait-stack.small{--pw:116px;--ph:66px}
+ .boss-question-card .compact-q{font-size:2.7rem!important;margin:7px 0!important}.boss-question-card .answers button{min-height:39px!important;}
+ .boss-question-card{padding:8px 12px!important;}
+}

@@ -1,6 +1,1 @@
-v12 layout scroll fix
-- Center panel body overflow is auto.
-- Town/Map/Shop/Inventory/Mastery can scroll.
-- Adventure layout remains compact but content is not trapped off-screen.
-- JS syntax checked.
-- Assets folder intentionally not included.
+v14 boss fix: Boss battles no longer have an 8-question cap. Boss fights continue until boss HP reaches 0 or player HP reaches 0. Syntax and logic checks passed. No assets folder included.
