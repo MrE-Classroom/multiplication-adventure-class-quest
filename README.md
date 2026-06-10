@@ -1,21 +1,24 @@
-# Multiplication Adventure Class Quest - v7
+# Multiplication Adventure: Class Quest — v8 Scratch Rebuild
 
-Static GitHub Pages build. This ZIP does not include the assets folder.
-Upload the referenced assets separately using the same folder paths listed in ASSET_PATHS.json.
+Static GitHub Pages game build.
 
-## v7 fixes
-- Rebuilt modal/window system.
-- Fixed reset modal content and buttons.
-- Fixed quest claim modal/message rendering.
-- Fixed preview modal content and buttons.
-- Preview now shows cosmetic frames/auras on the hero portrait stack.
-- Fixed default aura bug: no aura is shown when Aura = None.
-- Rebuilt center question panel background behavior so area background fills the center panel.
-- Added HP Option B:
-  - Training: wrong answers do not reduce HP.
-  - Adventure: wrong answers reduce HP by 1.
-  - Boss: wrong answers reduce HP by 1.
+## Upload instructions
+Upload these files/folders to the repository root:
+- index.html
+- css/
+- data/
+- js/
+- ASSET_PATHS.json
 
-## Upload
-Use the contents of this ZIP at the repository root.
-Keep your assets folder in the repository with the expected paths.
+This ZIP intentionally does **not** include the `assets/` folder. Upload your assets separately using the paths listed in `ASSET_PATHS.json`.
+
+## Major fixes in v8
+- Rebuilt game structure from scratch.
+- Center question panel uses the area background image directly on the scene panel.
+- Boss battle screen rebuilt with visible full boss, hero, VS layout, and boss HP bar.
+- Frame overlays layer over the hero instead of replacing the hero.
+- Frame overlay fills the portrait window.
+- Hero names added for every class/gender choice.
+- HP Option B: wrong answers reduce HP in Adventure and Boss, not Training.
+- Modal windows for preview, quest rewards, and reset rebuilt.
+- Mastery/adaptive fact selection retained.

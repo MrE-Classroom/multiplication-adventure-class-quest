@@ -1,12 +1,13 @@
-Version: v7 no-assets rebuild
-Checks completed:
-- JavaScript syntax check passed for js/ui.js and js/game.js.
-- Logic smoke test passed in Node VM:
-  * fresh player starts with Aura = None
-  * wrong answer in Adventure reduces HP by 1
-  * wrong answer in Training does not reduce HP
-  * quest reward claim returns a valid reward message
-- Modal system rebuilt so body text/content/buttons render inside modal.
-- Preview modal now shows hero portrait stack for frames, auras, pets, and trails.
-- Center question panel now sets area background directly on the panel body.
-- ZIP intentionally excludes assets folder; upload assets separately to GitHub.
+v8 scratch rebuild checks
+
+Passed:
+- node --check data/gameData.js
+- node --check js/storage.js
+- node --check js/mastery.js
+- node --check js/game.js
+- data/mastery logic test passed
+- confirmed meadow background path is used by center scene panel style: assets/backgrounds/meadow.jpg
+- confirmed boss data includes boss images and boss HP values
+- confirmed ZIP excludes assets folder
+
+Note: Because this ZIP intentionally excludes assets, the browser can only display backgrounds after the matching assets folder is uploaded to GitHub.
