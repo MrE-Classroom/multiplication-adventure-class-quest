@@ -2,11 +2,15 @@
 
 A browser-based multiplication fluency game for students.
 
-## Current Build
+## How to Play
 
-v20 — compact hero portrait panel and rebuilt battle layout with a transparent top combat stage and a separate bottom question panel.
+Students choose a hero, practice multiplication facts, earn coins, unlock gear, complete quests, and battle bosses.
 
-## Required Files
+## Hosting
+
+This game is designed to run on GitHub Pages.
+
+Required root files and folders:
 
 ```text
 index.html
@@ -16,8 +20,10 @@ data/
 assets/
 ```
 
-## Notes
+## Saving Progress
 
-Student progress saves locally in the browser using localStorage. Use the in-game Settings button to reset progress.
+Student progress saves locally in the browser using localStorage.
 
- 
+## Current Build
+
+v21 — responsive character select screen with one start button.

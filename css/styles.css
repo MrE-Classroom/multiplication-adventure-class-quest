@@ -73,3 +73,92 @@ button{font:inherit;font-weight:900;border:1px solid var(--line);border-radius:1
   .combat-question-zone .question{font-size:2.7rem;}
   .combat-question-zone .answers button{min-height:38px;}
 }
+
+
+/* v21: responsive start screen fix; one start button only */
+.hero-select{
+  height:100dvh;
+  min-height:0;
+  overflow:hidden;
+  padding:clamp(8px,1.4vw,16px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.select-card{
+  width:min(1180px,100%);
+  height:calc(100dvh - clamp(16px,2.8vw,32px));
+  max-height:760px;
+  min-height:0;
+  padding:clamp(12px,1.8vw,22px);
+  display:grid;
+  grid-template-rows:auto auto 1fr;
+  gap:clamp(8px,1.2vw,14px);
+  overflow:hidden;
+}
+.select-card h1{
+  font-size:clamp(2rem,5.2vw,4rem);
+  line-height:.98;
+  margin:0;
+}
+.select-topline{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.select-topline p{margin:0;}
+.start-row{position:static;background:transparent;padding:0;}
+.start-game-btn{white-space:nowrap;padding:.65rem 1rem;}
+.avatar-picks{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(160px,240px));
+  justify-content:center;
+  gap:10px;
+  margin:0;
+}
+.choice-btn{
+  min-height:0;
+  padding:8px;
+}
+.choice-btn .portrait-stack,.choice-btn .portrait-select,.choice-btn img{
+  width:68px!important;
+  height:68px!important;
+}
+.class-choices{
+  min-height:0;
+  overflow:hidden;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+}
+.class-choice{
+  min-height:0;
+  overflow:hidden;
+  padding:clamp(10px,1.4vw,18px);
+  display:grid;
+  grid-template-rows:auto auto auto 1fr auto;
+  gap:clamp(5px,.8vw,10px);
+  align-content:start;
+}
+.class-choice .portrait-stack,.class-choice .portrait-select,.class-choice img{
+  width:clamp(72px,8vh,96px)!important;
+  height:clamp(72px,8vh,96px)!important;
+}
+.class-choice h2{font-size:clamp(1.25rem,2vw,1.8rem);line-height:1;margin:.1rem 0;}
+.class-choice p{font-size:clamp(.9rem,1.25vw,1rem);line-height:1.25;margin:.1rem 0;}
+.class-choice .mini-start{display:none!important;}
+@media(max-height:720px){
+  .select-card{gap:7px;padding:12px;}
+  .select-card h1{font-size:clamp(1.8rem,4.8vw,3.2rem);}
+  .avatar-picks{gap:8px;}
+  .class-choice{gap:5px;padding:10px;}
+  .class-choice p.muted{display:none;}
+  .class-choice .portrait-stack,.class-choice .portrait-select,.class-choice img{width:68px!important;height:68px!important;}
+}
+@media(max-width:900px){
+  .hero-select{overflow:auto;align-items:flex-start;}
+  .select-card{height:auto;max-height:none;overflow:visible;}
+  .class-choices{grid-template-columns:1fr;overflow:visible;}
+}
