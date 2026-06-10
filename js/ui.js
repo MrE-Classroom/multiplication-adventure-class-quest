@@ -31,16 +31,21 @@ window.UI = (() => {
     const s=Game.getState(); const c=Game.cls();
     const frame = Game.getItem(s?.equipped?.frame);
     const aura = Game.getItem(s?.equipped?.aura);
-    const trailOn = s?.equipped?.cosmetic === 'fire_trail';
-    const box = el('div', `${baseCls || ''} hero-cosmetic-wrap ${frame ? 'has-frame' : ''} ${aura ? 'has-aura' : ''} ${trailOn ? 'fire-trail-equipped' : ''}`.trim());
-    if(aura?.image){
-      const auraImg = image(aura.image, 'cosmetic-aura-img', aura.name);
-      auraImg.onerror = () => auraImg.remove();
-      box.appendChild(auraImg);
-    }
+    const trail = Game.getItem(s?.equipped?.cosmetic);
+    const auraClass = aura ? ` aura-${aura.id}` : '';
+    const frameClass = frame ? ` frame-${frame.id}` : '';
+    const trailClass = trail?.type === 'trail' ? ` trail-${trail.id}` : '';
+    const box = el('div', `${baseCls || ''} hero-cosmetic-wrap ${frame ? 'has-frame' : ''} ${aura ? 'has-aura' : ''}${auraClass}${frameClass}${trailClass}`.trim());
+
+    // Aura is rendered as a CSS glow layer, not a square image layer. This prevents
+    // non-transparent aura files from covering the hero while still giving a clear glow.
+    if(aura) box.setAttribute('data-aura', aura.name);
+
     const heroImg = image(Game.heroImage(), 'asset-img hero-main-img', c.icon);
-    heroImg.onerror = () => { heroImg.remove(); box.appendChild(el('span','asset-fallback', c.icon)); };
+    heroImg.onerror = () => { heroImg.remove(); box.appendChild(el('span','asset-fallback hero-main-img', c.icon)); };
     box.appendChild(heroImg);
+
+    // Frame stays above the hero image. It should be a transparent PNG overlay.
     if(frame?.image){
       const frameImg = image(frame.image, 'cosmetic-frame-img', frame.name);
       frameImg.onerror = () => frameImg.remove();
@@ -228,9 +233,39 @@ window.UI = (() => {
   }
 
   function showShop(){
-    const b=center('Class Shop'); const tabs=el('div','tabs'); ['all','weapon','head','body','legs','pet','aura','frame','cosmetic'].forEach(t=>tabs.appendChild(btn(title(t),'secondary',()=>draw(t)))); b.appendChild(tabs); const list=el('div','item-grid'); const preview=el('div','item-preview hidden'); b.append(list,preview,btn('Back to Town','secondary',()=>showTown()));
-    function draw(type='all'){ list.innerHTML=''; preview.classList.add('hidden'); preview.innerHTML=''; Game.shopItems().filter(i=>type==='all'||i.slot===type||i.type===type).forEach(item=>{ const unlocked=Game.itemUnlocked(item); const c=el('div','item-card '+(unlocked?'':'locked-item')); c.appendChild(figure(item.image,'item-icon-large','')); c.insertAdjacentHTML('beforeend',`<b>${item.name}</b><span>Tier ${item.tier||1} · ${item.rarity} · ${item.cost} coins</span><span class="muted">${item.desc}</span><span>${Game.owned(item.id)?'Owned':unlocked?'Available':'Locked: '+Game.itemUnlockText(item)}</span>`); c.appendChild(btn('Preview','',()=>select(item))); list.appendChild(c); }); }
-    function select(item){ const unlocked=Game.itemUnlocked(item); preview.classList.remove('hidden'); preview.innerHTML=''; preview.appendChild(figure(item.image,'item-preview-img','')); preview.insertAdjacentHTML('beforeend',`<h3>${item.name}</h3><p>${item.desc}</p><p>Class: ${item.cls.join(', ')}</p><p>Unlock: <b>${Game.itemUnlockText(item)}</b></p><p>Stats: ${Object.entries(item.stats||{}).map(([k,v])=>`${k}+${v}`).join(', ')||'Cosmetic only'}</p>`); const buy=btn(Game.owned(item.id)?'Owned':unlocked?'Buy':'Locked','',()=>{const r=Game.buyItem(item.id); if(r.ok) askEquip(item); else showModal('Shop',r.msg); draw('all');}); buy.disabled=Game.owned(item.id)||!unlocked; preview.appendChild(buy); preview.appendChild(btn('Close Preview','secondary',()=>{preview.classList.add('hidden');})); }
+    const b=center('Class Shop');
+    const tabs=el('div','tabs');
+    ['all','weapon','head','body','legs','pet','aura','frame','cosmetic'].forEach(t=>tabs.appendChild(btn(title(t),'secondary',()=>draw(t))));
+    b.appendChild(tabs);
+    const list=el('div','item-grid');
+    b.append(list,btn('Back to Town','secondary',()=>showTown()));
+    function draw(type='all'){
+      list.innerHTML='';
+      Game.shopItems().filter(i=>type==='all'||i.slot===type||i.type===type).forEach(item=>{
+        const unlocked=Game.itemUnlocked(item);
+        const c=el('div','item-card '+(unlocked?'':'locked-item'));
+        c.appendChild(figure(item.image,'item-icon-large',''));
+        c.insertAdjacentHTML('beforeend',`<b>${item.name}</b><span>Tier ${item.tier||1} · ${item.rarity} · ${item.cost} coins</span><span class="muted">${item.desc}</span><span>${Game.owned(item.id)?'Owned':unlocked?'Available':'Locked: '+Game.itemUnlockText(item)}</span>`);
+        c.appendChild(btn('Preview','',()=>select(item,type)));
+        list.appendChild(c);
+      });
+    }
+    function select(item,currentType='all'){
+      const unlocked=Game.itemUnlocked(item);
+      const content=el('div','item-modal-content');
+      content.appendChild(figure(item.image,'item-preview-img',''));
+      content.insertAdjacentHTML('beforeend',`<h3>${item.name}</h3><p>${item.desc}</p><p>Class: ${item.cls.join(', ')}</p><p>Unlock: <b>${Game.itemUnlockText(item)}</b></p><p>Stats: ${Object.entries(item.stats||{}).map(([k,v])=>`${k}+${v}`).join(', ')||'Cosmetic only'}</p>`);
+      const actions=[['Close',closeModal,'secondary']];
+      if(!Game.owned(item.id) && unlocked){
+        actions.unshift(['Buy',()=>{const r=Game.buyItem(item.id); if(r.ok) askEquip(item); else showModal('Shop',r.msg); draw(currentType);},'']);
+      } else if(Game.owned(item.id)) {
+        actions.unshift(['Owned',()=>{},'secondary disabled-action']);
+      } else {
+        actions.unshift(['Locked',()=>{},'secondary disabled-action']);
+      }
+      showModalNode('Preview Item', content, actions);
+      document.querySelectorAll('.disabled-action').forEach(x=>x.disabled=true);
+    }
     draw('all');
   }
   function askEquip(item){ showModal('Item Bought',`${item.name} was added to your inventory. Equip it now?`, [ ['Equip',()=>{Game.equipItem(item.id); closeModal(); refresh();}], ['Later',()=>{closeModal(); refresh();}, 'secondary'] ]); }
@@ -278,7 +313,18 @@ window.UI = (() => {
     const small=Math.min(a,b), big=Math.max(a,b);
     return `Helper fact: ${small} × ${big-1}, then add ${small}.`;
   }
-  function showModal(title,msg,actions=null){ closeModal(); const back=el('div','modal-backdrop'); back.id='modal'; const m=el('div','modal'); m.innerHTML=`<h2>${title}</h2><p>${msg}</p>`; const a=el('div','modal-actions'); (actions||[['OK',closeModal,'']]).forEach(([t,fn,cls])=>a.appendChild(btn(t,cls||'',fn))); m.appendChild(a); back.appendChild(m); document.body.appendChild(back); }
+  function modalBase(title, actions=null){
+    closeModal();
+    const back=el('div','modal-backdrop'); back.id='modal';
+    const m=el('div','modal');
+    m.appendChild(el('h2','',esc(title)));
+    const a=el('div','modal-actions');
+    (actions||[['OK',closeModal,'']]).forEach(([t,fn,cls])=>a.appendChild(btn(t,cls||'',fn)));
+    back.appendChild(m); document.body.appendChild(back);
+    return {back,m,a};
+  }
+  function showModal(title,msg,actions=null){ const {m,a}=modalBase(title,actions); m.insertBefore(el('p','',esc(msg)),a); m.appendChild(a); }
+  function showModalNode(title,node,actions=null){ const {m,a}=modalBase(title,actions); m.insertBefore(node,a); m.appendChild(a); }
   function closeModal(){ const m=document.getElementById('modal'); if(m)m.remove(); }
   function showToast(msg){ showModal('Notice',msg); }
   return { render, refresh };

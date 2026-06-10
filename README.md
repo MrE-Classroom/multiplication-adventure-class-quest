@@ -1,32 +1,33 @@
-# Multiplication Adventure: Class Quest — Version 5
+# Multiplication Adventure Class Quest — v6
 
-Repository name: `multiplication-adventure-class-quest`
+Static GitHub Pages build. Upload these files to the root of the repository:
 
-This ZIP does not include the `assets/` folder. Upload your existing assets folder to the repository root so paths like `assets/heroes/knight-boy.png` resolve correctly.
+- index.html
+- css/
+- js/
+- data/
+- ASSET_PATHS.json
 
-## Version 5 changes
+Do not upload this zip as a single file to GitHub Pages. Extract it first.
 
-- Added 20 new cosmetic options to the shop data:
-  - 10 new frames: silver, blue, green, purple, pink, red/fire, ice, rainbow, shadow, galaxy.
-  - 10 new auras: fire, ice, nature, lightning, shadow, royal, rainbow, pink sparkle, galaxy, bright sparkle.
-- Aura rendering was rebuilt so aura art sits behind/outside the hero portrait and remains visible when a frame is equipped.
-- Frame rendering now uses frame image overlays instead of only a CSS border.
-- Area and training backgrounds now fill the entire center question panel during battle/training/boss screens.
-- Added a dark overlay and panel contrast protection so questions, answers, hero, and enemies remain readable over colorful backgrounds.
-- Coach messages are now dynamic but short. They respond to the current question, area, boss, answer result, repeated mistakes, training, and weak facts.
-- Scrolling remains available as a fallback for smaller devices; it was not fully removed.
+## Assets
 
-## Required upload structure
+This zip intentionally does not include the assets folder. Upload your asset folders separately using the paths listed in ASSET_PATHS.json.
 
-```text
-index.html
-css/styles.css
-data/gameData.js
-js/game.js
-js/mastery.js
-js/storage.js
-js/ui.js
-assets/
-```
+Required cosmetic folders include:
 
-See `ASSET_PATHS.json` for every referenced asset path.
+- assets/cosmetics/frames/
+- assets/cosmetics/auras/
+- assets/cosmetics/pets/
+- assets/cosmetics/trails/
+
+Frame files must be true transparent PNG overlays. The center and background must be transparent, not a visible checkerboard pattern.
+
+## v6 changes
+
+- Fixed cosmetic stack logic: aura glow behind hero, hero portrait in the middle, frame overlay on top.
+- Aura now creates a glow around the portrait through CSS, preventing square aura images from covering the hero.
+- Frame overlay no longer replaces the hero image in the rendering logic.
+- Area background now covers the full center question panel during training, adventure, and boss battles.
+- Shop preview now opens in a centered modal instead of appearing at the bottom of the shop scroll area.
+- Side panel scrolling remains available as fallback on smaller screens.

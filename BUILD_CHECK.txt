@@ -1,21 +1,13 @@
-Build: multiplication-adventure-class-quest v5 no-assets
+Build: multiplication-adventure-class-quest v6
+Assets folder included: No
 
 Checked:
-- No assets folder included in ZIP.
-- JavaScript syntax checked with node --check:
-  - data/gameData.js
-  - js/game.js
-  - js/ui.js
-  - js/mastery.js
-  - js/storage.js
-- Basic runtime smoke test completed:
-  - GameData loads.
-  - Game state initializes.
-  - Class selection works.
-  - New cosmetic item purchase/equip works for unlocked items.
-  - Area start creates a question.
+- JavaScript syntax passed with node --check.
+- Game runtime smoke test passed: class selection, training question, answer submit/continue, shop buy/equip/unequip frame.
+- Cosmetic rendering logic updated: aura is CSS glow around the portrait; frame is layered over hero portrait; hero portrait remains in the stack.
+- Center question panel uses the current area background across the full center panel with contrast overlay.
+- Shop preview changed from bottom inline preview to centered modal.
+- Side panel scrolling remains available as a small-device fallback.
 
-Notes:
-- This build references 91 asset paths.
-- 20 new cosmetic asset files must be uploaded separately for the new frames and auras.
-- Scrolling remains available as a fallback on smaller screens/devices.
+Important asset note:
+- Frame PNGs must have real transparent centers/backgrounds. If a frame image has a checkerboard baked into the image, the code cannot remove that automatically; upload transparent PNG frame overlays.

@@ -329,3 +329,119 @@ html,body{height:100%;margin:0;overflow:hidden;}
   .cosmetic-aura-img{inset:-12%;width:124%;height:124%;}
   .has-frame.has-aura .cosmetic-aura-img{inset:-18%;width:136%;height:136%;}
 }
+
+/* Version 6 fixes: reliable scene backgrounds, cosmetics layering, aura glow, centered shop modal */
+.mode-battle .center-panel,
+.mode-boss .center-panel,
+.mode-training .center-panel{
+  background-image:linear-gradient(180deg,rgba(7,10,18,.52),rgba(7,10,18,.78)),var(--scene-bg)!important;
+  background-size:cover!important;
+  background-position:center!important;
+  background-repeat:no-repeat!important;
+}
+.mode-battle .center-panel .panel-head,
+.mode-boss .center-panel .panel-head,
+.mode-training .center-panel .panel-head{
+  background:rgba(25,29,46,.82);
+  backdrop-filter:blur(2px);
+}
+.mode-battle .center-panel .panel-body,
+.mode-boss .center-panel .panel-body,
+.mode-training .center-panel .panel-body{
+  background:transparent!important;
+}
+.battle-bg-panel{
+  background:transparent!important;
+  border-radius:0 0 18px 18px;
+}
+.battle-bg-panel::before{display:none!important;}
+
+/* Keep side-panel scrolling available as a device fallback. */
+.mode-battle .left-panel .panel-body,
+.mode-boss .left-panel .panel-body,
+.mode-training .left-panel .panel-body,
+.mode-battle .right-panel .panel-body,
+.mode-boss .right-panel .panel-body,
+.mode-training .right-panel .panel-body{overflow:auto!important;}
+
+/* Hero portrait/cosmetic stack: aura glow behind, hero in middle, frame overlay on top. */
+.hero-cosmetic-wrap{
+  position:relative!important;
+  overflow:visible!important;
+  isolation:isolate;
+  border-radius:18px;
+  --aura-color:rgba(180,140,255,.85);
+  --aura-color-2:rgba(255,255,255,.7);
+}
+.hero-cosmetic-wrap::before{
+  content:"";
+  position:absolute;
+  inset:8%;
+  border-radius:22px;
+  opacity:0;
+  z-index:0;
+  pointer-events:none;
+  background:radial-gradient(circle at center,transparent 48%,var(--aura-color) 66%,transparent 78%);
+  box-shadow:0 0 28px 12px var(--aura-color), inset 0 0 28px var(--aura-color-2);
+  filter:blur(1px);
+  animation:auraGlowPulse 2s ease-in-out infinite;
+}
+.hero-cosmetic-wrap.has-aura::before{opacity:.95;}
+.hero-cosmetic-wrap .hero-main-img,
+.hero-cosmetic-wrap .asset-fallback.hero-main-img{
+  position:relative!important;
+  z-index:2!important;
+  width:auto!important;
+  max-width:78%!important;
+  height:78%!important;
+  max-height:78%!important;
+  object-fit:contain!important;
+  border-radius:8px;
+  filter:drop-shadow(0 8px 12px rgba(0,0,0,.5));
+}
+.hero-cosmetic-wrap.has-frame .hero-main-img{max-width:70%!important;height:70%!important;max-height:70%!important;}
+.cosmetic-aura-img{display:none!important;}
+.cosmetic-frame-img{
+  position:absolute!important;
+  z-index:4!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  pointer-events:none!important;
+  filter:drop-shadow(0 6px 12px rgba(0,0,0,.55));
+}
+.image-portrait.hero-cosmetic-wrap,
+.combat-portrait.hero-cosmetic-wrap,
+.profile-portrait.hero-cosmetic-wrap{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+.aura-fire_aura{--aura-color:rgba(255,96,31,.95);--aura-color-2:rgba(255,208,89,.9);}
+.aura-ice_aura{--aura-color:rgba(115,215,255,.95);--aura-color-2:rgba(235,255,255,.9);}
+.aura-nature_aura{--aura-color:rgba(76,224,112,.95);--aura-color-2:rgba(214,255,180,.9);}
+.aura-lightning_aura{--aura-color:rgba(102,175,255,.98);--aura-color-2:rgba(234,243,255,.95);}
+.aura-shadow_aura{--aura-color:rgba(128,70,220,.9);--aura-color-2:rgba(35,12,72,.9);}
+.aura-royal_aura{--aura-color:rgba(255,208,86,.95);--aura-color-2:rgba(166,92,255,.95);}
+.aura-rainbow_aura{--aura-color:rgba(255,135,232,.95);--aura-color-2:rgba(94,226,255,.95);}
+.aura-pink_sparkle_aura{--aura-color:rgba(255,121,215,.98);--aura-color-2:rgba(255,235,252,.95);}
+.aura-galaxy_aura{--aura-color:rgba(131,80,255,.95);--aura-color-2:rgba(48,189,255,.9);}
+.aura-bright_sparkle_aura,.aura-sparkle_aura{--aura-color:rgba(255,244,167,.98);--aura-color-2:rgba(255,255,255,.95);}
+.trail-fire_trail{box-shadow:0 0 26px rgba(255,94,40,.55), inset 0 -12px 20px rgba(255,94,40,.18);}
+@keyframes auraGlowPulse{0%,100%{transform:scale(.96);opacity:.72}50%{transform:scale(1.08);opacity:1}}
+
+/* Boss battles should look larger and more dramatic. */
+.epic-boss-scene{
+  height:clamp(220px,38vh,390px)!important;
+  min-height:220px!important;
+  background:radial-gradient(circle at 78% 48%,rgba(255,210,83,.34),transparent 35%),radial-gradient(circle at 22% 45%,rgba(87,139,255,.24),transparent 32%),rgba(20,24,40,.8)!important;
+}
+.epic-boss-scene .boss-combat{width:clamp(210px,28vw,380px)!important;height:clamp(210px,28vw,380px)!important;}
+.epic-boss-scene .hero-combat{width:clamp(100px,13vw,180px)!important;height:clamp(100px,13vw,180px)!important;}
+.epic-boss-scene .boss-combat .asset-img{height:92%!important;max-height:92%!important;}
+
+.item-modal-content{text-align:center;}
+.item-modal-content .item-preview-img{margin-inline:auto;}
+.disabled-action{opacity:.5;cursor:not-allowed;}
+
