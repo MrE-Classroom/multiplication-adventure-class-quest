@@ -1,32 +1,32 @@
-# Multiplication Adventure Class Quest
+# Multiplication Adventure: Class Quest — Version 5
 
-Version 3 rebuild for the `multiplication-adventure-class-quest` repository.
+Repository name: `multiplication-adventure-class-quest`
 
-This ZIP does not include the `assets/` folder. Upload your generated assets to GitHub using the paths listed in `ASSET_PATHS.json`.
+This ZIP does not include the `assets/` folder. Upload your existing assets folder to the repository root so paths like `assets/heroes/knight-boy.png` resolve correctly.
 
-## What changed in v3
+## Version 5 changes
 
-- Full-screen character selection layout.
-- Boy/Girl hero choice remains at the start.
-- Improved image sizing to prevent stretching.
-- More epic boss battle layout with larger boss art, boss title, and HP bar.
-- Gold frame, sparkle aura, fire trail, and pet cosmetics now visibly affect the hero display.
-- Quest system now uses 4 active quests at a time.
-- New quests appear after all active quest rewards are claimed.
+- Added 20 new cosmetic options to the shop data:
+  - 10 new frames: silver, blue, green, purple, pink, red/fire, ice, rainbow, shadow, galaxy.
+  - 10 new auras: fire, ice, nature, lightning, shadow, royal, rainbow, pink sparkle, galaxy, bright sparkle.
+- Aura rendering was rebuilt so aura art sits behind/outside the hero portrait and remains visible when a frame is equipped.
+- Frame rendering now uses frame image overlays instead of only a CSS border.
+- Area and training backgrounds now fill the entire center question panel during battle/training/boss screens.
+- Added a dark overlay and panel contrast protection so questions, answers, hero, and enemies remain readable over colorful backgrounds.
+- Coach messages are now dynamic but short. They respond to the current question, area, boss, answer result, repeated mistakes, training, and weak facts.
+- Scrolling remains available as a fallback for smaller devices; it was not fully removed.
 
-## Upload to GitHub
+## Required upload structure
 
-Upload/replace these files in your repository:
+```text
+index.html
+css/styles.css
+data/gameData.js
+js/game.js
+js/mastery.js
+js/storage.js
+js/ui.js
+assets/
+```
 
-- `index.html`
-- `css/styles.css`
-- `js/game.js`
-- `js/ui.js`
-- `js/mastery.js`
-- `js/storage.js`
-- `data/gameData.js`
-- `ASSET_PATHS.json`
-- `BUILD_CHECK.txt`
-- `README.md`
-
-Do not delete your existing `assets/` folder. This build references assets but does not include them.
+See `ASSET_PATHS.json` for every referenced asset path.

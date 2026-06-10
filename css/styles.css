@@ -220,3 +220,112 @@ html,body{height:100%;margin:0;overflow:hidden;}
   .epic-boss-scene{height:auto;min-height:260px;flex-wrap:wrap;}
   .enemy-side,.hero-side{flex:1 1 40%;}
 }
+
+/* Version 5: dynamic coach, stronger cosmetics, and full center-panel area backgrounds */
+.battle-bg-panel{
+  position:relative;
+  isolation:isolate;
+  background-image:var(--scene-bg);
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  border-radius:0 0 18px 18px;
+  overflow:hidden;
+}
+.battle-bg-panel::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,rgba(7,10,18,.56),rgba(7,10,18,.72));
+  backdrop-filter:saturate(.92) contrast(.95);
+  z-index:-1;
+}
+.battle-bg-panel .battle-scene,
+.battle-bg-panel .question-box{
+  position:relative;
+  background:rgba(28,32,50,.82);
+  border-color:rgba(255,255,255,.22);
+  box-shadow:0 12px 28px rgba(0,0,0,.28);
+}
+.battle-bg-panel .question-box{
+  backdrop-filter:blur(2px);
+}
+.battle-bg-panel .question{
+  text-shadow:0 3px 16px rgba(0,0,0,.75);
+}
+.battle-bg-panel .answers button{
+  box-shadow:0 5px 16px rgba(0,0,0,.32);
+}
+.battle-bg-panel .combat-portrait{
+  background:rgba(17,20,34,.7);
+  box-shadow:0 0 0 2px rgba(255,255,255,.12),0 12px 24px rgba(0,0,0,.42);
+}
+.battle-bg-panel .enemy-combat .asset-img,
+.battle-bg-panel .hero-combat .asset-img{
+  filter:drop-shadow(0 7px 12px rgba(0,0,0,.72));
+}
+
+.hero-cosmetic-wrap{
+  position:relative;
+  overflow:visible!important;
+  isolation:isolate;
+}
+.hero-cosmetic-wrap .hero-main-img{
+  position:relative;
+  z-index:2;
+  width:auto;
+  height:86%;
+  max-width:86%;
+  max-height:86%;
+  object-fit:contain;
+  filter:drop-shadow(0 8px 10px rgba(0,0,0,.45));
+}
+.cosmetic-aura-img{
+  position:absolute;
+  z-index:1;
+  inset:-18%;
+  width:136%;
+  height:136%;
+  object-fit:contain;
+  opacity:.9;
+  pointer-events:none;
+  mix-blend-mode:screen;
+  filter:drop-shadow(0 0 18px rgba(255,255,255,.55));
+  animation:auraPulse 1.9s ease-in-out infinite;
+}
+.cosmetic-frame-img{
+  position:absolute;
+  z-index:3;
+  inset:-4%;
+  width:108%;
+  height:108%;
+  object-fit:contain;
+  pointer-events:none;
+  filter:drop-shadow(0 5px 10px rgba(0,0,0,.5));
+}
+.has-frame.has-aura .cosmetic-aura-img{
+  inset:-24%;
+  width:148%;
+  height:148%;
+  opacity:.98;
+  filter:drop-shadow(0 0 26px rgba(255,255,255,.75));
+}
+.framed-name{color:#ffeaa3;text-shadow:0 0 12px rgba(255,231,129,.45);}
+@keyframes auraPulse{0%,100%{transform:scale(.98);opacity:.82}50%{transform:scale(1.06);opacity:1}}
+
+.right-panel .town-card:last-child{
+  font-size:.92rem;
+  line-height:1.2;
+}
+.mode-battle .right-panel .town-card:last-child,
+.mode-boss .right-panel .town-card:last-child,
+.mode-training .right-panel .town-card:last-child{
+  max-height:72px;
+  overflow:auto;
+}
+
+@media(max-height:740px){
+  .battle-bg-panel .battle-scene{height:108px;}
+  .cosmetic-aura-img{inset:-12%;width:124%;height:124%;}
+  .has-frame.has-aura .cosmetic-aura-img{inset:-18%;width:136%;height:136%;}
+}

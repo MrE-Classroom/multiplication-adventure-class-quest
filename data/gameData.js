@@ -60,7 +60,31 @@ window.GameData = (() => {
     { id:'tiny_dragon', name:'Tiny Dragon Pet', type:'pet', slot:'pet', cls:['all'], cost:60, rarity:'Epic', tier:2, unlock:'meadow', stats:{}, cosmetic:true, desc:'A friendly dragon companion.' },
     { id:'sparkle_aura', name:'Sparkle Aura', type:'aura', slot:'aura', cls:['all'], cost:35, rarity:'Rare', tier:1, unlock:'start', stats:{}, cosmetic:true, desc:'A bright aura for math champions.' },
     { id:'gold_frame', name:'Gold Name Frame', type:'frame', slot:'frame', cls:['all'], cost:45, rarity:'Rare', tier:2, unlock:'meadow', stats:{}, cosmetic:true, desc:'A shiny frame for your hero name.' },
-    { id:'fire_trail', name:'Fire Trail', type:'trail', slot:'cosmetic', cls:['all'], cost:70, rarity:'Epic', tier:3, unlock:'forest', stats:{}, cosmetic:true, desc:'A fiery movement trail.' }
+    { id:'fire_trail', name:'Fire Trail', type:'trail', slot:'cosmetic', cls:['all'], cost:70, rarity:'Epic', tier:3, unlock:'forest', stats:{}, cosmetic:true, desc:'A fiery movement trail.' },
+
+    // Expanded universal frames
+    { id:'silver_frame', name:'Silver Frame', type:'frame', slot:'frame', cls:['all'], cost:30, rarity:'Common', tier:1, unlock:'start', stats:{}, cosmetic:true, desc:'A clean silver portrait frame.' },
+    { id:'blue_frame', name:'Blue Frame', type:'frame', slot:'frame', cls:['all'], cost:30, rarity:'Common', tier:1, unlock:'start', stats:{}, cosmetic:true, desc:'A bright blue portrait frame.' },
+    { id:'green_frame', name:'Green Frame', type:'frame', slot:'frame', cls:['all'], cost:35, rarity:'Common', tier:1, unlock:'start', stats:{}, cosmetic:true, desc:'A nature green portrait frame.' },
+    { id:'purple_frame', name:'Purple Frame', type:'frame', slot:'frame', cls:['all'], cost:35, rarity:'Rare', tier:1, unlock:'start', stats:{}, cosmetic:true, desc:'A magical purple portrait frame.' },
+    { id:'pink_frame', name:'Pink Frame', type:'frame', slot:'frame', cls:['all'], cost:35, rarity:'Rare', tier:1, unlock:'start', stats:{}, cosmetic:true, desc:'A bright pink portrait frame.' },
+    { id:'red_fire_frame', name:'Red Fire Frame', type:'frame', slot:'frame', cls:['all'], cost:55, rarity:'Rare', tier:2, unlock:'meadow', stats:{}, cosmetic:true, desc:'A fiery red portrait frame.' },
+    { id:'ice_frame', name:'Ice Frame', type:'frame', slot:'frame', cls:['all'], cost:55, rarity:'Rare', tier:2, unlock:'meadow', stats:{}, cosmetic:true, desc:'A cool ice portrait frame.' },
+    { id:'rainbow_frame', name:'Rainbow Frame', type:'frame', slot:'frame', cls:['all'], cost:75, rarity:'Epic', tier:3, unlock:'forest', stats:{}, cosmetic:true, desc:'A colorful rainbow portrait frame.' },
+    { id:'shadow_frame', name:'Shadow Frame', type:'frame', slot:'frame', cls:['all'], cost:75, rarity:'Epic', tier:3, unlock:'forest', stats:{}, cosmetic:true, desc:'A dark shadow portrait frame.' },
+    { id:'galaxy_frame', name:'Galaxy Frame', type:'frame', slot:'frame', cls:['all'], cost:95, rarity:'Legendary', tier:4, unlock:'cave', stats:{}, cosmetic:true, desc:'A cosmic galaxy portrait frame.' },
+
+    // Expanded universal auras
+    { id:'fire_aura', name:'Fire Aura', type:'aura', slot:'aura', cls:['all'], cost:40, rarity:'Rare', tier:1, unlock:'start', stats:{}, cosmetic:true, desc:'A warm fire glow.' },
+    { id:'ice_aura', name:'Ice Aura', type:'aura', slot:'aura', cls:['all'], cost:40, rarity:'Rare', tier:1, unlock:'start', stats:{}, cosmetic:true, desc:'A cool ice glow.' },
+    { id:'nature_aura', name:'Nature Aura', type:'aura', slot:'aura', cls:['all'], cost:40, rarity:'Rare', tier:1, unlock:'start', stats:{}, cosmetic:true, desc:'A leafy green glow.' },
+    { id:'lightning_aura', name:'Lightning Aura', type:'aura', slot:'aura', cls:['all'], cost:50, rarity:'Rare', tier:2, unlock:'meadow', stats:{}, cosmetic:true, desc:'An electric lightning glow.' },
+    { id:'shadow_aura', name:'Shadow Aura', type:'aura', slot:'aura', cls:['all'], cost:50, rarity:'Rare', tier:2, unlock:'meadow', stats:{}, cosmetic:true, desc:'A dark shadow glow.' },
+    { id:'royal_aura', name:'Royal Aura', type:'aura', slot:'aura', cls:['all'], cost:65, rarity:'Epic', tier:3, unlock:'forest', stats:{}, cosmetic:true, desc:'A bright royal glow.' },
+    { id:'rainbow_aura', name:'Rainbow Aura', type:'aura', slot:'aura', cls:['all'], cost:80, rarity:'Epic', tier:3, unlock:'forest', stats:{}, cosmetic:true, desc:'A colorful rainbow glow.' },
+    { id:'pink_sparkle_aura', name:'Pink Sparkle Aura', type:'aura', slot:'aura', cls:['all'], cost:50, rarity:'Rare', tier:2, unlock:'meadow', stats:{}, cosmetic:true, desc:'A bright pink sparkle glow.' },
+    { id:'galaxy_aura', name:'Galaxy Aura', type:'aura', slot:'aura', cls:['all'], cost:95, rarity:'Legendary', tier:4, unlock:'cave', stats:{}, cosmetic:true, desc:'A cosmic galaxy glow.' },
+    { id:'bright_sparkle_aura', name:'Bright Sparkle Aura', type:'aura', slot:'aura', cls:['all'], cost:60, rarity:'Epic', tier:2, unlock:'meadow', stats:{}, cosmetic:true, desc:'A stronger sparkle aura that stays visible with frames.' }
   ];
 
 
@@ -75,7 +99,9 @@ window.GameData = (() => {
     wood_sword:'assets/items/knight/wooden-sword.png', simple_helmet:'assets/items/knight/simple-helmet.png', training_shield:'assets/items/knight/training-shield.png', iron_sword:'assets/items/knight/iron-sword.png', iron_helmet:'assets/items/knight/iron-helmet.png', steel_armor:'assets/items/knight/steel-armor.png', knight_boots:'assets/items/knight/knight-boots.png', royal_shield:'assets/items/knight/royal-shield.png', dragon_plate:'assets/items/knight/dragon-plate-armor.png',
     practice_bow:'assets/items/archer/practice-bow.png', leather_hood:'assets/items/archer/leather-hood.png', leather_armor:'assets/items/archer/leather-armor.png', forest_bow:'assets/items/archer/forest-bow.png', scout_boots:'assets/items/archer/scout-boots.png', reinforced_leather:'assets/items/archer/reinforced-leather-armor.png', ranger_hood:'assets/items/archer/ranger-hood.png', castle_longbow:'assets/items/archer/castle-longbow.png', dragon_quiver:'assets/items/archer/dragon-quiver.png',
     training_wand:'assets/items/mage/training-wand.png', apprentice_hat:'assets/items/mage/apprentice-hat.png', blue_robe:'assets/items/mage/blue-robe.png', star_staff:'assets/items/mage/star-staff.png', magic_shoes:'assets/items/mage/magic-shoes.png', moon_robe:'assets/items/mage/moon-robe.png', spell_book:'assets/items/mage/spell-book.png', crystal_staff:'assets/items/mage/crystal-staff.png', dragon_spellbook:'assets/items/mage/dragon-spellbook.png',
-    tiny_dragon:'assets/cosmetics/pets/tiny-dragon-pet.png', sparkle_aura:'assets/cosmetics/auras/sparkle-aura.png', gold_frame:'assets/cosmetics/frames/gold-name-frame.png', fire_trail:'assets/cosmetics/trails/fire-trail.png'
+    tiny_dragon:'assets/cosmetics/pets/tiny-dragon-pet.png', sparkle_aura:'assets/cosmetics/auras/sparkle-aura.png', gold_frame:'assets/cosmetics/frames/gold-name-frame.png', fire_trail:'assets/cosmetics/trails/fire-trail.png',
+    silver_frame:'assets/cosmetics/frames/silver-frame.png', blue_frame:'assets/cosmetics/frames/blue-frame.png', green_frame:'assets/cosmetics/frames/green-frame.png', purple_frame:'assets/cosmetics/frames/purple-frame.png', pink_frame:'assets/cosmetics/frames/pink-frame.png', red_fire_frame:'assets/cosmetics/frames/red-fire-frame.png', ice_frame:'assets/cosmetics/frames/ice-frame.png', rainbow_frame:'assets/cosmetics/frames/rainbow-frame.png', shadow_frame:'assets/cosmetics/frames/shadow-frame.png', galaxy_frame:'assets/cosmetics/frames/galaxy-frame.png',
+    fire_aura:'assets/cosmetics/auras/fire-aura.png', ice_aura:'assets/cosmetics/auras/ice-aura.png', nature_aura:'assets/cosmetics/auras/nature-aura.png', lightning_aura:'assets/cosmetics/auras/lightning-aura.png', shadow_aura:'assets/cosmetics/auras/shadow-aura.png', royal_aura:'assets/cosmetics/auras/royal-aura.png', rainbow_aura:'assets/cosmetics/auras/rainbow-aura.png', pink_sparkle_aura:'assets/cosmetics/auras/pink-sparkle-aura.png', galaxy_aura:'assets/cosmetics/auras/galaxy-aura.png', bright_sparkle_aura:'assets/cosmetics/auras/bright-sparkle-aura.png'
   };
   items.forEach(item => item.image = itemAssets[item.id] || '');
 

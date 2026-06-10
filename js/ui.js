@@ -27,14 +27,27 @@ window.UI = (() => {
     }
     return box;
   }
-  function heroVisualClass(base=''){
-    const s=Game.getState(); let cls=base;
-    if(s?.equipped?.frame==='gold_frame') cls+=' gold-frame-equipped';
-    if(s?.equipped?.aura==='sparkle_aura') cls+=' sparkle-aura-equipped';
-    if(s?.equipped?.cosmetic==='fire_trail') cls+=' fire-trail-equipped';
-    return cls.trim();
+  function heroFigure(baseCls){
+    const s=Game.getState(); const c=Game.cls();
+    const frame = Game.getItem(s?.equipped?.frame);
+    const aura = Game.getItem(s?.equipped?.aura);
+    const trailOn = s?.equipped?.cosmetic === 'fire_trail';
+    const box = el('div', `${baseCls || ''} hero-cosmetic-wrap ${frame ? 'has-frame' : ''} ${aura ? 'has-aura' : ''} ${trailOn ? 'fire-trail-equipped' : ''}`.trim());
+    if(aura?.image){
+      const auraImg = image(aura.image, 'cosmetic-aura-img', aura.name);
+      auraImg.onerror = () => auraImg.remove();
+      box.appendChild(auraImg);
+    }
+    const heroImg = image(Game.heroImage(), 'asset-img hero-main-img', c.icon);
+    heroImg.onerror = () => { heroImg.remove(); box.appendChild(el('span','asset-fallback', c.icon)); };
+    box.appendChild(heroImg);
+    if(frame?.image){
+      const frameImg = image(frame.image, 'cosmetic-frame-img', frame.name);
+      frameImg.onerror = () => frameImg.remove();
+      box.appendChild(frameImg);
+    }
+    return box;
   }
-  function heroFigure(baseCls){ const c=Game.cls(); return figure(Game.heroImage(), heroVisualClass(baseCls), c.icon); }
   function petFigure(){ const s=Game.getState(); return s?.equipped?.pet==='tiny_dragon' ? figure(Game.getItem('tiny_dragon')?.image,'pet-companion','🐉') : null; }
   function renderClassSelect(){
     app().innerHTML='';
@@ -114,7 +127,7 @@ window.UI = (() => {
     const body=el('div','panel-body'); const st=Game.stats();
     const compact = ['battle','boss','training'].includes(s.mode);
     body.appendChild(heroFigure('hero-portrait image-portrait'));
-    body.insertAdjacentHTML('beforeend', `<h3 class="hero-name ${s.equipped.frame==='gold_frame'?'gold-name':''}">${c.name} ${c.difficulty}</h3><p><b>${c.ability}</b><br><span class="muted">${c.abilityText}</span></p>`);
+    body.insertAdjacentHTML('beforeend', `<h3 class="hero-name ${s.equipped.frame?'framed-name':''}">${c.name} ${c.difficulty}</h3><p><b>${c.ability}</b><br><span class="muted">${c.abilityText}</span></p>`);
     const pet = petFigure(); if(pet) body.appendChild(pet);
     if(compact){
       const gearSummary = ['weapon','head','body'].map(slot=>Game.getItem(s.equipped[slot])?.name).filter(Boolean).join(' • ') || 'No gear equipped yet';
@@ -145,6 +158,13 @@ window.UI = (() => {
   function center(titleText){ document.getElementById('centerTitle').textContent=titleText; const b=document.querySelector('.center-panel .panel-body'); b.innerHTML=''; b.className='panel-body'; return b; }
   function renderCenter(){ const s=Game.getState(); if(s.mode==='town') return showTown(); if(s.mode==='battle'||s.mode==='training'||s.mode==='boss') return showQuestion(); if(s.mode==='results') return showResults(); return showTown(); }
 
+  function refreshChrome(){
+    const oldLeft=document.querySelector('.left-panel'); if(oldLeft) oldLeft.replaceWith(leftPanel());
+    const oldRight=document.querySelector('.right-panel'); if(oldRight) oldRight.replaceWith(rightPanel());
+    const oldBottom=document.querySelector('.bottombar'); if(oldBottom) oldBottom.replaceWith(bottomBar());
+    const oldTop=document.querySelector('.topbar'); if(oldTop) oldTop.replaceWith(topBar());
+  }
+
   function showTown(){
     const b=center('Town'); b.innerHTML='<p class="muted">Choose what to do next.</p>'; const grid=el('div','town-grid');
     const cards=[
@@ -164,6 +184,7 @@ window.UI = (() => {
     const s=Game.getState(), q=s.session.question; const c=Game.cls(); const area = s.currentArea ? Game.areaById(s.currentArea) : null;
     const isBoss = s.mode==='boss';
     const b=center(s.mode==='training'?'Training Area':isBoss?'Boss Battle':'Adventure');
+    b.classList.add('battle-bg-panel');
     const scene=el('div', isBoss?'battle-scene epic-boss-scene':'battle-scene');
     const opponentSrc = isBoss ? area?.bossImage : (area?.enemies?.[s.session.total % (area.enemies.length || 1)] || '');
     const heroSide=el('div','combat-side hero-side');
@@ -216,8 +237,8 @@ window.UI = (() => {
 
   function showInventory(){
     const b=center('Inventory'); const s=Game.getState(); b.innerHTML='<p class="muted">Equip and unequip owned items. Wrong-class items stay locked.</p><h3>Equipped</h3>'; const eq=el('div','inventory-grid');
-    Object.keys(s.equipped).forEach(slot=>{const item=Game.getItem(s.equipped[slot]); const c=el('div','item-card'); if(item) c.appendChild(figure(item.image,'item-icon-large','')); c.insertAdjacentHTML('beforeend',`<b>${title(slot)}</b><span>${item?item.name:'Empty'}</span>`); const u=btn('Unequip','secondary',()=>{Game.unequip(slot);showInventory();}); u.disabled=!item; c.appendChild(u); eq.appendChild(c);}); b.appendChild(eq); b.appendChild(el('h3','','Owned Items'));
-    const grid=el('div','inventory-grid'); if(!s.inventory.length) grid.innerHTML='<p>No items yet. Visit the shop.</p>'; s.inventory.forEach(id=>{ const item=Game.getItem(id); const classLocked=!Game.allowed(item); const progressLocked=!Game.itemUnlocked(item); const locked=classLocked||progressLocked; const equipped=Object.values(s.equipped).includes(id); const c=el('div','item-card'); c.appendChild(figure(item.image,'item-icon-large','')); c.insertAdjacentHTML('beforeend',`<b>${item.name}</b><span>${item.slot}</span><span class="muted">${item.desc}</span><span>${classLocked?'Locked for current class':progressLocked?'Locked: '+Game.itemUnlockText(item):equipped?'Equipped':'Ready'}</span>`); const e=btn('Equip','',()=>{const r=Game.equipItem(id); if(!r.ok) showModal('Locked',r.msg); showInventory();}); e.disabled=locked||equipped; c.appendChild(e); grid.appendChild(c);}); b.appendChild(grid); b.appendChild(btn('Back to Town','secondary',()=>showTown()));
+    Object.keys(s.equipped).forEach(slot=>{const item=Game.getItem(s.equipped[slot]); const c=el('div','item-card'); if(item) c.appendChild(figure(item.image,'item-icon-large','')); c.insertAdjacentHTML('beforeend',`<b>${title(slot)}</b><span>${item?item.name:'Empty'}</span>`); const u=btn('Unequip','secondary',()=>{Game.unequip(slot); refreshChrome(); showInventory();}); u.disabled=!item; c.appendChild(u); eq.appendChild(c);}); b.appendChild(eq); b.appendChild(el('h3','','Owned Items'));
+    const grid=el('div','inventory-grid'); if(!s.inventory.length) grid.innerHTML='<p>No items yet. Visit the shop.</p>'; s.inventory.forEach(id=>{ const item=Game.getItem(id); const classLocked=!Game.allowed(item); const progressLocked=!Game.itemUnlocked(item); const locked=classLocked||progressLocked; const equipped=Object.values(s.equipped).includes(id); const c=el('div','item-card'); c.appendChild(figure(item.image,'item-icon-large','')); c.insertAdjacentHTML('beforeend',`<b>${item.name}</b><span>${item.slot}</span><span class="muted">${item.desc}</span><span>${classLocked?'Locked for current class':progressLocked?'Locked: '+Game.itemUnlockText(item):equipped?'Equipped':'Ready'}</span>`); const e=btn('Equip','',()=>{const r=Game.equipItem(id); if(!r.ok) showModal('Locked',r.msg); refreshChrome(); showInventory();}); e.disabled=locked||equipped; c.appendChild(e); grid.appendChild(c);}); b.appendChild(grid); b.appendChild(btn('Back to Town','secondary',()=>showTown()));
   }
 
   function showMastery(){
@@ -230,7 +251,33 @@ window.UI = (() => {
   function showClassChange(){ const b=center('Change Class'); if(!Game.canChangeClass()) {b.innerHTML='<p>Class changes are only available in Town.</p>'; return;} const s=Game.getState(); b.innerHTML=`<p>${s.freeClassChange?'Your next class change is free.':'Class change fee: 25 coins.'}</p><p class="muted">Your selected hero style stays the same.</p>`; const grid=el('div','class-grid'); Object.entries(GameData.classes).forEach(([id,c])=>{const card=el('div','class-card'); card.appendChild(figure(c.portraits?.[s.avatarModel || 'boy'],'class-portrait-card',c.icon)); card.insertAdjacentHTML('beforeend',`<h3>${c.name}</h3><p>${c.difficulty}</p><p>${c.ability}</p>`); const bb=btn('Change to '+c.name,'',()=>{const r=Game.changeClass(id); showModal('Class Change',r.msg||'Class changed.'); refresh();}); bb.disabled=id===s.selectedClass; card.appendChild(bb); grid.appendChild(card);}); b.appendChild(grid); }
   function showReset(){ showModal('Reset Game','This will erase hero choice, class selection, coins, gear, quests, boss keys, records, and mastery progress. This cannot be undone.', [['Cancel',closeModal,'secondary'],['Reset Everything',()=>{Game.reset();closeModal();refresh();},'danger']]); }
   function bossKeyText(){ const s=Game.getState(); if(s.currentArea){ const p=s.progress[s.currentArea]; return `Boss Key: ${p.key?'Ready':'Not Ready'}`;} return 'Boss Key: —'; }
-  function coachText(){ const s=Game.getState(); const weak=Mastery.weakFacts(s.mastery,1)[0]; if(s.mode==='boss') return 'Boss Rule: correct answers damage the boss; wrong answers cost HP.'; if(s.mode==='battle') return 'Use the fact strategy you know. Check your product before choosing.'; if(s.mode==='training'&&weak) return `Training Focus: ${weak.a} × ${weak.b}`; if(weak) return `Recommended: train ${weak.a} × ${weak.b} before a boss.`; return 'Recommended: start an area or complete a quest.'; }
+  function coachText(){
+    const s=Game.getState(); const q=s.session?.question; const weak=Mastery.weakFacts(s.mastery,1)[0];
+    const area = s.currentArea ? Game.areaById(s.currentArea) : null;
+    if(q && s.session?.answered){
+      if(s.session.lastCorrect) return s.mode==='boss' ? 'Nice hit. Keep your focus.' : 'Correct. Check the next fact carefully.';
+      return factTip(q.a, q.b);
+    }
+    if(q){
+      const f=s.mastery?.[Mastery.key(q.a,q.b)];
+      if(f?.recentMisses>=2) return factTip(q.a,q.b);
+      if(s.mode==='boss') return `${area?.boss || 'Boss'}: one fact at a time.`;
+      if(s.mode==='training') return `Practice focus: ${q.a} × ${q.b}.`;
+      return `${area?.name || 'Area'} tip: solve before choosing.`;
+    }
+    if(weak) return `Try training ${weak.a} × ${weak.b}.`;
+    return 'Choose an area or quest to begin.';
+  }
+  function factTip(a,b){
+    if(a===0 || b===0) return 'Zero fact: any number times 0 is 0.';
+    if(a===1 || b===1) return 'One fact: the answer is the other number.';
+    if(a===2 || b===2) return 'Two fact: double the other number.';
+    if(a===5 || b===5) return 'Five fact: count by 5s.';
+    if(a===10 || b===10) return 'Ten fact: add a zero to the other number.';
+    if(a===9 || b===9) return 'Nine fact: use 10 groups, then subtract one group.';
+    const small=Math.min(a,b), big=Math.max(a,b);
+    return `Helper fact: ${small} × ${big-1}, then add ${small}.`;
+  }
   function showModal(title,msg,actions=null){ closeModal(); const back=el('div','modal-backdrop'); back.id='modal'; const m=el('div','modal'); m.innerHTML=`<h2>${title}</h2><p>${msg}</p>`; const a=el('div','modal-actions'); (actions||[['OK',closeModal,'']]).forEach(([t,fn,cls])=>a.appendChild(btn(t,cls||'',fn))); m.appendChild(a); back.appendChild(m); document.body.appendChild(back); }
   function closeModal(){ const m=document.getElementById('modal'); if(m)m.remove(); }
   function showToast(msg){ showModal('Notice',msg); }
