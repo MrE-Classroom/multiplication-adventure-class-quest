@@ -24,7 +24,7 @@
   function freshState(classId, gender){
     const c = D.classes[classId];
     return {
-      version:8, classId, gender, heroName:c.heroNames[gender], screen:'town', areaId:'town', coins:50,
+      version:9, classId, gender, heroName:c.heroNames[gender], screen:'town', areaId:'town', coins:50,
       hp:c.hp, mana:c.mana, level:1, xp:0, streak:0, totalCorrect:0, totalAttempts:0,
       inventory:[], equipped:Object.fromEntries(slots.map(s => [s,null])), bosses:{}, areaProgress:{}, mastery:M.init(), quests:newQuestSet(1), records:{bestStreak:0,bestAccuracy:0}, recentFacts:[], session:null, coach:'Choose an activity to begin.'
     };
@@ -110,13 +110,17 @@
       return `<div class="card"><b>${esc(q.label)}</b><div>${p}/${q.target}</div><div class="muted">Reward: ${q.reward} coins</div>${q.claimed?'<div class="good">Claimed</div>': done?`<button class="primary" onclick="Game.claimQuest('${q.id}')">Claim</button>`:''}</div>`;
     }).join('')}</div><div class="divider"></div><b>Coach</b><div class="card">${esc(state.coach || coach())}</div>`;
   }
-  function centerBackground(){
+  function sceneUrl(){
     let url = D.backgrounds.town;
     if(state.session?.mode==='training') url = D.backgrounds.training;
     else if(state.session?.areaId) url = areaById(state.session.areaId)?.background || url;
     else if(state.areaId==='training') url = D.backgrounds.training;
     else if(areaById(state.areaId)) url = areaById(state.areaId).background;
-    return `background-image:linear-gradient(180deg,rgba(5,8,18,.50),rgba(5,8,18,.80)),url('${url}')`;
+    return url;
+  }
+  function centerBackground(){
+    const url = sceneUrl();
+    return `--scene-bg:url(&quot;${url}&quot;); background-image:url(&quot;${url}&quot;);`;
   }
   function renderCenter(){
     if(state.session) return state.session.mode==='boss' ? renderBoss() : renderBattle();
@@ -219,7 +223,14 @@
   function unequip(slot){ state.equipped[slot]=null; state.coach=`Unequipped ${cap(slot)}.`; save(); render(); }
   function resetModal(){ modal = `<div class="modal-backdrop" onclick="Game.closeModal(event)"><div class="modal" onclick="event.stopPropagation()"><h2>Reset Game</h2><p>This will erase all saved progress, gear, coins, mastery, and quests.</p><div class="modal-actions"><button onclick="Game.closeModal()">Cancel</button><button class="danger" onclick="Game.confirmReset()">Reset</button></div></div></div>`; render(); }
 
-  function renderSelect(){ const c=D.classes[selectedClass]; app.innerHTML = `<div class="hero-select"><div class="select-card"><h1>Multiplication Adventure</h1><p class="muted">Step 1: choose your hero style. Step 2: choose your class.</p><div class="avatar-picks">${['boy','girl'].map(g=>`<button class="choice-btn ${selectedGender===g?'active':''}" onclick="Game.pickGender('${g}')"><div class="portrait-stack small">${img(D.classes.knight.portraits[g],'hero-img',g)}</div><b>${cap(g)} Hero</b></button>`).join('')}</div><div class="class-choices">${Object.values(D.classes).map(k=>`<div class="class-choice ${selectedClass===k.id?'active':''}" onclick="Game.pickClass('${k.id}')"><div>${portraitStackSelect(k.id, selectedGender)}</div><h2>${k.name}</h2><div>${k.difficulty}</div><p><b>${k.ability}:</b> ${k.abilityText}</p><p class="muted">HP ${k.hp} · Mana ${k.mana}</p><button class="primary" onclick="event.stopPropagation();Game.startNew('${k.id}','${selectedGender}')">Choose ${k.heroNames[selectedGender]}</button></div>`).join('')}</div></div></div>`; }
+  function renderSelect(){
+    const active = D.classes[selectedClass];
+    app.innerHTML = `<div class="hero-select"><div class="select-card"><h1>Multiplication Adventure</h1><p class="muted">Step 1: choose your hero style. Step 2: choose your class.</p>
+      <div class="start-row"><button class="primary start-game-btn" onclick="Game.startNew('${selectedClass}','${selectedGender}')">Start as ${esc(active.heroNames[selectedGender])}</button></div>
+      <div class="avatar-picks">${['boy','girl'].map(g=>`<button class="choice-btn ${selectedGender===g?'active':''}" onclick="Game.pickGender('${g}')"><div class="portrait-stack small">${img(D.classes[selectedClass].portraits[g],'hero-img',g)}</div><b>${cap(g)} Hero</b></button>`).join('')}</div>
+      <div class="class-choices">${Object.values(D.classes).map(k=>`<div class="class-choice ${selectedClass===k.id?'active':''}" onclick="Game.pickClass('${k.id}')"><div>${portraitStackSelect(k.id, selectedGender)}</div><h2>${k.name}</h2><div>${k.difficulty}</div><p><b>${k.ability}:</b> ${k.abilityText}</p><p class="muted">${k.heroNames[selectedGender]} · HP ${k.hp} · Mana ${k.mana}</p><button class="primary mini-start" onclick="event.stopPropagation();Game.startNew('${k.id}','${selectedGender}')">Choose ${esc(k.heroNames[selectedGender])}</button></div>`).join('')}</div>
+    </div></div>`;
+  }
   function portraitStackSelect(classId, gender){ const c=D.classes[classId]; return `<div class="portrait-stack medium">${img(c.portraits[gender],'hero-img',c.name)}</div>`; }
   function coach(){ if(state.session?.mode==='boss') return 'Correct answers damage the boss.'; if(state.session?.mode==='adventure') return `${areaById(state.session.areaId).name} tip: solve before choosing.`; if(state.session?.mode==='training') return 'Training has no HP loss.'; return 'Choose an activity to begin.'; }
   function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
@@ -230,7 +241,7 @@
     goTown:()=>setScreen('town'), goMap:()=>setScreen('map'), goShop:()=>setScreen('shop'), goInventory:()=>setScreen('inventory'), goMastery:()=>setScreen('mastery'), goRecords:()=>setScreen('records'), goSettings:()=>setScreen('settings'),
     setShopFilter:f=>{shopFilter=f;render();}, startTraining:()=>startSession('training'), startArea:id=>startSession('adventure',id), startBoss:id=>startSession('boss',id), answer:submitAnswer, nextQuestion, focusSpell, claimQuest,
     previewItem, buy, equip, unequip, resetModal, confirmReset:()=>{S.clear();state=null;modal=null;renderSelect();}, closeModal:(e)=>{ if(e && e.target!==e.currentTarget) return; modal=null;render(); }, noop:()=>{},
-    _state:()=>state, _sceneBg:()=>centerBackground()
+    _state:()=>state, _sceneBg:()=>centerBackground(), _sceneUrl:()=>sceneUrl()
   };
   render();
 })();

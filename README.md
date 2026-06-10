@@ -1,24 +1,23 @@
-# Multiplication Adventure: Class Quest — v8 Scratch Rebuild
+# Multiplication Adventure: Class Quest v9 Fixed
 
-Static GitHub Pages game build.
+This is a static GitHub Pages game build. It does not include the assets folder.
 
 ## Upload instructions
-Upload these files/folders to the repository root:
+Upload these code files/folders to the repository root:
 - index.html
 - css/
-- data/
 - js/
+- data/
 - ASSET_PATHS.json
+- README.md
+- BUILD_CHECK.txt
 
-This ZIP intentionally does **not** include the `assets/` folder. Upload your assets separately using the paths listed in `ASSET_PATHS.json`.
+Keep your existing assets folder structure. Confirm all paths listed in ASSET_PATHS.json exist in GitHub.
 
-## Major fixes in v8
-- Rebuilt game structure from scratch.
-- Center question panel uses the area background image directly on the scene panel.
-- Boss battle screen rebuilt with visible full boss, hero, VS layout, and boss HP bar.
-- Frame overlays layer over the hero instead of replacing the hero.
-- Frame overlay fills the portrait window.
-- Hero names added for every class/gender choice.
-- HP Option B: wrong answers reduce HP in Adventure and Boss, not Training.
-- Modal windows for preview, quest rewards, and reset rebuilt.
-- Mastery/adaptive fact selection retained.
+## Fixes in v9
+- Start screen rebuilt so the Start button is always visible.
+- Center scene background is applied with a CSS variable and direct background image fallback.
+- Boss HP bar and boss image layout retained.
+- HP Option B retained: Training = no HP loss; Adventure/Boss = wrong answer -1 HP.
+- Quest reward, preview, and reset modal logic retained.
+- Hero names retained for all six class/gender combinations.
