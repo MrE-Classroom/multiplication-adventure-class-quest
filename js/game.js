@@ -24,7 +24,7 @@
   function freshState(classId, gender){
     const c = D.classes[classId];
     return {
-      version:13, classId, gender, heroName:c.heroNames[gender], screen:'town', areaId:'town', coins:50,
+      version:15, classId, gender, heroName:c.heroNames[gender], screen:'town', areaId:'town', coins:50,
       hp:c.hp, mana:c.mana, level:1, xp:0, streak:0, totalCorrect:0, totalAttempts:0,
       inventory:[], equipped:Object.fromEntries(slots.map(s => [s,null])), bosses:{}, areaProgress:{}, mastery:M.init(), quests:newQuestSet(1), records:{bestStreak:0,bestAccuracy:0}, recentFacts:[], session:null, coach:'Choose an activity to begin.'
     };
@@ -64,6 +64,13 @@
     if(!id) return '';
     return `aura-css aura-${String(id).replace(/[^a-z0-9_-]/gi,'')}`;
   }
+  function frameClass(id){
+    if(!id) return '';
+    return `css-frame frame-${String(id).replace(/[^a-z0-9_-]/gi,'')}`;
+  }
+  function enemyTile(src, label, extra=''){
+    return `<div class="enemy-art ${extra}">${src?`<img class="enemy-thumb" src="${src}" alt="${esc(label)}" onerror="this.closest('.enemy-art').classList.add('img-missing');this.remove()">`:''}<div class="enemy-fallback">${esc(label)}</div></div>`;
+  }
   function portraitStack(size='medium', override={}){
     const aura = override.aura !== undefined ? override.aura : state.equipped.aura;
     const frame = override.frame !== undefined ? override.frame : state.equipped.frame;
@@ -74,13 +81,14 @@
       ${aura ? `<div class="${auraClass(aura)}" aria-hidden="true"></div>` : ''}
       ${t ? img(t.image,'trail-img',t.name) : ''}
       <div class="portrait-core">${img(heroPortrait(),'hero-img',heroName())}</div>
-      ${f ? img(f.image,'frame-img',f.name) : ''}
+      ${frame ? `<div class="${frameClass(frame)}" aria-hidden="true"></div>` : ''}
       ${p ? img(p.image,'pet-img',p.name) : ''}
     </div>`;
   }
   function cosmeticIcon(it){
     if(!it) return '';
     if(it.slot==='aura') return `<div class="aura-token ${auraClass(it.id)}"><span></span></div>`;
+    if(it.slot==='frame') return `<div class="frame-token ${frameClass(it.id)}"><span></span></div>`;
     return img(it.image,'',it.name);
   }
 
@@ -164,21 +172,23 @@
   function renderBattle(){
     const s = state.session, a = areaById(s.areaId), q=s.question;
     return `<section class="scene-panel adventure-scene" id="scenePanel" style="${centerBackground()}"><div class="adventure-layout">
+      <div class="battle-area-label">${esc(a.name)} Adventure · Focus facts: ${a.focus.join(', ')}</div>
       <div class="adventure-fighters">
         <div class="fighter-box hero-fighter">${portraitStack('small')}<div class="fighter-name">${esc(heroName())}</div></div>
         <div class="versus compact">×</div>
-        <div class="fighter-box enemy-fighter"><img class="enemy-thumb" src="${s.enemy}" alt="enemy" onerror="this.style.display='none'"></div>
+        <div class="fighter-box enemy-fighter">${enemyTile(s.enemy, a.name + ' Enemy')}</div>
       </div>
-      <div class="compact-question-card"><div class="progress-pill">Question ${s.index+1}/${s.total}</div><div class="question compact-q">${q.a} × ${q.b} = ?</div>${abilityLine()}${answerButtons()}<div class="feedback ${s.feedbackClass||''}">${s.feedback||''}</div>${s.answered?'<button class="primary next-button" onclick="Game.nextQuestion()">Next Question</button>':''}</div>
+      <div class="compact-question-card"><div class="progress-pill">${esc(a.name)} · Question ${s.index+1}/${s.total}</div><div class="question compact-q">${q.a} × ${q.b} = ?</div>${abilityLine()}${answerButtons()}<div class="feedback ${s.feedbackClass||''}">${s.feedback||''}</div>${s.answered?'<button class="primary next-button" onclick="Game.nextQuestion()">Next Question</button>':''}</div>
     </div></section>`;
   }
   function renderBoss(){
     const s = state.session, a = areaById(s.areaId), q=s.question;
     const hpPct = Math.max(0, Math.round((s.bossHp/s.bossMaxHp)*100));
     return `<section class="scene-panel boss-scene" id="scenePanel" style="${centerBackground()}"><div class="boss-battle-layout">
+      <div class="battle-area-label boss-label">${esc(a.name)} Boss Battle · ${esc(a.boss)}</div>
       <div class="boss-hp-bar"><div class="boss-hp-fill" style="width:${hpPct}%"></div><div class="boss-hp-text">${a.boss} HP ${s.bossHp}/${s.bossMaxHp}</div></div>
-      <div class="boss-fighters-row"><div class="boss-combatant hero-combatant">${portraitStack('small')}<b>${esc(heroName())}</b></div><div class="boss-vs-fixed">VS</div><div class="boss-combatant enemy-combatant"><div class="boss-enemy-frame">${img(a.bossImage,'boss-enemy-img',a.boss)}</div><b>${esc(a.boss)}</b></div></div>
-      <div class="boss-question-zone"><div class="compact-question-card boss-question-card"><div class="progress-pill">Boss Question ${s.index+1} · Damage the boss until HP reaches 0</div><div class="question compact-q">${q.a} × ${q.b} = ?</div>${abilityLine()}${answerButtons()}<div class="feedback ${s.feedbackClass||''}">${s.feedback||''}</div>${s.answered?'<button class="primary next-button" onclick="Game.nextQuestion()">Next Question</button>':''}</div></div>
+      <div class="boss-fighters-row"><div class="boss-combatant hero-combatant">${portraitStack('small')}<b>${esc(heroName())}</b></div><div class="boss-vs-fixed">VS</div><div class="boss-combatant enemy-combatant"><div class="boss-enemy-frame">${enemyTile(a.bossImage, a.boss, 'boss-art')}</div><b>${esc(a.boss)}</b></div></div>
+      <div class="boss-question-zone"><div class="compact-question-card boss-question-card"><div class="progress-pill">${esc(a.name)} Boss · Question ${s.index+1} · Damage until HP reaches 0</div><div class="question compact-q">${q.a} × ${q.b} = ?</div>${abilityLine()}${answerButtons()}<div class="feedback ${s.feedbackClass||''}">${s.feedback||''}</div>${s.answered?'<button class="primary next-button" onclick="Game.nextQuestion()">Next Question</button>':''}</div></div>
     </div></section>`;
   }
   function abilityLine(){ if(state.classId==='mage' && !state.session.answered) return `<div class="row" style="justify-content:center"><button onclick="Game.focusSpell()" ${state.mana<1||state.session.focusUsed?'disabled':''}>Use Focus Spell (1 mana)</button><span class="muted">Removes two wrong choices. Mana: ${state.mana}</span></div>`; if(state.classId==='archer') return `<div class="pill" style="display:inline-flex">Streak Shot: +2 coins every 3-correct streak</div>`; if(state.classId==='knight') return `<div class="pill" style="display:inline-flex">Shield Block: one boss mistake blocked</div>`; return ''; }

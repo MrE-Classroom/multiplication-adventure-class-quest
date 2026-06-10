@@ -1,1 +1,6 @@
-v14 boss fix: Boss battles no longer have an 8-question cap. Boss fights continue until boss HP reaches 0 or player HP reaches 0. Syntax and logic checks passed. No assets folder included.
+V15 display fix
+- CSS-only frame rendering in hero displays/previews/inventory, avoiding broken transparent PNG overlays.
+- CSS-only aura glow rendering in hero displays/previews/inventory, avoiding white-box aura PNGs.
+- Enemy image fallback displays readable enemy label if an asset is missing.
+- Battle and boss screens show area name inside the center panel.
+- Boss questions continue until boss HP reaches 0 or player HP reaches 0.
