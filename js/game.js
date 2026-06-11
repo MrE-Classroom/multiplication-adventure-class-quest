@@ -4,7 +4,7 @@
   const M = window.Mastery;
   const S = window.GameStorage;
   const app = document.getElementById('app');
-  const VERSION = 24;
+  const VERSION = 25;
   const slots = ['weapon','head','body','legs','pet','aura','frame','trail','cosmetic'];
   const filters = ['all','weapon','head','body','legs','pet','aura','frame','trail','cosmetic'];
   let state = S.load();
@@ -20,23 +20,22 @@
   const currentClass = () => D.classes[state?.classId] || D.classes.knight;
   const heroName = () => state?.heroName || currentClass().heroNames[state?.gender || 'girl'];
   const heroPortrait = () => currentClass().portraits[state?.gender || 'girl'];
-
   const heroBattleModel = () => D.battleModels?.[state?.classId]?.[state?.gender || 'girl'] || heroPortrait();
   const heroBattleKey = () => D.battleModelKeys?.[state?.classId]?.[state?.gender || 'girl'] || '';
   const auraAssetId = (id) => (id && D.auraSprites?.[id]) ? id : D.legacyAuraSpriteMap?.[id];
   const auraSpritePath = (id) => (auraAssetId(id) && D.auraSprites?.[auraAssetId(id)]?.[heroBattleKey()]) || null;
   const firstAuraSpritePath = (id) => auraAssetId(id) && D.auraSprites?.[auraAssetId(id)] ? Object.values(D.auraSprites[auraAssetId(id)])[0] : null;
-  const frameImage = (id) => itemById(id)?.image || '';
   function img(src, cls='', alt=''){
     if(!src) return '';
     const safeSrc = esc(src);
     const safeAlt = esc(alt);
-    const fallback = safeSrc.includes('assets/heroes/portraits/')
-      ? safeSrc.replace('assets/heroes/portraits/', 'assets/heroes/')
-      : '';
-    const err = fallback
-      ? `this.onerror=null;this.src='${fallback}'`
-      : `this.remove()`;
+    let fallback = '';
+    if(safeSrc.includes('assets/heroes/portraits/')){
+      fallback = safeSrc.replace('assets/heroes/portraits/', 'assets/heroes/');
+    }else if(/^assets\/heroes\/(knight|archer|mage)-(boy|girl)\.png$/.test(safeSrc)){
+      fallback = safeSrc.replace('assets/heroes/', 'assets/heroes/portraits/');
+    }
+    const err = fallback ? `this.onerror=null;this.src='${fallback}'` : `this.remove()`;
     return `<img class="${cls}" src="${safeSrc}" alt="${safeAlt}" onerror="${err}">`;
   }
   const save = () => { if (state) S.save(state); };
@@ -118,7 +117,7 @@
     const petId = override.pet !== undefined ? override.pet : state?.equipped?.pet;
     const trailId = override.trail !== undefined ? override.trail : state?.equipped?.trail;
     const pet = petId && itemById(petId); const trail = trailId && itemById(trailId);
-    const frameSrc = frameImage(frame);
+    const frameSrc = frame ? itemById(frame)?.image : '';
     return `<div class="portrait-stack ${size}">
       ${trail ? img(trail.image,'trail-img',trail.name) : ''}
       <div class="portrait-core">${img(heroPortrait(),'hero-img',heroName())}</div>
@@ -139,7 +138,7 @@
     if(!it) return '';
     if(it.slot === 'aura'){
       const sprite = firstAuraSpritePath(it.id);
-      return sprite ? `<div class="icon-token aura-token"><div class="aura-shop-sprite" style="background-image:url('${esc(sprite)}')"></div></div>` : `<div class="icon-token aura-token">${it.image ? img(it.image,'',it.name) : `<div class="${auraClass(it.id)}"></div>`}</div>`;
+      return sprite ? `<div class="icon-token aura-token"><div class="aura-shop-sprite" style="background-image:url('${esc(sprite)}')"></div></div>` : `<div class="icon-token aura-token">${it.image ? img(it.image,'',it.name) : ''}</div>`;
     }
     if(it.slot === 'frame') return `<div class="icon-token frame-token">${it.image ? img(it.image,'',it.name) : `<div class="${frameClass(it.id)}"></div>`}</div>`;
     return `<div class="icon-token">${img(it.image,'',it.name)}</div>`;
@@ -198,7 +197,39 @@
   function nextQuestion(){ const s=state.session; if(!s) return; if(s.mode==='boss' && s.bossHp<=0){ const areaId=s.areaId, a=areaById(areaId); state.bosses[areaId]=true; state.coins+=50; state.session=null; state.areaId='town'; state.screen='town'; state.coach='Boss defeated. New gear unlocked.'; save(); showNotice('Boss Defeated',`You defeated ${a.boss} and earned 50 coins.`); return; } if(state.hp<=0 && (s.mode==='adventure'||s.mode==='boss')){ state.session=null; state.areaId='town'; state.screen='town'; state.coach='HP reached 0. Try again from Town.'; save(); showNotice('Try Again','Your HP reached 0. You returned to Town.'); return; } s.index++; if(s.mode!=='boss' && s.index>=s.total){ if(s.mode==='training'){ incQuest('training'); state.coins+=15; state.coach='Training set complete.'; } if(s.mode==='adventure'){ const p=state.areaProgress[s.areaId]||{}; p.rounds=(p.rounds||0)+1; p.wins=(p.wins||0)+1; state.areaProgress[s.areaId]=p; state.coins+=20; state.coach='Adventure complete. Boss may be ready.'; } state.session=null; state.areaId='town'; state.screen='town'; save(); render(); return; } const q=makeQuestion(s.mode,s.areaId); Object.assign(s,{question:q,answers:q.answers,answered:false,feedback:'',feedbackClass:'',removed:[],focusUsed:false}); if(s.mode!=='boss') s.enemy=areaById(s.areaId)?pick(areaById(s.areaId).enemies):null; save(); render(); }
   function focusSpell(){ const s=state.session; if(!s||s.focusUsed||state.mana<1) return; state.mana--; s.focusUsed=true; s.removed=s.answers.filter(v=>v!==s.question.product).slice(0,2); state.coach='Two wrong choices removed.'; save(); render(); }
   function claimQuest(id){ const q=state.quests.list.find(q=>q.id===id); if(!q||q.claimed||questProgress(q)<q.target) return; q.claimed=true; state.coins+=q.reward; state.coach=`Claimed ${q.reward} coins.`; maybeNewQuests(); save(); render(); }
-  function previewItem(id){ const it=itemById(id); if(!it) return; const owned=state.inventory.includes(id), locked=!isUnlocked(it), canAfford=state.coins>=it.cost; const ov={}; if(it.slot==='frame') ov.frame=it.id; if(it.slot==='aura') ov.aura=it.id; if(it.slot==='pet') ov.pet=it.id; if(it.slot==='trail') ov.trail=it.id; const preview = it.slot==='aura' && auraSpritePath(it.id) ? battleHeroStack('preview-battle', ov) : (['frame','aura','pet','trail'].includes(it.slot)?portraitStack('big',ov):itemIcon(it)); modal=`<div class="modal-backdrop" onclick="Game.closeModal(event)"><div class="modal" onclick="event.stopPropagation()"><h2>Preview Item</h2><div class="preview-layout"><div>${preview}</div><div><h3>${esc(it.name)}</h3><p>${esc(it.rarity)} · ${it.cost} coins</p><p class="muted">${esc(it.desc)}</p><p>${locked?'Locked: '+esc(D.unlockLabels[it.unlock]||it.unlock):(owned?'Owned':'Available')}</p></div></div><div class="modal-actions"><button onclick="Game.closeModal()">Close</button>${owned?`<button class="primary" onclick="Game.equip('${it.id}')">Equip</button>`:`<button class="primary" ${locked||!canAfford?'disabled':''} onclick="Game.buy('${it.id}')">Buy</button>`}</div></div></div>`; render(); };
+  function previewItem(id){
+    const it=itemById(id); if(!it) return;
+    const owned=state.inventory.includes(id), locked=!isUnlocked(it), canAfford=state.coins>=it.cost;
+    const ov={};
+    if(it.slot==='frame') ov.frame=it.id;
+    if(it.slot==='aura') ov.aura=it.id;
+    if(it.slot==='pet') ov.pet=it.id;
+    if(it.slot==='trail') ov.trail=it.id;
+    const preview = it.slot==='aura' && auraSpritePath(it.id)
+      ? `<div class="aura-preview-box">${battleHeroStack('preview-battle', ov)}</div>`
+      : (['frame','pet','trail'].includes(it.slot)
+        ? `<div class="portrait-preview-box">${portraitStack('big',ov)}</div>`
+        : itemIcon(it));
+    modal=`<div class="modal-backdrop" onclick="Game.closeModal(event)">
+      <div class="modal item-preview-modal" onclick="event.stopPropagation()">
+        <h2>Preview Item</h2>
+        <div class="preview-layout contained-preview-layout">
+          <div class="preview-left">${preview}</div>
+          <div class="preview-right">
+            <h3>${esc(it.name)}</h3>
+            <p>${esc(it.rarity)} · ${it.cost} coins</p>
+            <p class="muted">${esc(it.desc)}</p>
+            <p>${locked?'Locked: '+esc(D.unlockLabels[it.unlock]||it.unlock):(owned?'Owned':'Available')}</p>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button onclick="Game.closeModal()">Close</button>
+          ${owned?`<button class="primary" onclick="Game.equip('${it.id}')">Equip</button>`:`<button class="primary" ${locked||!canAfford?'disabled':''} onclick="Game.buy('${it.id}')">Buy</button>`}
+        </div>
+      </div>
+    </div>`;
+    render();
+  };
 
   function buy(id){ const it=itemById(id); if(!it||state.inventory.includes(id)||!isUnlocked(it)||state.coins<it.cost) return; state.coins-=it.cost; state.inventory.push(id); state.coach=`Bought ${it.name}.`; save(); previewItem(id); }
   function equip(id){ const it=itemById(id); if(!it||!state.inventory.includes(id)) return; state.equipped[it.slot]=id; state.coach=`Equipped ${it.name}.`; state.hp=Math.min(state.hp,maxHp()); state.mana=Math.min(state.mana,maxMana()); modal=''; save(); render(); }

@@ -26,48 +26,17 @@ Student progress saves locally in the browser using localStorage.
 
 ## Current Build
 
-v24 — aura correction: auras are battle-only and old shop aura IDs map to real spritesheet assets.
+v21 — responsive character select screen with one start button.
 
 
-## v24 — aura correction: auras are battle-only and old shop aura IDs map to real spritesheet assets.
+## v25 Code-Only Rebuild
 
-Auras now live only in:
+This ZIP intentionally does not include the `assets/` folder.
 
-```text
-assets/cosmetics/auras/
-```
-
-Hero assets are split into:
-
-```text
-assets/heroes/portraits/
-assets/heroes/battle/
-```
-
-The previous incorrect aura folder has been removed:
-
-```text
-assets/effects/auras/
-```
-
-The six outline aura options are implemented as 10-frame horizontal spritesheets. Each sheet is 12540 × 1254, with each frame 1254 × 1254.
-
-
-## GitHub-Ready Optimization
-
-This build preserves the same paths and game code behavior, but the large aura spritesheets were optimized as indexed PNGs with alpha transparency. The files remain transparent in the browser and keep the same 12540 × 1254 spritesheet size.
-
-
-## v24 — aura correction: auras are battle-only and old shop aura IDs map to real spritesheet assets.
-
-- Character select screen scales to the visible device height.
-- Hero portraits are kept in both `assets/heroes/portraits/` and `assets/heroes/` so the browser has a fallback path.
-- Image tags now use a fallback for hero portrait paths before removing the image.
-
-
-## v24 Aura Fix
-
-- Auras no longer render on hero portrait cards or the side hero panel.
-- Old shop aura IDs now map to the new real aura spritesheet assets.
-- Battle auras use `assets/cosmetics/auras/option_*/aura_*_pulse_sheet.png`.
-- CSS-only aura rendering has been removed from battle.
+Changes:
+- Hero portraits use `assets/heroes/*.png` as the primary path.
+- Hero portrait images fall back to `assets/heroes/portraits/*.png`.
+- Auras do not render on hero portraits or the side hero panel.
+- Auras render only through real battle spritesheet assets.
+- Previous shop aura IDs map to the real new aura spritesheets.
+- Shop aura preview is clipped inside a fixed preview box so it does not cover item text.

@@ -1,9 +1,9 @@
 
 window.GameData = (() => {
   const classes = {
-    knight: { id:'knight', name:'Knight', icon:'🛡️', difficulty:'★★☆☆☆', hp:5, mana:2, portraits:{boy:'assets/heroes/portraits/knight-boy.png', girl:'assets/heroes/portraits/knight-girl.png'}, heroNames:{boy:'Leo Shieldheart', girl:'Aria Shieldheart'}, stats:{attack:2,defense:4,speed:1,focus:1}, ability:'Shield Block', abilityText:'Blocks one wrong boss answer.' },
-    archer: { id:'archer', name:'Archer', icon:'🏹', difficulty:'★★★☆☆', hp:4, mana:3, portraits:{boy:'assets/heroes/portraits/archer-boy.png', girl:'assets/heroes/portraits/archer-girl.png'}, heroNames:{boy:'Theo Swiftshot', girl:'Maya Swiftshot'}, stats:{attack:3,defense:2,speed:4,focus:2}, ability:'Streak Shot', abilityText:'+2 coins every 3 correct in a row.' },
-    mage: { id:'mage', name:'Mage', icon:'🔮', difficulty:'★★★★☆', hp:3, mana:5, portraits:{boy:'assets/heroes/portraits/mage-boy.png', girl:'assets/heroes/portraits/mage-girl.png'}, heroNames:{boy:'Nico Starspell', girl:'Luna Starspell'}, stats:{attack:4,defense:1,speed:2,focus:5}, ability:'Focus Spell', abilityText:'Spend 1 mana to remove two wrong choices.' }
+    knight: { id:'knight', name:'Knight', icon:'🛡️', difficulty:'★★☆☆☆', hp:5, mana:2, portraits:{boy:'assets/heroes/knight-boy.png', girl:'assets/heroes/knight-girl.png'}, heroNames:{boy:'Leo Shieldheart', girl:'Aria Shieldheart'}, stats:{attack:2,defense:4,speed:1,focus:1}, ability:'Shield Block', abilityText:'Blocks one wrong boss answer.' },
+    archer: { id:'archer', name:'Archer', icon:'🏹', difficulty:'★★★☆☆', hp:4, mana:3, portraits:{boy:'assets/heroes/archer-boy.png', girl:'assets/heroes/archer-girl.png'}, heroNames:{boy:'Theo Swiftshot', girl:'Maya Swiftshot'}, stats:{attack:3,defense:2,speed:4,focus:2}, ability:'Streak Shot', abilityText:'+2 coins every 3 correct in a row.' },
+    mage: { id:'mage', name:'Mage', icon:'🔮', difficulty:'★★★★☆', hp:3, mana:5, portraits:{boy:'assets/heroes/mage-boy.png', girl:'assets/heroes/mage-girl.png'}, heroNames:{boy:'Nico Starspell', girl:'Luna Starspell'}, stats:{attack:4,defense:1,speed:2,focus:5}, ability:'Focus Spell', abilityText:'Spend 1 mana to remove two wrong choices.' }
   };
 
   const battleModels = {

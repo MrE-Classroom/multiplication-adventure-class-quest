@@ -408,3 +408,51 @@ button{font:inherit;font-weight:900;border:1px solid var(--line);border-radius:1
 .hero-mini-wrap .aura-css{
   display:none !important;
 }
+
+
+/* v25 code-only rebuild: battle-only contained aura previews */
+.portrait-stack .aura-css,
+.hero-mini-wrap .aura-css,
+.portrait-preview-box .aura-css{
+  display:none !important;
+}
+.item-preview-modal{width:min(780px,96vw);}
+.contained-preview-layout{
+  display:grid;
+  grid-template-columns:minmax(220px,300px) minmax(240px,1fr);
+  gap:18px;
+  align-items:center;
+}
+.preview-left{min-width:0;display:flex;align-items:center;justify-content:center;}
+.preview-right{min-width:0;overflow-wrap:anywhere;}
+.aura-preview-box{
+  width:280px;
+  height:280px;
+  max-width:100%;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:radial-gradient(circle at center,#27304d,#11172a 70%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  position:relative;
+}
+.aura-preview-box .battle-hero-stack{
+  width:255px;
+  max-width:255px;
+  filter:drop-shadow(0 8px 14px #0008);
+}
+.portrait-preview-box{
+  width:300px;
+  max-width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+@media(max-width:760px){
+  .contained-preview-layout{grid-template-columns:1fr;}
+  .aura-preview-box{width:min(280px,80vw);height:min(280px,80vw);}
+  .aura-preview-box .battle-hero-stack{width:min(255px,72vw);}
+}
