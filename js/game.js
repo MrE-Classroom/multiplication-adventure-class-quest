@@ -4,7 +4,7 @@
   const M = window.Mastery;
   const S = window.GameStorage;
   const app = document.getElementById('app');
-  const VERSION = 20;
+  const VERSION = 22;
   const slots = ['weapon','head','body','legs','pet','aura','frame','trail','cosmetic'];
   const filters = ['all','weapon','head','body','legs','pet','aura','frame','trail','cosmetic'];
   let state = S.load();
@@ -20,6 +20,12 @@
   const currentClass = () => D.classes[state?.classId] || D.classes.knight;
   const heroName = () => state?.heroName || currentClass().heroNames[state?.gender || 'girl'];
   const heroPortrait = () => currentClass().portraits[state?.gender || 'girl'];
+
+  const heroBattleModel = () => D.battleModels?.[state?.classId]?.[state?.gender || 'girl'] || heroPortrait();
+  const heroBattleKey = () => D.battleModelKeys?.[state?.classId]?.[state?.gender || 'girl'] || '';
+  const auraSpritePath = (id) => (id && D.auraSprites?.[id]?.[heroBattleKey()]) || null;
+  const firstAuraSpritePath = (id) => id && D.auraSprites?.[id] ? Object.values(D.auraSprites[id])[0] : null;
+  const frameImage = (id) => itemById(id)?.image || '';
   const img = (src, cls='', alt='') => src ? `<img class="${cls}" src="${src}" alt="${esc(alt)}" onerror="this.remove()">` : '';
   const save = () => { if (state) S.save(state); };
 
@@ -101,19 +107,34 @@
     const petId = override.pet !== undefined ? override.pet : state?.equipped?.pet;
     const trailId = override.trail !== undefined ? override.trail : state?.equipped?.trail;
     const pet = petId && itemById(petId); const trail = trailId && itemById(trailId);
+    const hasBattleAura = !!auraSpritePath(aura);
+    const frameSrc = frameImage(frame);
     return `<div class="portrait-stack ${size}">
-      ${aura ? `<div class="${auraClass(aura)}"></div>` : ''}
+      ${aura && !hasBattleAura ? `<div class="${auraClass(aura)}"></div>` : ''}
       ${trail ? img(trail.image,'trail-img',trail.name) : ''}
       <div class="portrait-core">${img(heroPortrait(),'hero-img',heroName())}</div>
-      ${frame ? `<div class="${frameClass(frame)}"></div>` : ''}
+      ${frame ? (frameSrc ? img(frameSrc,'portrait-frame-img',itemById(frame)?.name || 'frame') : `<div class="${frameClass(frame)}"></div>`) : ''}
       ${pet ? img(pet.image,'pet-img',pet.name) : ''}
     </div>`;
   }
   function portraitStackSelect(classId, gender){ const c=D.classes[classId]; return `<div class="portrait-stack medium"><div class="portrait-core">${img(c.portraits[gender],'hero-img',c.name)}</div></div>`; }
+  function battleHeroStack(size='battle-model', override={}){
+    const aura = override.aura !== undefined ? override.aura : state?.equipped?.aura;
+    const auraPath = auraSpritePath(aura);
+    const legacyAura = aura && !auraPath;
+    return `<div class="battle-hero-stack ${size}">
+      ${auraPath ? `<div class="battle-aura-sprite" style="background-image:url('${esc(auraPath)}')"></div>` : ''}
+      ${legacyAura ? `<div class="battle-legacy-aura ${auraClass(aura)}"></div>` : ''}
+      ${img(heroBattleModel(),'battle-hero-img',heroName())}
+    </div>`;
+  }
   function itemIcon(it){
     if(!it) return '';
-    if(it.slot === 'aura') return `<div class="icon-token aura-token"><div class="${auraClass(it.id)}"></div></div>`;
-    if(it.slot === 'frame') return `<div class="icon-token frame-token"><div class="${frameClass(it.id)}"></div></div>`;
+    if(it.slot === 'aura'){
+      const sprite = firstAuraSpritePath(it.id);
+      return sprite ? `<div class="icon-token aura-token"><div class="aura-shop-sprite" style="background-image:url('${esc(sprite)}')"></div></div>` : `<div class="icon-token aura-token">${it.image ? img(it.image,'',it.name) : `<div class="${auraClass(it.id)}"></div>`}</div>`;
+    }
+    if(it.slot === 'frame') return `<div class="icon-token frame-token">${it.image ? img(it.image,'',it.name) : `<div class="${frameClass(it.id)}"></div>`}</div>`;
     return `<div class="icon-token">${img(it.image,'',it.name)}</div>`;
   }
   function enemyArt(src,label,extra=''){
@@ -159,8 +180,8 @@
   function renderMastery(){ const facts=state.mastery, sum=M.summary(facts); let rows=''; for(let a=0;a<=10;a++){ rows += `<tr><th>${a}</th>`; for(let b=0;b<=10;b++){ rows += `<td class="m${facts[M.key(a,b)]?.level||0}">${facts[M.key(a,b)]?.level||0}</td>`; } rows += '</tr>'; } return `<div class="center-pad"><div class="grid2"><div class="card">Mastered: ${sum.mastered}/121</div><div class="card">Accuracy: ${sum.accuracy}%</div></div><div style="overflow:auto;margin-top:12px"><table class="mastery-table"><tr><th>×</th>${Array.from({length:11},(_,i)=>`<th>${i}</th>`).join('')}</tr>${rows}</table></div></div>`; }
   function renderRecords(){ const sum=M.summary(state.mastery); return `<div class="center-pad"><div class="card"><h3>Records</h3><p>Best streak: ${state.records.bestStreak||0}</p><p>Best accuracy: ${state.records.bestAccuracy||0}%</p><p>Total attempts: ${sum.attempts}</p></div></div>`; }
   function renderSettings(){ return `<div class="center-pad"><div class="card"><h3>Settings</h3><p class="muted">Use this screen to reset progress or return to Town.</p><button class="danger" onclick="Game.resetModal()">Reset Game</button> <button onclick="Game.goTown()">Back to Town</button></div></div>`; }
-  function renderBattle(){ const s=state.session, a=areaById(s.areaId), q=s.question; const areaName=esc(a?.name || 'Training'); return `<section class="scene-panel combat-screen" style="${sceneStyle()}"><div class="combat-stage transparent-stage"><div class="combat-area-badge">${areaName} Adventure</div><div class="combat-fighters"><div class="combat-hero">${portraitStack('battle-portrait')}<span>${esc(heroName())}</span></div><div class="combat-versus">×</div><div class="combat-enemy">${enemyArt(s.enemy, `${a?.name || 'Training'} Enemy`)}</div></div></div><div class="combat-question-zone">${questionCard(`${areaName} · Question ${s.index+1}/${s.total}`)}</div></section>`; }
-  function renderBoss(){ const s=state.session, a=areaById(s.areaId), hpPct=Math.max(0,Math.round((s.bossHp/s.bossMaxHp)*100)); return `<section class="scene-panel combat-screen" style="${sceneStyle()}"><div class="combat-stage transparent-stage"><div class="combat-area-badge">${esc(a.name)} Boss Battle</div><div class="boss-hp combat-hp"><div class="boss-fill" style="width:${hpPct}%"></div><div class="boss-text">${esc(a.boss)} HP ${s.bossHp}/${s.bossMaxHp}</div></div><div class="combat-fighters boss-fighters"><div class="combat-hero">${portraitStack('battle-portrait')}<span>${esc(heroName())}</span></div><div class="combat-versus">VS</div><div class="combat-enemy">${enemyArt(a.bossImage,a.boss,'boss-art')}</div></div></div><div class="combat-question-zone">${questionCard(`${a.name} Boss · Boss Question ${s.index+1} · Damage until HP reaches 0`)}</div></section>`; }
+  function renderBattle(){ const s=state.session, a=areaById(s.areaId), q=s.question; const areaName=esc(a?.name || 'Training'); return `<section class="scene-panel combat-screen" style="${sceneStyle()}"><div class="combat-stage transparent-stage"><div class="combat-area-badge">${areaName} Adventure</div><div class="combat-fighters"><div class="combat-hero">${battleHeroStack('battle-model')}<span>${esc(heroName())}</span></div><div class="combat-versus">×</div><div class="combat-enemy">${enemyArt(s.enemy, `${a?.name || 'Training'} Enemy`)}</div></div></div><div class="combat-question-zone">${questionCard(`${areaName} · Question ${s.index+1}/${s.total}`)}</div></section>`; }
+  function renderBoss(){ const s=state.session, a=areaById(s.areaId), hpPct=Math.max(0,Math.round((s.bossHp/s.bossMaxHp)*100)); return `<section class="scene-panel combat-screen" style="${sceneStyle()}"><div class="combat-stage transparent-stage"><div class="combat-area-badge">${esc(a.name)} Boss Battle</div><div class="boss-hp combat-hp"><div class="boss-fill" style="width:${hpPct}%"></div><div class="boss-text">${esc(a.boss)} HP ${s.bossHp}/${s.bossMaxHp}</div></div><div class="combat-fighters boss-fighters"><div class="combat-hero">${battleHeroStack('battle-model')}<span>${esc(heroName())}</span></div><div class="combat-versus">VS</div><div class="combat-enemy">${enemyArt(a.bossImage,a.boss,'boss-art')}</div></div></div><div class="combat-question-zone">${questionCard(`${a.name} Boss · Boss Question ${s.index+1} · Damage until HP reaches 0`)}</div></section>`; }
   function questionCard(label){ const s=state.session,q=s.question; return `<div class="question-card"><div class="pill">${esc(label)}</div><div class="question">${q.a} × ${q.b} = ?</div>${abilityLine()}<div class="answers">${s.answers.map(v=>`<button class="primary" ${s.answered||s.removed?.includes(v)?'disabled':''} onclick="Game.answer(${v})">${v}</button>`).join('')}</div><div class="feedback ${s.feedbackClass||''}">${s.feedback||''}</div>${s.answered?'<button class="primary" onclick="Game.nextQuestion()">Next Question</button>':''}</div>`; }
   function abilityLine(){ if(state.classId==='mage' && !state.session.answered) return `<div class="row" style="justify-content:center;margin-bottom:8px"><button onclick="Game.focusSpell()" ${state.mana<1||state.session.focusUsed?'disabled':''}>Use Focus Spell (1 mana)</button><span class="muted">Mana: ${state.mana}</span></div>`; if(state.classId==='archer') return `<div class="pill" style="margin-bottom:8px">Streak Shot: +2 coins every 3-correct streak</div>`; if(state.classId==='knight') return `<div class="pill" style="margin-bottom:8px">Shield Block: one boss mistake blocked</div>`; return ''; }
 
@@ -170,7 +191,8 @@
   function nextQuestion(){ const s=state.session; if(!s) return; if(s.mode==='boss' && s.bossHp<=0){ const areaId=s.areaId, a=areaById(areaId); state.bosses[areaId]=true; state.coins+=50; state.session=null; state.areaId='town'; state.screen='town'; state.coach='Boss defeated. New gear unlocked.'; save(); showNotice('Boss Defeated',`You defeated ${a.boss} and earned 50 coins.`); return; } if(state.hp<=0 && (s.mode==='adventure'||s.mode==='boss')){ state.session=null; state.areaId='town'; state.screen='town'; state.coach='HP reached 0. Try again from Town.'; save(); showNotice('Try Again','Your HP reached 0. You returned to Town.'); return; } s.index++; if(s.mode!=='boss' && s.index>=s.total){ if(s.mode==='training'){ incQuest('training'); state.coins+=15; state.coach='Training set complete.'; } if(s.mode==='adventure'){ const p=state.areaProgress[s.areaId]||{}; p.rounds=(p.rounds||0)+1; p.wins=(p.wins||0)+1; state.areaProgress[s.areaId]=p; state.coins+=20; state.coach='Adventure complete. Boss may be ready.'; } state.session=null; state.areaId='town'; state.screen='town'; save(); render(); return; } const q=makeQuestion(s.mode,s.areaId); Object.assign(s,{question:q,answers:q.answers,answered:false,feedback:'',feedbackClass:'',removed:[],focusUsed:false}); if(s.mode!=='boss') s.enemy=areaById(s.areaId)?pick(areaById(s.areaId).enemies):null; save(); render(); }
   function focusSpell(){ const s=state.session; if(!s||s.focusUsed||state.mana<1) return; state.mana--; s.focusUsed=true; s.removed=s.answers.filter(v=>v!==s.question.product).slice(0,2); state.coach='Two wrong choices removed.'; save(); render(); }
   function claimQuest(id){ const q=state.quests.list.find(q=>q.id===id); if(!q||q.claimed||questProgress(q)<q.target) return; q.claimed=true; state.coins+=q.reward; state.coach=`Claimed ${q.reward} coins.`; maybeNewQuests(); save(); render(); }
-  function previewItem(id){ const it=itemById(id); if(!it) return; const owned=state.inventory.includes(id), locked=!isUnlocked(it), canAfford=state.coins>=it.cost; const ov={}; if(it.slot==='frame') ov.frame=it.id; if(it.slot==='aura') ov.aura=it.id; if(it.slot==='pet') ov.pet=it.id; if(it.slot==='trail') ov.trail=it.id; modal=`<div class="modal-backdrop" onclick="Game.closeModal(event)"><div class="modal" onclick="event.stopPropagation()"><h2>Preview Item</h2><div class="preview-layout"><div>${['frame','aura','pet','trail'].includes(it.slot)?portraitStack('big',ov):itemIcon(it)}</div><div><h3>${esc(it.name)}</h3><p>${esc(it.rarity)} · ${it.cost} coins</p><p class="muted">${esc(it.desc)}</p><p>${locked?'Locked: '+esc(D.unlockLabels[it.unlock]||it.unlock):(owned?'Owned':'Available')}</p></div></div><div class="modal-actions"><button onclick="Game.closeModal()">Close</button>${owned?`<button class="primary" onclick="Game.equip('${it.id}')">Equip</button>`:`<button class="primary" ${locked||!canAfford?'disabled':''} onclick="Game.buy('${it.id}')">Buy</button>`}</div></div></div>`; render(); }
+  function previewItem(id){ const it=itemById(id); if(!it) return; const owned=state.inventory.includes(id), locked=!isUnlocked(it), canAfford=state.coins>=it.cost; const ov={}; if(it.slot==='frame') ov.frame=it.id; if(it.slot==='aura') ov.aura=it.id; if(it.slot==='pet') ov.pet=it.id; if(it.slot==='trail') ov.trail=it.id; const preview = it.slot==='aura' && auraSpritePath(it.id) ? battleHeroStack('preview-battle', ov) : (['frame','aura','pet','trail'].includes(it.slot)?portraitStack('big',ov):itemIcon(it)); modal=`<div class="modal-backdrop" onclick="Game.closeModal(event)"><div class="modal" onclick="event.stopPropagation()"><h2>Preview Item</h2><div class="preview-layout"><div>${preview}</div><div><h3>${esc(it.name)}</h3><p>${esc(it.rarity)} · ${it.cost} coins</p><p class="muted">${esc(it.desc)}</p><p>${locked?'Locked: '+esc(D.unlockLabels[it.unlock]||it.unlock):(owned?'Owned':'Available')}</p></div></div><div class="modal-actions"><button onclick="Game.closeModal()">Close</button>${owned?`<button class="primary" onclick="Game.equip('${it.id}')">Equip</button>`:`<button class="primary" ${locked||!canAfford?'disabled':''} onclick="Game.buy('${it.id}')">Buy</button>`}</div></div></div>`; render(); };
+
   function buy(id){ const it=itemById(id); if(!it||state.inventory.includes(id)||!isUnlocked(it)||state.coins<it.cost) return; state.coins-=it.cost; state.inventory.push(id); state.coach=`Bought ${it.name}.`; save(); previewItem(id); }
   function equip(id){ const it=itemById(id); if(!it||!state.inventory.includes(id)) return; state.equipped[it.slot]=id; state.coach=`Equipped ${it.name}.`; state.hp=Math.min(state.hp,maxHp()); state.mana=Math.min(state.mana,maxMana()); modal=''; save(); render(); }
   function unequip(slot){ state.equipped[slot]=null; state.coach=`Unequipped ${cap(slot)}.`; save(); render(); }
@@ -185,8 +207,9 @@
     goTown:()=>setScreen('town'), goMap:()=>setScreen('map'), goShop:()=>setScreen('shop'), goInventory:()=>setScreen('inventory'), goMastery:()=>setScreen('mastery'), goRecords:()=>setScreen('records'), goSettings:()=>setScreen('settings'),
     setShopFilter:f=>{shopFilter=filters.includes(f)?f:'all';render();}, startTraining:()=>startSession('training'), startArea:id=>startSession('adventure',id), startBoss:id=>startSession('boss',id), answer:submitAnswer, nextQuestion, focusSpell, claimQuest,
     previewItem,buy,equip,unequip,resetModal,confirmReset:()=>{S.clear();state=null;modal='';renderSelect();},closeModal:(e)=>{if(e&&e.target!==e.currentTarget)return;modal='';render();},
-    _state:()=>state,_render:render,_fresh:freshState,_shopHTML:renderShop
+    _state:()=>state,_render:render,_fresh:freshState,_shopHTML:renderShop,_auraSpritePath:auraSpritePath,_battleHeroStack:battleHeroStack
   };
+
   migrate();
   render();
 })();

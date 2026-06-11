@@ -1,10 +1,38 @@
 
 window.GameData = (() => {
   const classes = {
-    knight: { id:'knight', name:'Knight', icon:'🛡️', difficulty:'★★☆☆☆', hp:5, mana:2, portraits:{boy:'assets/heroes/knight-boy.png', girl:'assets/heroes/knight-girl.png'}, heroNames:{boy:'Leo Shieldheart', girl:'Aria Shieldheart'}, stats:{attack:2,defense:4,speed:1,focus:1}, ability:'Shield Block', abilityText:'Blocks one wrong boss answer.' },
-    archer: { id:'archer', name:'Archer', icon:'🏹', difficulty:'★★★☆☆', hp:4, mana:3, portraits:{boy:'assets/heroes/archer-boy.png', girl:'assets/heroes/archer-girl.png'}, heroNames:{boy:'Theo Swiftshot', girl:'Maya Swiftshot'}, stats:{attack:3,defense:2,speed:4,focus:2}, ability:'Streak Shot', abilityText:'+2 coins every 3 correct in a row.' },
-    mage: { id:'mage', name:'Mage', icon:'🔮', difficulty:'★★★★☆', hp:3, mana:5, portraits:{boy:'assets/heroes/mage-boy.png', girl:'assets/heroes/mage-girl.png'}, heroNames:{boy:'Nico Starspell', girl:'Luna Starspell'}, stats:{attack:4,defense:1,speed:2,focus:5}, ability:'Focus Spell', abilityText:'Spend 1 mana to remove two wrong choices.' }
+    knight: { id:'knight', name:'Knight', icon:'🛡️', difficulty:'★★☆☆☆', hp:5, mana:2, portraits:{boy:'assets/heroes/portraits/knight-boy.png', girl:'assets/heroes/portraits/knight-girl.png'}, heroNames:{boy:'Leo Shieldheart', girl:'Aria Shieldheart'}, stats:{attack:2,defense:4,speed:1,focus:1}, ability:'Shield Block', abilityText:'Blocks one wrong boss answer.' },
+    archer: { id:'archer', name:'Archer', icon:'🏹', difficulty:'★★★☆☆', hp:4, mana:3, portraits:{boy:'assets/heroes/portraits/archer-boy.png', girl:'assets/heroes/portraits/archer-girl.png'}, heroNames:{boy:'Theo Swiftshot', girl:'Maya Swiftshot'}, stats:{attack:3,defense:2,speed:4,focus:2}, ability:'Streak Shot', abilityText:'+2 coins every 3 correct in a row.' },
+    mage: { id:'mage', name:'Mage', icon:'🔮', difficulty:'★★★★☆', hp:3, mana:5, portraits:{boy:'assets/heroes/portraits/mage-boy.png', girl:'assets/heroes/portraits/mage-girl.png'}, heroNames:{boy:'Nico Starspell', girl:'Luna Starspell'}, stats:{attack:4,defense:1,speed:2,focus:5}, ability:'Focus Spell', abilityText:'Spend 1 mana to remove two wrong choices.' }
   };
+
+  const battleModels = {
+    knight: { boy:'assets/heroes/battle/battle_knight_boy_sword.png', girl:'assets/heroes/battle/battle_knight_girl_sword.png' },
+    archer: { boy:'assets/heroes/battle/battle_archer_boy_arrow.png', girl:'assets/heroes/battle/battle_archer_girl_arrow.png' },
+    mage: { boy:'assets/heroes/battle/battle_mage_purple_spell.png', girl:'assets/heroes/battle/battle_mage_blue_spell.png' }
+  };
+  const battleModelKeys = {
+    knight: { boy:'knight_boy_sword', girl:'knight_girl_sword' },
+    archer: { boy:'archer_boy_arrow', girl:'archer_girl_arrow' },
+    mage: { boy:'mage_purple_spell', girl:'mage_blue_spell' }
+  };
+  const auraOptions = [
+    {id:'prismatic_rose_aura', folder:'option_01_prismatic_rose', slug:'prismatic_rose', name:'Prismatic Rose Aura', cost:80, rarity:'Legendary', unlock:'start', desc:'A rose-pink prismatic pulse that follows the attack pose.'},
+    {id:'inferno_outline_aura', folder:'option_02_inferno_outline', slug:'inferno_outline', name:'Inferno Outline Aura', cost:90, rarity:'Legendary', unlock:'meadow', desc:'A flame outline aura for battle and training.'},
+    {id:'electric_outline_aura', folder:'option_03_electric_outline', slug:'electric_outline', name:'Electric Outline Aura', cost:95, rarity:'Legendary', unlock:'forest', desc:'A crackling lightning outline aura.'},
+    {id:'frost_outline_aura', folder:'option_04_frost_outline', slug:'frost_outline', name:'Frost Outline Aura', cost:95, rarity:'Legendary', unlock:'forest', desc:'A crystalline frost outline aura.'},
+    {id:'shadow_outline_aura', folder:'option_05_shadow_outline', slug:'shadow_outline', name:'Shadow Outline Aura', cost:105, rarity:'Legendary', unlock:'cave', desc:'A smoky violet shadow outline aura.'},
+    {id:'celestial_radiance_aura', folder:'option_06_celestial_radiance', slug:'celestial_radiance', name:'Celestial Radiance Aura', cost:120, rarity:'Mythic', unlock:'castle', desc:'A radiant gold-and-pink celestial outline aura.'}
+  ];
+  const auraSprites = Object.fromEntries(auraOptions.map(o => [o.id, {
+    knight_boy_sword:`assets/cosmetics/auras/${o.folder}/aura_knight_boy_sword_${o.slug}_pulse_sheet.png`,
+    knight_girl_sword:`assets/cosmetics/auras/${o.folder}/aura_knight_girl_sword_${o.slug}_pulse_sheet.png`,
+    archer_boy_arrow:`assets/cosmetics/auras/${o.folder}/aura_archer_boy_arrow_${o.slug}_pulse_sheet.png`,
+    archer_girl_arrow:`assets/cosmetics/auras/${o.folder}/aura_archer_girl_arrow_${o.slug}_pulse_sheet.png`,
+    mage_blue_spell:`assets/cosmetics/auras/${o.folder}/aura_mage_blue_spell_${o.slug}_pulse_sheet.png`,
+    mage_purple_spell:`assets/cosmetics/auras/${o.folder}/aura_mage_purple_spell_${o.slug}_pulse_sheet.png`
+  }]));
+
   const areas = [
     { id:'meadow', name:'Meadow', focus:[0,1,2,5,10], boss:'Meadow Slime', bossHp:6, unlockAfter:null, background:'assets/backgrounds/meadow.jpg', bossImage:'assets/bosses/meadow-boss.png', enemies:['assets/enemies/meadow-enemy-1.png','assets/enemies/meadow-enemy-2.png'] },
     { id:'forest', name:'Forest', focus:[3,4], boss:'Forest Guardian', bossHp:8, unlockAfter:'meadow', background:'assets/backgrounds/forest.jpg', bossImage:'assets/bosses/forest-boss.png', enemies:['assets/enemies/forest-enemy-1.png','assets/enemies/forest-enemy-2.png'] },
@@ -68,6 +96,7 @@ window.GameData = (() => {
     {id:'pink_sparkle_aura',name:'Pink Sparkle Aura',type:'aura',slot:'aura',cls:['all'],cost:40,rarity:'Rare',unlock:'start',stats:{},cosmetic:true,desc:'A pink sparkle glow.'},
     {id:'galaxy_aura',name:'Galaxy Aura',type:'aura',slot:'aura',cls:['all'],cost:95,rarity:'Legendary',unlock:'castle',stats:{},cosmetic:true,desc:'A cosmic glow.'},
     {id:'bright_sparkle_aura',name:'Bright Sparkle Aura',type:'aura',slot:'aura',cls:['all'],cost:55,rarity:'Epic',unlock:'forest',stats:{},cosmetic:true,desc:'A bright white sparkle glow.'},
+    ...auraOptions.map(o => ({id:o.id,name:o.name,type:'aura',slot:'aura',cls:['all'],cost:o.cost,rarity:o.rarity,unlock:o.unlock,stats:{},cosmetic:true,desc:o.desc,sprite:true})),
     {id:'gold_frame',name:'Gold Frame',type:'frame',slot:'frame',cls:['all'],cost:45,rarity:'Rare',unlock:'meadow',stats:{},cosmetic:true,desc:'A shiny gold portrait frame.'},
     {id:'silver_frame',name:'Silver Frame',type:'frame',slot:'frame',cls:['all'],cost:30,rarity:'Common',unlock:'start',stats:{},cosmetic:true,desc:'A clean silver portrait frame.'},
     {id:'blue_frame',name:'Blue Frame',type:'frame',slot:'frame',cls:['all'],cost:30,rarity:'Common',unlock:'start',stats:{},cosmetic:true,desc:'A bright blue portrait frame.'},
@@ -86,8 +115,8 @@ window.GameData = (() => {
     {id:'leaf_trail',name:'Leaf Trail',type:'trail',slot:'trail',cls:['all'],cost:50,rarity:'Rare',unlock:'start',stats:{},cosmetic:true,desc:'A leafy trail.'},
     {id:'shadow_trail',name:'Shadow Trail',type:'trail',slot:'trail',cls:['all'],cost:80,rarity:'Epic',unlock:'cave',stats:{},cosmetic:true,desc:'A shadowy trail.'}
   ];
-  items.forEach(i => { i.image = itemImages[i.id] || ''; });
+  items.forEach(i => { i.image = itemImages[i.id] || i.image || ''; });
   const ui = { coin:'assets/ui/coin.png', heart:'assets/ui/heart.png', mana:'assets/ui/mana.png', key:'assets/ui/key.png', map:'assets/ui/map.png', shop:'assets/ui/shop.png', backpack:'assets/ui/backpack.png', star:'assets/ui/star.png', mastery:'assets/ui/mastery.png', badge:'assets/ui/badge.png', lock:'assets/ui/lock.png' };
-  const assets = [...new Set([...areas.flatMap(a => [a.background,a.bossImage,...a.enemies]), backgrounds.town, backgrounds.training, ...Object.values(ui), ...Object.values(itemImages), ...Object.values(classes).flatMap(c => Object.values(c.portraits))])].sort();
-  return { classes, areas, backgrounds, items, itemImages, unlockLabels, ui, assets };
+  const assets = [...new Set([...areas.flatMap(a => [a.background,a.bossImage,...a.enemies]), backgrounds.town, backgrounds.training, ...Object.values(ui), ...Object.values(itemImages), ...Object.values(classes).flatMap(c => Object.values(c.portraits)), ...Object.values(battleModels).flatMap(v => Object.values(v)), ...Object.values(auraSprites).flatMap(v => Object.values(v))])].sort();
+  return { classes, areas, backgrounds, items, itemImages, unlockLabels, ui, assets, battleModels, battleModelKeys, auraOptions, auraSprites };
 })();

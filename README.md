@@ -26,4 +26,28 @@ Student progress saves locally in the browser using localStorage.
 
 ## Current Build
 
-v21 — responsive character select screen with one start button.
+v22 — new asset folder structure, real portrait-frame PNGs, and animated battle aura spritesheets in the cosmetics shop.
+
+
+## v22 Asset Structure
+
+Auras now live only in:
+
+```text
+assets/cosmetics/auras/
+```
+
+Hero assets are split into:
+
+```text
+assets/heroes/portraits/
+assets/heroes/battle/
+```
+
+The previous incorrect aura folder has been removed:
+
+```text
+assets/effects/auras/
+```
+
+The six outline aura options are implemented as 10-frame horizontal spritesheets. Each sheet is 12540 × 1254, with each frame 1254 × 1254.

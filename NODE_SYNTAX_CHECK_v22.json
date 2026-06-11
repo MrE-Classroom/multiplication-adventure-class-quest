@@ -1,0 +1,18 @@
+{
+  "data/gameData.js": {
+    "returncode": 0,
+    "stderr": ""
+  },
+  "js/game.js": {
+    "returncode": 0,
+    "stderr": ""
+  },
+  "js/mastery.js": {
+    "returncode": 0,
+    "stderr": ""
+  },
+  "js/storage.js": {
+    "returncode": 0,
+    "stderr": ""
+  }
+}
