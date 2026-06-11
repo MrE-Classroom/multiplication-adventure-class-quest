@@ -243,3 +243,168 @@ button{font:inherit;font-weight:900;border:1px solid var(--line);border-radius:1
 @media(max-height:720px) and (min-width:900px){
   .battle-hero-stack{width:min(210px,28vh);}
 }
+
+
+/* v23 character select scaling + portrait visibility fix */
+.hero-select{
+  min-height:100dvh;
+  height:100dvh;
+  width:100vw;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:clamp(6px,1.4vh,16px);
+  overflow:hidden;
+}
+.select-card{
+  width:min(94vw,980px);
+  max-height:calc(100dvh - 14px);
+  overflow:hidden;
+  padding:clamp(14px,2vh,24px);
+  border-radius:18px;
+  display:grid;
+  grid-template-rows:auto auto minmax(0,auto) minmax(0,1fr);
+}
+.select-card h1{
+  font-size:clamp(2rem,5vw,3.35rem);
+  line-height:1;
+  margin:0 0 clamp(8px,1.2vh,14px);
+}
+.select-topline{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:clamp(8px,1.4vh,14px);
+}
+.select-topline p{
+  margin:0;
+}
+.start-game-btn{
+  flex:0 0 auto;
+  white-space:nowrap;
+}
+.avatar-picks{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(120px,180px));
+  justify-content:center;
+  gap:clamp(8px,1.2vw,12px);
+  margin-bottom:clamp(8px,1.4vh,12px);
+}
+.choice-btn{
+  min-height:0;
+  padding:clamp(8px,1.3vh,12px);
+}
+.class-choices{
+  min-height:0;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(8px,1.2vw,12px);
+}
+.class-choice{
+  min-height:0;
+  padding:clamp(10px,1.5vh,14px);
+  display:grid;
+  grid-template-rows:auto auto auto auto auto;
+  align-content:start;
+}
+.class-choice h2{
+  font-size:clamp(1.25rem,2.3vw,1.65rem);
+  margin:clamp(4px,.8vh,8px) 0;
+}
+.class-choice p{
+  margin:clamp(3px,.7vh,6px) 0;
+  line-height:1.2;
+}
+.hero-select .portrait-stack.medium{
+  --pw:96px;
+  --ph:82px;
+  border-radius:14px;
+}
+.hero-select .portrait-stack.medium .hero-img{
+  width:70px;
+  height:70px;
+  object-fit:cover;
+  border-radius:12px;
+  display:block;
+}
+.choice-btn .portrait-stack.medium{
+  --pw:78px;
+  --ph:70px;
+}
+.choice-btn .portrait-stack.medium .hero-img{
+  width:58px;
+  height:58px;
+}
+@media(max-height:720px){
+  .select-card{
+    width:min(94vw,920px);
+    padding:10px 14px;
+  }
+  .select-card h1{
+    font-size:clamp(1.85rem,4.4vw,2.85rem);
+    margin-bottom:6px;
+  }
+  .avatar-picks{
+    grid-template-columns:repeat(2,minmax(105px,150px));
+    gap:7px;
+    margin-bottom:7px;
+  }
+  .class-choices{
+    gap:7px;
+  }
+  .class-choice{
+    padding:9px;
+  }
+  .class-choice h2{
+    font-size:1.25rem;
+    margin:3px 0;
+  }
+  .class-choice p{
+    font-size:.78rem;
+    margin:3px 0;
+  }
+  .hero-select .portrait-stack.medium{
+    --pw:80px;
+    --ph:66px;
+  }
+  .hero-select .portrait-stack.medium .hero-img{
+    width:56px;
+    height:56px;
+  }
+  .choice-btn .portrait-stack.medium{
+    --pw:68px;
+    --ph:58px;
+  }
+  .choice-btn .portrait-stack.medium .hero-img{
+    width:48px;
+    height:48px;
+  }
+}
+@media(max-width:760px){
+  .select-card{
+    width:96vw;
+    max-height:calc(100dvh - 10px);
+    overflow:auto;
+  }
+  .select-topline{
+    align-items:stretch;
+    flex-direction:column;
+  }
+  .start-game-btn{
+    width:100%;
+  }
+  .class-choices{
+    grid-template-columns:1fr;
+  }
+  .avatar-picks{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+
+/* v24 aura correction: auras are battle-only and must use real spritesheet assets */
+.portrait-stack .aura-css,
+.hero-mini-wrap .aura-css{
+  display:none !important;
+}

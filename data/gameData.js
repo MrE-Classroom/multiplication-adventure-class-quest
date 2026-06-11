@@ -33,6 +33,21 @@ window.GameData = (() => {
     mage_purple_spell:`assets/cosmetics/auras/${o.folder}/aura_mage_purple_spell_${o.slug}_pulse_sheet.png`
   }]));
 
+
+  const legacyAuraSpriteMap = {
+    sparkle_aura:'prismatic_rose_aura',
+    pink_sparkle_aura:'prismatic_rose_aura',
+    bright_sparkle_aura:'celestial_radiance_aura',
+    fire_aura:'inferno_outline_aura',
+    ice_aura:'frost_outline_aura',
+    lightning_aura:'electric_outline_aura',
+    shadow_aura:'shadow_outline_aura',
+    royal_aura:'celestial_radiance_aura',
+    rainbow_aura:'celestial_radiance_aura',
+    galaxy_aura:'celestial_radiance_aura',
+    nature_aura:'prismatic_rose_aura'
+  };
+
   const areas = [
     { id:'meadow', name:'Meadow', focus:[0,1,2,5,10], boss:'Meadow Slime', bossHp:6, unlockAfter:null, background:'assets/backgrounds/meadow.jpg', bossImage:'assets/bosses/meadow-boss.png', enemies:['assets/enemies/meadow-enemy-1.png','assets/enemies/meadow-enemy-2.png'] },
     { id:'forest', name:'Forest', focus:[3,4], boss:'Forest Guardian', bossHp:8, unlockAfter:'meadow', background:'assets/backgrounds/forest.jpg', bossImage:'assets/bosses/forest-boss.png', enemies:['assets/enemies/forest-enemy-1.png','assets/enemies/forest-enemy-2.png'] },
@@ -118,5 +133,5 @@ window.GameData = (() => {
   items.forEach(i => { i.image = itemImages[i.id] || i.image || ''; });
   const ui = { coin:'assets/ui/coin.png', heart:'assets/ui/heart.png', mana:'assets/ui/mana.png', key:'assets/ui/key.png', map:'assets/ui/map.png', shop:'assets/ui/shop.png', backpack:'assets/ui/backpack.png', star:'assets/ui/star.png', mastery:'assets/ui/mastery.png', badge:'assets/ui/badge.png', lock:'assets/ui/lock.png' };
   const assets = [...new Set([...areas.flatMap(a => [a.background,a.bossImage,...a.enemies]), backgrounds.town, backgrounds.training, ...Object.values(ui), ...Object.values(itemImages), ...Object.values(classes).flatMap(c => Object.values(c.portraits)), ...Object.values(battleModels).flatMap(v => Object.values(v)), ...Object.values(auraSprites).flatMap(v => Object.values(v))])].sort();
-  return { classes, areas, backgrounds, items, itemImages, unlockLabels, ui, assets, battleModels, battleModelKeys, auraOptions, auraSprites };
+  return { classes, areas, backgrounds, items, itemImages, unlockLabels, ui, assets, battleModels, battleModelKeys, auraOptions, auraSprites, legacyAuraSpriteMap };
 })();

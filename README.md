@@ -26,10 +26,10 @@ Student progress saves locally in the browser using localStorage.
 
 ## Current Build
 
-v22 — new asset folder structure, real portrait-frame PNGs, and animated battle aura spritesheets in the cosmetics shop.
+v24 — aura correction: auras are battle-only and old shop aura IDs map to real spritesheet assets.
 
 
-## v22 Asset Structure
+## v24 — aura correction: auras are battle-only and old shop aura IDs map to real spritesheet assets.
 
 Auras now live only in:
 
@@ -51,3 +51,23 @@ assets/effects/auras/
 ```
 
 The six outline aura options are implemented as 10-frame horizontal spritesheets. Each sheet is 12540 × 1254, with each frame 1254 × 1254.
+
+
+## GitHub-Ready Optimization
+
+This build preserves the same paths and game code behavior, but the large aura spritesheets were optimized as indexed PNGs with alpha transparency. The files remain transparent in the browser and keep the same 12540 × 1254 spritesheet size.
+
+
+## v24 — aura correction: auras are battle-only and old shop aura IDs map to real spritesheet assets.
+
+- Character select screen scales to the visible device height.
+- Hero portraits are kept in both `assets/heroes/portraits/` and `assets/heroes/` so the browser has a fallback path.
+- Image tags now use a fallback for hero portrait paths before removing the image.
+
+
+## v24 Aura Fix
+
+- Auras no longer render on hero portrait cards or the side hero panel.
+- Old shop aura IDs now map to the new real aura spritesheet assets.
+- Battle auras use `assets/cosmetics/auras/option_*/aura_*_pulse_sheet.png`.
+- CSS-only aura rendering has been removed from battle.

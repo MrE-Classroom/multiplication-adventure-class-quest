@@ -1,0 +1,30 @@
+{
+  "build": "v24-aura-battle-only",
+  "missing_asset_paths": [],
+  "asset_folder_mb": 44.07,
+  "wrong_effects_aura_folder_removed": true,
+  "aura_spritesheet_count": 36,
+  "node_syntax_check": {
+    "data/gameData.js": {
+      "returncode": 0,
+      "stderr": ""
+    },
+    "js/game.js": {
+      "returncode": 0,
+      "stderr": ""
+    },
+    "js/mastery.js": {
+      "returncode": 0,
+      "stderr": ""
+    },
+    "js/storage.js": {
+      "returncode": 0,
+      "stderr": ""
+    }
+  },
+  "runtime_smoke_test": {
+    "returncode": 0,
+    "stdout": "{\"ok\":true,\"oldAuraMappedToAsset\":true,\"portraitAuraRemoved\":true,\"battleUsesSpritesheet\":true,\"htmlLength\":23254}\n",
+    "stderr": ""
+  }
+}

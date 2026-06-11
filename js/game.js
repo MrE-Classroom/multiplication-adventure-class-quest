@@ -4,7 +4,7 @@
   const M = window.Mastery;
   const S = window.GameStorage;
   const app = document.getElementById('app');
-  const VERSION = 22;
+  const VERSION = 24;
   const slots = ['weapon','head','body','legs','pet','aura','frame','trail','cosmetic'];
   const filters = ['all','weapon','head','body','legs','pet','aura','frame','trail','cosmetic'];
   let state = S.load();
@@ -23,10 +23,22 @@
 
   const heroBattleModel = () => D.battleModels?.[state?.classId]?.[state?.gender || 'girl'] || heroPortrait();
   const heroBattleKey = () => D.battleModelKeys?.[state?.classId]?.[state?.gender || 'girl'] || '';
-  const auraSpritePath = (id) => (id && D.auraSprites?.[id]?.[heroBattleKey()]) || null;
-  const firstAuraSpritePath = (id) => id && D.auraSprites?.[id] ? Object.values(D.auraSprites[id])[0] : null;
+  const auraAssetId = (id) => (id && D.auraSprites?.[id]) ? id : D.legacyAuraSpriteMap?.[id];
+  const auraSpritePath = (id) => (auraAssetId(id) && D.auraSprites?.[auraAssetId(id)]?.[heroBattleKey()]) || null;
+  const firstAuraSpritePath = (id) => auraAssetId(id) && D.auraSprites?.[auraAssetId(id)] ? Object.values(D.auraSprites[auraAssetId(id)])[0] : null;
   const frameImage = (id) => itemById(id)?.image || '';
-  const img = (src, cls='', alt='') => src ? `<img class="${cls}" src="${src}" alt="${esc(alt)}" onerror="this.remove()">` : '';
+  function img(src, cls='', alt=''){
+    if(!src) return '';
+    const safeSrc = esc(src);
+    const safeAlt = esc(alt);
+    const fallback = safeSrc.includes('assets/heroes/portraits/')
+      ? safeSrc.replace('assets/heroes/portraits/', 'assets/heroes/')
+      : '';
+    const err = fallback
+      ? `this.onerror=null;this.src='${fallback}'`
+      : `this.remove()`;
+    return `<img class="${cls}" src="${safeSrc}" alt="${safeAlt}" onerror="${err}">`;
+  }
   const save = () => { if (state) S.save(state); };
 
   function freshState(classId, gender){
@@ -102,15 +114,12 @@
   function auraClass(id){ return id ? `aura-css aura-${sanitizeClass(id)}` : ''; }
   function frameClass(id){ return id ? `frame-css frame-${sanitizeClass(id)}` : ''; }
   function portraitStack(size='medium', override={}){
-    const aura = override.aura !== undefined ? override.aura : state?.equipped?.aura;
     const frame = override.frame !== undefined ? override.frame : state?.equipped?.frame;
     const petId = override.pet !== undefined ? override.pet : state?.equipped?.pet;
     const trailId = override.trail !== undefined ? override.trail : state?.equipped?.trail;
     const pet = petId && itemById(petId); const trail = trailId && itemById(trailId);
-    const hasBattleAura = !!auraSpritePath(aura);
     const frameSrc = frameImage(frame);
     return `<div class="portrait-stack ${size}">
-      ${aura && !hasBattleAura ? `<div class="${auraClass(aura)}"></div>` : ''}
       ${trail ? img(trail.image,'trail-img',trail.name) : ''}
       <div class="portrait-core">${img(heroPortrait(),'hero-img',heroName())}</div>
       ${frame ? (frameSrc ? img(frameSrc,'portrait-frame-img',itemById(frame)?.name || 'frame') : `<div class="${frameClass(frame)}"></div>`) : ''}
@@ -121,10 +130,8 @@
   function battleHeroStack(size='battle-model', override={}){
     const aura = override.aura !== undefined ? override.aura : state?.equipped?.aura;
     const auraPath = auraSpritePath(aura);
-    const legacyAura = aura && !auraPath;
     return `<div class="battle-hero-stack ${size}">
       ${auraPath ? `<div class="battle-aura-sprite" style="background-image:url('${esc(auraPath)}')"></div>` : ''}
-      ${legacyAura ? `<div class="battle-legacy-aura ${auraClass(aura)}"></div>` : ''}
       ${img(heroBattleModel(),'battle-hero-img',heroName())}
     </div>`;
   }
