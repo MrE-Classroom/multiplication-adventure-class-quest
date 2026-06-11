@@ -1,0 +1,722 @@
+[
+  {
+    "file": "assets/cosmetics/auras/option_06_celestial_radiance/aura_knight_boy_sword_celestial_radiance_pulse_sheet.png",
+    "source": "battle_knight_boy_sword.png",
+    "size": [
+      12540,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      253
+    ],
+    "transparent_pixels": 13262055,
+    "partial_alpha_pixels": 2463105,
+    "opaque_pixels": 0,
+    "verified_transparent": true,
+    "verified_correct_size": true,
+    "frames": [
+      {
+        "frame": 1,
+        "alpha_extrema": [
+          0,
+          226
+        ],
+        "transparent_pixels": 1369885,
+        "partial_alpha_pixels": 202631,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 2,
+        "alpha_extrema": [
+          0,
+          236
+        ],
+        "transparent_pixels": 1354844,
+        "partial_alpha_pixels": 217672,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 3,
+        "alpha_extrema": [
+          0,
+          247
+        ],
+        "transparent_pixels": 1335493,
+        "partial_alpha_pixels": 237023,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 4,
+        "alpha_extrema": [
+          0,
+          251
+        ],
+        "transparent_pixels": 1316515,
+        "partial_alpha_pixels": 256001,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 5,
+        "alpha_extrema": [
+          0,
+          253
+        ],
+        "transparent_pixels": 1297622,
+        "partial_alpha_pixels": 274894,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 6,
+        "alpha_extrema": [
+          0,
+          253
+        ],
+        "transparent_pixels": 1278667,
+        "partial_alpha_pixels": 293849,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 7,
+        "alpha_extrema": [
+          0,
+          252
+        ],
+        "transparent_pixels": 1297071,
+        "partial_alpha_pixels": 275445,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 8,
+        "alpha_extrema": [
+          0,
+          250
+        ],
+        "transparent_pixels": 1316081,
+        "partial_alpha_pixels": 256435,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 9,
+        "alpha_extrema": [
+          0,
+          244
+        ],
+        "transparent_pixels": 1335578,
+        "partial_alpha_pixels": 236938,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 10,
+        "alpha_extrema": [
+          0,
+          232
+        ],
+        "transparent_pixels": 1360299,
+        "partial_alpha_pixels": 212217,
+        "opaque_pixels": 0
+      }
+    ]
+  },
+  {
+    "file": "assets/cosmetics/auras/option_06_celestial_radiance/aura_knight_girl_sword_celestial_radiance_pulse_sheet.png",
+    "source": "battle_knight_girl_sword.png",
+    "size": [
+      12540,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      253
+    ],
+    "transparent_pixels": 12717810,
+    "partial_alpha_pixels": 3007350,
+    "opaque_pixels": 0,
+    "verified_transparent": true,
+    "verified_correct_size": true,
+    "frames": [
+      {
+        "frame": 1,
+        "alpha_extrema": [
+          0,
+          228
+        ],
+        "transparent_pixels": 1319222,
+        "partial_alpha_pixels": 253294,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 2,
+        "alpha_extrema": [
+          0,
+          235
+        ],
+        "transparent_pixels": 1302375,
+        "partial_alpha_pixels": 270141,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 3,
+        "alpha_extrema": [
+          0,
+          247
+        ],
+        "transparent_pixels": 1281332,
+        "partial_alpha_pixels": 291184,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 4,
+        "alpha_extrema": [
+          0,
+          251
+        ],
+        "transparent_pixels": 1261139,
+        "partial_alpha_pixels": 311377,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 5,
+        "alpha_extrema": [
+          0,
+          252
+        ],
+        "transparent_pixels": 1241282,
+        "partial_alpha_pixels": 331234,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 6,
+        "alpha_extrema": [
+          0,
+          253
+        ],
+        "transparent_pixels": 1221330,
+        "partial_alpha_pixels": 351186,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 7,
+        "alpha_extrema": [
+          0,
+          252
+        ],
+        "transparent_pixels": 1240729,
+        "partial_alpha_pixels": 331787,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 8,
+        "alpha_extrema": [
+          0,
+          251
+        ],
+        "transparent_pixels": 1260569,
+        "partial_alpha_pixels": 311947,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 9,
+        "alpha_extrema": [
+          0,
+          246
+        ],
+        "transparent_pixels": 1281351,
+        "partial_alpha_pixels": 291165,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 10,
+        "alpha_extrema": [
+          0,
+          232
+        ],
+        "transparent_pixels": 1308481,
+        "partial_alpha_pixels": 264035,
+        "opaque_pixels": 0
+      }
+    ]
+  },
+  {
+    "file": "assets/cosmetics/auras/option_06_celestial_radiance/aura_archer_boy_arrow_celestial_radiance_pulse_sheet.png",
+    "source": "battle_archer_boy_arrow.png",
+    "size": [
+      12540,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      253
+    ],
+    "transparent_pixels": 12449416,
+    "partial_alpha_pixels": 3275744,
+    "opaque_pixels": 0,
+    "verified_transparent": true,
+    "verified_correct_size": true,
+    "frames": [
+      {
+        "frame": 1,
+        "alpha_extrema": [
+          0,
+          248
+        ],
+        "transparent_pixels": 1298254,
+        "partial_alpha_pixels": 274262,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 2,
+        "alpha_extrema": [
+          0,
+          240
+        ],
+        "transparent_pixels": 1279770,
+        "partial_alpha_pixels": 292746,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 3,
+        "alpha_extrema": [
+          0,
+          248
+        ],
+        "transparent_pixels": 1255507,
+        "partial_alpha_pixels": 317009,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 4,
+        "alpha_extrema": [
+          0,
+          253
+        ],
+        "transparent_pixels": 1232440,
+        "partial_alpha_pixels": 340076,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 5,
+        "alpha_extrema": [
+          0,
+          251
+        ],
+        "transparent_pixels": 1210402,
+        "partial_alpha_pixels": 362114,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 6,
+        "alpha_extrema": [
+          0,
+          253
+        ],
+        "transparent_pixels": 1188585,
+        "partial_alpha_pixels": 383931,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 7,
+        "alpha_extrema": [
+          0,
+          251
+        ],
+        "transparent_pixels": 1209834,
+        "partial_alpha_pixels": 362682,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 8,
+        "alpha_extrema": [
+          0,
+          250
+        ],
+        "transparent_pixels": 1232142,
+        "partial_alpha_pixels": 340374,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 9,
+        "alpha_extrema": [
+          0,
+          246
+        ],
+        "transparent_pixels": 1256056,
+        "partial_alpha_pixels": 316460,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 10,
+        "alpha_extrema": [
+          0,
+          238
+        ],
+        "transparent_pixels": 1286426,
+        "partial_alpha_pixels": 286090,
+        "opaque_pixels": 0
+      }
+    ]
+  },
+  {
+    "file": "assets/cosmetics/auras/option_06_celestial_radiance/aura_archer_girl_arrow_celestial_radiance_pulse_sheet.png",
+    "source": "battle_archer_girl_arrow.png",
+    "size": [
+      12540,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      253
+    ],
+    "transparent_pixels": 12528914,
+    "partial_alpha_pixels": 3196246,
+    "opaque_pixels": 0,
+    "verified_transparent": true,
+    "verified_correct_size": true,
+    "frames": [
+      {
+        "frame": 1,
+        "alpha_extrema": [
+          0,
+          232
+        ],
+        "transparent_pixels": 1304897,
+        "partial_alpha_pixels": 267619,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 2,
+        "alpha_extrema": [
+          0,
+          236
+        ],
+        "transparent_pixels": 1286950,
+        "partial_alpha_pixels": 285566,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 3,
+        "alpha_extrema": [
+          0,
+          247
+        ],
+        "transparent_pixels": 1263261,
+        "partial_alpha_pixels": 309255,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 4,
+        "alpha_extrema": [
+          0,
+          251
+        ],
+        "transparent_pixels": 1240930,
+        "partial_alpha_pixels": 331586,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 5,
+        "alpha_extrema": [
+          0,
+          251
+        ],
+        "transparent_pixels": 1219364,
+        "partial_alpha_pixels": 353152,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 6,
+        "alpha_extrema": [
+          0,
+          253
+        ],
+        "transparent_pixels": 1197420,
+        "partial_alpha_pixels": 375096,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 7,
+        "alpha_extrema": [
+          0,
+          252
+        ],
+        "transparent_pixels": 1218728,
+        "partial_alpha_pixels": 353788,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 8,
+        "alpha_extrema": [
+          0,
+          250
+        ],
+        "transparent_pixels": 1240324,
+        "partial_alpha_pixels": 332192,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 9,
+        "alpha_extrema": [
+          0,
+          244
+        ],
+        "transparent_pixels": 1263481,
+        "partial_alpha_pixels": 309035,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 10,
+        "alpha_extrema": [
+          0,
+          231
+        ],
+        "transparent_pixels": 1293559,
+        "partial_alpha_pixels": 278957,
+        "opaque_pixels": 0
+      }
+    ]
+  },
+  {
+    "file": "assets/cosmetics/auras/option_06_celestial_radiance/aura_mage_blue_spell_celestial_radiance_pulse_sheet.png",
+    "source": "battle_mage_blue_spell.png",
+    "size": [
+      12540,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      253
+    ],
+    "transparent_pixels": 12403591,
+    "partial_alpha_pixels": 3321569,
+    "opaque_pixels": 0,
+    "verified_transparent": true,
+    "verified_correct_size": true,
+    "frames": [
+      {
+        "frame": 1,
+        "alpha_extrema": [
+          0,
+          244
+        ],
+        "transparent_pixels": 1289719,
+        "partial_alpha_pixels": 282797,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 2,
+        "alpha_extrema": [
+          0,
+          236
+        ],
+        "transparent_pixels": 1272481,
+        "partial_alpha_pixels": 300035,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 3,
+        "alpha_extrema": [
+          0,
+          247
+        ],
+        "transparent_pixels": 1250096,
+        "partial_alpha_pixels": 322420,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 4,
+        "alpha_extrema": [
+          0,
+          250
+        ],
+        "transparent_pixels": 1228779,
+        "partial_alpha_pixels": 343737,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 5,
+        "alpha_extrema": [
+          0,
+          252
+        ],
+        "transparent_pixels": 1207947,
+        "partial_alpha_pixels": 364569,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 6,
+        "alpha_extrema": [
+          0,
+          253
+        ],
+        "transparent_pixels": 1188142,
+        "partial_alpha_pixels": 384374,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 7,
+        "alpha_extrema": [
+          0,
+          252
+        ],
+        "transparent_pixels": 1208095,
+        "partial_alpha_pixels": 364421,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 8,
+        "alpha_extrema": [
+          0,
+          251
+        ],
+        "transparent_pixels": 1229027,
+        "partial_alpha_pixels": 343489,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 9,
+        "alpha_extrema": [
+          0,
+          245
+        ],
+        "transparent_pixels": 1250777,
+        "partial_alpha_pixels": 321739,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 10,
+        "alpha_extrema": [
+          0,
+          233
+        ],
+        "transparent_pixels": 1278528,
+        "partial_alpha_pixels": 293988,
+        "opaque_pixels": 0
+      }
+    ]
+  },
+  {
+    "file": "assets/cosmetics/auras/option_06_celestial_radiance/aura_mage_purple_spell_celestial_radiance_pulse_sheet.png",
+    "source": "battle_mage_purple_spell.png",
+    "size": [
+      12540,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      253
+    ],
+    "transparent_pixels": 12445282,
+    "partial_alpha_pixels": 3279878,
+    "opaque_pixels": 0,
+    "verified_transparent": true,
+    "verified_correct_size": true,
+    "frames": [
+      {
+        "frame": 1,
+        "alpha_extrema": [
+          0,
+          244
+        ],
+        "transparent_pixels": 1290905,
+        "partial_alpha_pixels": 281611,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 2,
+        "alpha_extrema": [
+          0,
+          238
+        ],
+        "transparent_pixels": 1275081,
+        "partial_alpha_pixels": 297435,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 3,
+        "alpha_extrema": [
+          0,
+          247
+        ],
+        "transparent_pixels": 1254371,
+        "partial_alpha_pixels": 318145,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 4,
+        "alpha_extrema": [
+          0,
+          251
+        ],
+        "transparent_pixels": 1234728,
+        "partial_alpha_pixels": 337788,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 5,
+        "alpha_extrema": [
+          0,
+          253
+        ],
+        "transparent_pixels": 1213408,
+        "partial_alpha_pixels": 359108,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 6,
+        "alpha_extrema": [
+          0,
+          253
+        ],
+        "transparent_pixels": 1194312,
+        "partial_alpha_pixels": 378204,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 7,
+        "alpha_extrema": [
+          0,
+          251
+        ],
+        "transparent_pixels": 1212932,
+        "partial_alpha_pixels": 359584,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 8,
+        "alpha_extrema": [
+          0,
+          251
+        ],
+        "transparent_pixels": 1234038,
+        "partial_alpha_pixels": 338478,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 9,
+        "alpha_extrema": [
+          0,
+          244
+        ],
+        "transparent_pixels": 1254585,
+        "partial_alpha_pixels": 317931,
+        "opaque_pixels": 0
+      },
+      {
+        "frame": 10,
+        "alpha_extrema": [
+          0,
+          232
+        ],
+        "transparent_pixels": 1280922,
+        "partial_alpha_pixels": 291594,
+        "opaque_pixels": 0
+      }
+    ]
+  }
+]

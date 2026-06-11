@@ -1,0 +1,716 @@
+[
+  {
+    "file": "assets/cosmetics/auras/option_02_inferno_outline/aura_knight_boy_sword_inferno_outline_pulse_sheet.png",
+    "source": "battle_knight_boy_sword.png",
+    "size": [
+      12540,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "transparent_pixels": 14351758,
+    "partial_alpha_pixels": 1314572,
+    "opaque_pixels": 58830,
+    "verified_transparent": true,
+    "frames": [
+      {
+        "frame": 1,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1458383,
+        "partial_alpha_pixels": 110897,
+        "opaque_pixels": 3236
+      },
+      {
+        "frame": 2,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1449393,
+        "partial_alpha_pixels": 118928,
+        "opaque_pixels": 4195
+      },
+      {
+        "frame": 3,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1440085,
+        "partial_alpha_pixels": 127326,
+        "opaque_pixels": 5105
+      },
+      {
+        "frame": 4,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1430355,
+        "partial_alpha_pixels": 135530,
+        "opaque_pixels": 6631
+      },
+      {
+        "frame": 5,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1420084,
+        "partial_alpha_pixels": 144596,
+        "opaque_pixels": 7836
+      },
+      {
+        "frame": 6,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1411323,
+        "partial_alpha_pixels": 152306,
+        "opaque_pixels": 8887
+      },
+      {
+        "frame": 7,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1420954,
+        "partial_alpha_pixels": 144031,
+        "opaque_pixels": 7531
+      },
+      {
+        "frame": 8,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1431127,
+        "partial_alpha_pixels": 134923,
+        "opaque_pixels": 6466
+      },
+      {
+        "frame": 9,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1440510,
+        "partial_alpha_pixels": 127072,
+        "opaque_pixels": 4934
+      },
+      {
+        "frame": 10,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1449544,
+        "partial_alpha_pixels": 118963,
+        "opaque_pixels": 4009
+      }
+    ]
+  },
+  {
+    "file": "assets/cosmetics/auras/option_02_inferno_outline/aura_knight_girl_sword_inferno_outline_pulse_sheet.png",
+    "source": "battle_knight_girl_sword.png",
+    "size": [
+      12540,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "transparent_pixels": 13933932,
+    "partial_alpha_pixels": 1728789,
+    "opaque_pixels": 62439,
+    "verified_transparent": true,
+    "frames": [
+      {
+        "frame": 1,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1421013,
+        "partial_alpha_pixels": 148121,
+        "opaque_pixels": 3382
+      },
+      {
+        "frame": 2,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1409600,
+        "partial_alpha_pixels": 158490,
+        "opaque_pixels": 4426
+      },
+      {
+        "frame": 3,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1399154,
+        "partial_alpha_pixels": 167972,
+        "opaque_pixels": 5390
+      },
+      {
+        "frame": 4,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1388477,
+        "partial_alpha_pixels": 176949,
+        "opaque_pixels": 7090
+      },
+      {
+        "frame": 5,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1376656,
+        "partial_alpha_pixels": 187559,
+        "opaque_pixels": 8301
+      },
+      {
+        "frame": 6,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1365695,
+        "partial_alpha_pixels": 197296,
+        "opaque_pixels": 9525
+      },
+      {
+        "frame": 7,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1376242,
+        "partial_alpha_pixels": 188166,
+        "opaque_pixels": 8108
+      },
+      {
+        "frame": 8,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1387501,
+        "partial_alpha_pixels": 178076,
+        "opaque_pixels": 6939
+      },
+      {
+        "frame": 9,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1398799,
+        "partial_alpha_pixels": 168534,
+        "opaque_pixels": 5183
+      },
+      {
+        "frame": 10,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1410795,
+        "partial_alpha_pixels": 157626,
+        "opaque_pixels": 4095
+      }
+    ]
+  },
+  {
+    "file": "assets/cosmetics/auras/option_02_inferno_outline/aura_archer_boy_arrow_inferno_outline_pulse_sheet.png",
+    "source": "battle_archer_boy_arrow.png",
+    "size": [
+      12540,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "transparent_pixels": 13811754,
+    "partial_alpha_pixels": 1855349,
+    "opaque_pixels": 58057,
+    "verified_transparent": true,
+    "frames": [
+      {
+        "frame": 1,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1410501,
+        "partial_alpha_pixels": 158628,
+        "opaque_pixels": 3387
+      },
+      {
+        "frame": 2,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1398982,
+        "partial_alpha_pixels": 169241,
+        "opaque_pixels": 4293
+      },
+      {
+        "frame": 3,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1387615,
+        "partial_alpha_pixels": 179852,
+        "opaque_pixels": 5049
+      },
+      {
+        "frame": 4,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1375853,
+        "partial_alpha_pixels": 190419,
+        "opaque_pixels": 6244
+      },
+      {
+        "frame": 5,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1363293,
+        "partial_alpha_pixels": 201791,
+        "opaque_pixels": 7432
+      },
+      {
+        "frame": 6,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1351383,
+        "partial_alpha_pixels": 212392,
+        "opaque_pixels": 8741
+      },
+      {
+        "frame": 7,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1362297,
+        "partial_alpha_pixels": 202661,
+        "opaque_pixels": 7558
+      },
+      {
+        "frame": 8,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1374594,
+        "partial_alpha_pixels": 191436,
+        "opaque_pixels": 6486
+      },
+      {
+        "frame": 9,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1387354,
+        "partial_alpha_pixels": 180161,
+        "opaque_pixels": 5001
+      },
+      {
+        "frame": 10,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1399882,
+        "partial_alpha_pixels": 168768,
+        "opaque_pixels": 3866
+      }
+    ]
+  },
+  {
+    "file": "assets/cosmetics/auras/option_02_inferno_outline/aura_archer_girl_arrow_inferno_outline_pulse_sheet.png",
+    "source": "battle_archer_girl_arrow.png",
+    "size": [
+      12540,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "transparent_pixels": 13838403,
+    "partial_alpha_pixels": 1820977,
+    "opaque_pixels": 65780,
+    "verified_transparent": true,
+    "frames": [
+      {
+        "frame": 1,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1412919,
+        "partial_alpha_pixels": 155905,
+        "opaque_pixels": 3692
+      },
+      {
+        "frame": 2,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1400973,
+        "partial_alpha_pixels": 166731,
+        "opaque_pixels": 4812
+      },
+      {
+        "frame": 3,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1389525,
+        "partial_alpha_pixels": 177119,
+        "opaque_pixels": 5872
+      },
+      {
+        "frame": 4,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1378465,
+        "partial_alpha_pixels": 186655,
+        "opaque_pixels": 7396
+      },
+      {
+        "frame": 5,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1366303,
+        "partial_alpha_pixels": 197645,
+        "opaque_pixels": 8568
+      },
+      {
+        "frame": 6,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1354881,
+        "partial_alpha_pixels": 207845,
+        "opaque_pixels": 9790
+      },
+      {
+        "frame": 7,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1366040,
+        "partial_alpha_pixels": 198184,
+        "opaque_pixels": 8292
+      },
+      {
+        "frame": 8,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1378127,
+        "partial_alpha_pixels": 187157,
+        "opaque_pixels": 7232
+      },
+      {
+        "frame": 9,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1389553,
+        "partial_alpha_pixels": 177373,
+        "opaque_pixels": 5590
+      },
+      {
+        "frame": 10,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1401617,
+        "partial_alpha_pixels": 166363,
+        "opaque_pixels": 4536
+      }
+    ]
+  },
+  {
+    "file": "assets/cosmetics/auras/option_02_inferno_outline/aura_mage_blue_spell_inferno_outline_pulse_sheet.png",
+    "source": "battle_mage_blue_spell.png",
+    "size": [
+      12540,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "transparent_pixels": 13753037,
+    "partial_alpha_pixels": 1910134,
+    "opaque_pixels": 61989,
+    "verified_transparent": true,
+    "frames": [
+      {
+        "frame": 1,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1404188,
+        "partial_alpha_pixels": 164882,
+        "opaque_pixels": 3446
+      },
+      {
+        "frame": 2,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1392013,
+        "partial_alpha_pixels": 175937,
+        "opaque_pixels": 4566
+      },
+      {
+        "frame": 3,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1381166,
+        "partial_alpha_pixels": 186056,
+        "opaque_pixels": 5294
+      },
+      {
+        "frame": 4,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1369995,
+        "partial_alpha_pixels": 195763,
+        "opaque_pixels": 6758
+      },
+      {
+        "frame": 5,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1358329,
+        "partial_alpha_pixels": 206285,
+        "opaque_pixels": 7902
+      },
+      {
+        "frame": 6,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1347261,
+        "partial_alpha_pixels": 215826,
+        "opaque_pixels": 9429
+      },
+      {
+        "frame": 7,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1357259,
+        "partial_alpha_pixels": 207059,
+        "opaque_pixels": 8198
+      },
+      {
+        "frame": 8,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1368648,
+        "partial_alpha_pixels": 196834,
+        "opaque_pixels": 7034
+      },
+      {
+        "frame": 9,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1380748,
+        "partial_alpha_pixels": 186478,
+        "opaque_pixels": 5290
+      },
+      {
+        "frame": 10,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1393430,
+        "partial_alpha_pixels": 175014,
+        "opaque_pixels": 4072
+      }
+    ]
+  },
+  {
+    "file": "assets/cosmetics/auras/option_02_inferno_outline/aura_mage_purple_spell_inferno_outline_pulse_sheet.png",
+    "source": "battle_mage_purple_spell.png",
+    "size": [
+      12540,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "transparent_pixels": 13792305,
+    "partial_alpha_pixels": 1862707,
+    "opaque_pixels": 70148,
+    "verified_transparent": true,
+    "frames": [
+      {
+        "frame": 1,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1406599,
+        "partial_alpha_pixels": 161949,
+        "opaque_pixels": 3968
+      },
+      {
+        "frame": 2,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1395246,
+        "partial_alpha_pixels": 172160,
+        "opaque_pixels": 5110
+      },
+      {
+        "frame": 3,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1385049,
+        "partial_alpha_pixels": 181357,
+        "opaque_pixels": 6110
+      },
+      {
+        "frame": 4,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1374636,
+        "partial_alpha_pixels": 190077,
+        "opaque_pixels": 7803
+      },
+      {
+        "frame": 5,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1363229,
+        "partial_alpha_pixels": 200219,
+        "opaque_pixels": 9068
+      },
+      {
+        "frame": 6,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1352157,
+        "partial_alpha_pixels": 209868,
+        "opaque_pixels": 10491
+      },
+      {
+        "frame": 7,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1361628,
+        "partial_alpha_pixels": 201813,
+        "opaque_pixels": 9075
+      },
+      {
+        "frame": 8,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1372983,
+        "partial_alpha_pixels": 191673,
+        "opaque_pixels": 7860
+      },
+      {
+        "frame": 9,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1384372,
+        "partial_alpha_pixels": 182209,
+        "opaque_pixels": 5935
+      },
+      {
+        "frame": 10,
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 1396406,
+        "partial_alpha_pixels": 171382,
+        "opaque_pixels": 4728
+      }
+    ]
+  }
+]

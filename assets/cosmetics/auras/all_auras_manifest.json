@@ -1,0 +1,428 @@
+{
+  "folder": "assets/cosmetics/auras/",
+  "included_options": [
+    "option_01_prismatic_rose",
+    "option_02_inferno_outline",
+    "option_03_electric_outline",
+    "option_04_frost_outline"
+  ],
+  "frameSize": [
+    1254,
+    1254
+  ],
+  "framesPerSheet": 10,
+  "sheetSize": [
+    12540,
+    1254
+  ],
+  "files": [
+    {
+      "file": "assets/cosmetics/auras/option_01_prismatic_rose/aura_archer_boy_arrow_prismatic_rose_pulse_sheet.png",
+      "mode": "RGBA",
+      "size": [
+        12540,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 14759926,
+      "partial_alpha_pixels": 868115,
+      "opaque_pixels": 97119,
+      "verified_transparent": true,
+      "verified_correct_size": true
+    },
+    {
+      "file": "assets/cosmetics/auras/option_01_prismatic_rose/aura_archer_girl_arrow_prismatic_rose_pulse_sheet.png",
+      "mode": "RGBA",
+      "size": [
+        12540,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 14773954,
+      "partial_alpha_pixels": 856154,
+      "opaque_pixels": 95052,
+      "verified_transparent": true,
+      "verified_correct_size": true
+    },
+    {
+      "file": "assets/cosmetics/auras/option_01_prismatic_rose/aura_knight_boy_sword_prismatic_rose_pulse_sheet.png",
+      "mode": "RGBA",
+      "size": [
+        12540,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 15107431,
+      "partial_alpha_pixels": 557847,
+      "opaque_pixels": 59882,
+      "verified_transparent": true,
+      "verified_correct_size": true
+    },
+    {
+      "file": "assets/cosmetics/auras/option_01_prismatic_rose/aura_knight_girl_sword_prismatic_rose_pulse_sheet.png",
+      "mode": "RGBA",
+      "size": [
+        12540,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 14856710,
+      "partial_alpha_pixels": 782947,
+      "opaque_pixels": 85503,
+      "verified_transparent": true,
+      "verified_correct_size": true
+    },
+    {
+      "file": "assets/cosmetics/auras/option_01_prismatic_rose/aura_mage_blue_spell_prismatic_rose_pulse_sheet.png",
+      "mode": "RGBA",
+      "size": [
+        12540,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 14721811,
+      "partial_alpha_pixels": 897650,
+      "opaque_pixels": 105699,
+      "verified_transparent": true,
+      "verified_correct_size": true
+    },
+    {
+      "file": "assets/cosmetics/auras/option_01_prismatic_rose/aura_mage_purple_spell_prismatic_rose_pulse_sheet.png",
+      "mode": "RGBA",
+      "size": [
+        12540,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 14735684,
+      "partial_alpha_pixels": 891096,
+      "opaque_pixels": 98380,
+      "verified_transparent": true,
+      "verified_correct_size": true
+    },
+    {
+      "file": "assets/cosmetics/auras/option_02_inferno_outline/aura_archer_boy_arrow_inferno_outline_pulse_sheet.png",
+      "mode": "RGBA",
+      "size": [
+        12540,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 13811754,
+      "partial_alpha_pixels": 1855349,
+      "opaque_pixels": 58057,
+      "verified_transparent": true,
+      "verified_correct_size": true
+    },
+    {
+      "file": "assets/cosmetics/auras/option_02_inferno_outline/aura_archer_girl_arrow_inferno_outline_pulse_sheet.png",
+      "mode": "RGBA",
+      "size": [
+        12540,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 13838403,
+      "partial_alpha_pixels": 1820977,
+      "opaque_pixels": 65780,
+      "verified_transparent": true,
+      "verified_correct_size": true
+    },
+    {
+      "file": "assets/cosmetics/auras/option_02_inferno_outline/aura_knight_boy_sword_inferno_outline_pulse_sheet.png",
+      "mode": "RGBA",
+      "size": [
+        12540,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 14351758,
+      "partial_alpha_pixels": 1314572,
+      "opaque_pixels": 58830,
+      "verified_transparent": true,
+      "verified_correct_size": true
+    },
+    {
+      "file": "assets/cosmetics/auras/option_02_inferno_outline/aura_knight_girl_sword_inferno_outline_pulse_sheet.png",
+      "mode": "RGBA",
+      "size": [
+        12540,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 13933932,
+      "partial_alpha_pixels": 1728789,
+      "opaque_pixels": 62439,
+      "verified_transparent": true,
+      "verified_correct_size": true
+    },
+    {
+      "file": "assets/cosmetics/auras/option_02_inferno_outline/aura_mage_blue_spell_inferno_outline_pulse_sheet.png",
+      "mode": "RGBA",
+      "size": [
+        12540,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 13753037,
+      "partial_alpha_pixels": 1910134,
+      "opaque_pixels": 61989,
+      "verified_transparent": true,
+      "verified_correct_size": true
+    },
+    {
+      "file": "assets/cosmetics/auras/option_02_inferno_outline/aura_mage_purple_spell_inferno_outline_pulse_sheet.png",
+      "mode": "RGBA",
+      "size": [
+        12540,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 13792305,
+      "partial_alpha_pixels": 1862707,
+      "opaque_pixels": 70148,
+      "verified_transparent": true,
+      "verified_correct_size": true
+    },
+    {
+      "file": "assets/cosmetics/auras/option_03_electric_outline/aura_archer_boy_arrow_electric_outline_pulse_sheet.png",
+      "mode": "RGBA",
+      "size": [
+        12540,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        249
+      ],
+      "transparent_pixels": 13950093,
+      "partial_alpha_pixels": 1775067,
+      "opaque_pixels": 0,
+      "verified_transparent": true,
+      "verified_correct_size": true
+    },
+    {
+      "file": "assets/cosmetics/auras/option_03_electric_outline/aura_archer_girl_arrow_electric_outline_pulse_sheet.png",
+      "mode": "RGBA",
+      "size": [
+        12540,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        248
+      ],
+      "transparent_pixels": 13987157,
+      "partial_alpha_pixels": 1738003,
+      "opaque_pixels": 0,
+      "verified_transparent": true,
+      "verified_correct_size": true
+    },
+    {
+      "file": "assets/cosmetics/auras/option_03_electric_outline/aura_knight_boy_sword_electric_outline_pulse_sheet.png",
+      "mode": "RGBA",
+      "size": [
+        12540,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        248
+      ],
+      "transparent_pixels": 14518285,
+      "partial_alpha_pixels": 1206875,
+      "opaque_pixels": 0,
+      "verified_transparent": true,
+      "verified_correct_size": true
+    },
+    {
+      "file": "assets/cosmetics/auras/option_03_electric_outline/aura_knight_girl_sword_electric_outline_pulse_sheet.png",
+      "mode": "RGBA",
+      "size": [
+        12540,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        248
+      ],
+      "transparent_pixels": 14117985,
+      "partial_alpha_pixels": 1607175,
+      "opaque_pixels": 0,
+      "verified_transparent": true,
+      "verified_correct_size": true
+    },
+    {
+      "file": "assets/cosmetics/auras/option_03_electric_outline/aura_mage_blue_spell_electric_outline_pulse_sheet.png",
+      "mode": "RGBA",
+      "size": [
+        12540,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        249
+      ],
+      "transparent_pixels": 13908283,
+      "partial_alpha_pixels": 1816877,
+      "opaque_pixels": 0,
+      "verified_transparent": true,
+      "verified_correct_size": true
+    },
+    {
+      "file": "assets/cosmetics/auras/option_03_electric_outline/aura_mage_purple_spell_electric_outline_pulse_sheet.png",
+      "mode": "RGBA",
+      "size": [
+        12540,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        249
+      ],
+      "transparent_pixels": 13946941,
+      "partial_alpha_pixels": 1778219,
+      "opaque_pixels": 0,
+      "verified_transparent": true,
+      "verified_correct_size": true
+    },
+    {
+      "file": "assets/cosmetics/auras/option_04_frost_outline/aura_archer_boy_arrow_frost_outline_pulse_sheet.png",
+      "mode": "RGBA",
+      "size": [
+        12540,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 13605849,
+      "partial_alpha_pixels": 2118917,
+      "opaque_pixels": 394,
+      "verified_transparent": true,
+      "verified_correct_size": true
+    },
+    {
+      "file": "assets/cosmetics/auras/option_04_frost_outline/aura_archer_girl_arrow_frost_outline_pulse_sheet.png",
+      "mode": "RGBA",
+      "size": [
+        12540,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 13654276,
+      "partial_alpha_pixels": 2068724,
+      "opaque_pixels": 2160,
+      "verified_transparent": true,
+      "verified_correct_size": true
+    },
+    {
+      "file": "assets/cosmetics/auras/option_04_frost_outline/aura_knight_boy_sword_frost_outline_pulse_sheet.png",
+      "mode": "RGBA",
+      "size": [
+        12540,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 14243502,
+      "partial_alpha_pixels": 1481223,
+      "opaque_pixels": 435,
+      "verified_transparent": true,
+      "verified_correct_size": true
+    },
+    {
+      "file": "assets/cosmetics/auras/option_04_frost_outline/aura_knight_girl_sword_frost_outline_pulse_sheet.png",
+      "mode": "RGBA",
+      "size": [
+        12540,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 13767778,
+      "partial_alpha_pixels": 1955817,
+      "opaque_pixels": 1565,
+      "verified_transparent": true,
+      "verified_correct_size": true
+    },
+    {
+      "file": "assets/cosmetics/auras/option_04_frost_outline/aura_mage_blue_spell_frost_outline_pulse_sheet.png",
+      "mode": "RGBA",
+      "size": [
+        12540,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 13559864,
+      "partial_alpha_pixels": 2164094,
+      "opaque_pixels": 1202,
+      "verified_transparent": true,
+      "verified_correct_size": true
+    },
+    {
+      "file": "assets/cosmetics/auras/option_04_frost_outline/aura_mage_purple_spell_frost_outline_pulse_sheet.png",
+      "mode": "RGBA",
+      "size": [
+        12540,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 13603478,
+      "partial_alpha_pixels": 2120461,
+      "opaque_pixels": 1221,
+      "verified_transparent": true,
+      "verified_correct_size": true
+    }
+  ]
+}
