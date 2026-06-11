@@ -1,6 +1,0 @@
-v16 robust fix
-- Added saved-state migration so old localStorage states cannot blank the screen.
-- Shop display made robust with explicit content wrapper and sticky tabs.
-- In-progress sessions are cleared after update to avoid stale session crashes.
-- JavaScript syntax checked.
-- No assets folder included.
