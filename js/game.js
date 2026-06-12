@@ -4,9 +4,9 @@
   const M = window.Mastery;
   const S = window.GameStorage;
   const app = document.getElementById('app');
-  const VERSION = 29;
-  const slots = ['weapon','head','body','legs','pet','aura','frame','trail','cosmetic'];
-  const filters = ['all','weapon','head','body','legs','item','pet','aura','frame','trail','cosmetic'];
+  const VERSION = 30;
+  const slots = ['weapon','head','body','legs','item','pet','aura','frame'];
+  const filters = ['all','weapon','head','body','legs','item','pet','aura','frame'];
   let state = S.load();
   let selectedClass = 'mage';
   let selectedGender = 'girl';
@@ -111,7 +111,7 @@
   function incQuest(type,n=1){ state.questProgress = state.questProgress || {}; state.questProgress[type] = (state.questProgress[type]||0)+n; }
   function maybeNewQuests(){ if(state.quests.list.every(q=>q.claimed)){ state.quests = newQuestSet((state.quests.batch||1)+1); state.questProgress = {}; } }
 
-  function equippedItems(){ return Object.values(state.equipped||{}).filter(Boolean).map(itemById).filter(Boolean); }
+  function equippedItems(){ return slots.map(s => state.equipped?.[s]).filter(Boolean).map(itemById).filter(Boolean); }
   function stats(){ const out={...currentClass().stats}; for(const it of equippedItems()) for(const [k,v] of Object.entries(it.stats||{})) out[k]=(out[k]||0)+v; return out; }
   function maxHp(){ return Math.round(currentClass().hp + Math.floor((stats().defense||0)/3)); }
   function maxMana(){ return Math.round(currentClass().mana + Math.floor((stats().focus||0)/3)); }
@@ -129,11 +129,9 @@
   function portraitStack(size='medium', override={}){
     const frame = override.frame !== undefined ? override.frame : state?.equipped?.frame;
     const petId = override.pet !== undefined ? override.pet : state?.equipped?.pet;
-    const trailId = override.trail !== undefined ? override.trail : state?.equipped?.trail;
-    const pet = petId && itemById(petId); const trail = trailId && itemById(trailId);
-    const frameSrc = frameImage(frame);
+    const pet = petId && itemById(petId);
+    const frameSrc = frame ? itemById(frame)?.image : '';
     return `<div class="portrait-stack ${size}">
-      ${trail ? img(trail.image,'trail-img',trail.name) : ''}
       <div class="portrait-core">${img(heroPortrait(),'hero-img',heroName())}</div>
       ${frame ? (frameSrc ? img(frameSrc,'portrait-frame-img',itemById(frame)?.name || 'frame') : `<div class="${frameClass(frame)}"></div>`) : ''}
       ${pet ? img(pet.image,'pet-img',pet.name) : ''}
@@ -156,7 +154,9 @@
     }
     if(it.slot === 'aura'){
       const sprite = firstAuraSpritePath(it.id);
-      return sprite ? `<div class="icon-token aura-token"><div class="aura-shop-sprite"><div class="aura-shop-frame" style="background-image:url('${esc(sprite)}')"></div></div></div>` : `<div class="icon-token aura-token">${it.image ? img(it.image,'',it.name) : ''}</div>`;
+      if(it.image) return `<div class="icon-token aura-token">${img(it.image,'',it.name)}</div>`;
+      if(sprite) return `<div class="icon-token aura-token"><div class="aura-static-sheet" style="background-image:url('${esc(sprite)}')"></div></div>`;
+      return `<div class="icon-token aura-token"><div class="aura-static-icon">✨</div></div>`;
     }
     if(it.slot === 'frame') return `<div class="icon-token frame-token">${it.image ? img(it.image,'',it.name) : `<div class="${frameClass(it.id)}"></div>`}</div>`;
     return `<div class="icon-token">${img(it.image,'',it.name)}</div>`;
@@ -219,7 +219,8 @@
   function isPotionId(id){ return !!POTIONS[id]; }
   function potionShopItems(){ return Object.values(POTIONS); }
   function shopVisibleItems(){
-    const gear = D.items.filter(it => canUseItem(it) && (shopFilter==='all' || it.slot===shopFilter || it.type===shopFilter));
+    const hidden = it => it.slot==='trail' || it.type==='trail' || it.slot==='cosmetic';
+    const gear = D.items.filter(it => !hidden(it) && canUseItem(it) && (shopFilter==='all' || it.slot===shopFilter || it.type===shopFilter));
     const pots = (shopFilter==='all' || shopFilter==='item') ? potionShopItems() : [];
     return [...gear, ...pots];
   }
@@ -312,8 +313,7 @@
     state.totalAttempts++; incQuest('attempts');
     state.recentFacts.push(M.key(q.a,q.b)); state.recentFacts=state.recentFacts.slice(-6);
     const rec=M.record(state.mastery,q.a,q.b,correct); if(rec.improved) incQuest('improve');
-    let resultTitle = correct ? 'Correct!' : 'Not quite';
-    let resultBody = '';
+
     if(correct){
       s.roundStats.correct++;
       state.totalCorrect++; incQuest('correct'); state.streak++;
@@ -324,26 +324,36 @@
         const dmg=Math.max(1,Math.floor((stats().attack||1)/3));
         s.bossHp=Math.max(0,s.bossHp-dmg);
       }
-      resultBody = 'Nice work.';
       s.feedbackClass='good';
-    } else {
-      state.streak=0;
-      resultBody = `${q.a} × ${q.b} = ${q.product}`;
-      s.feedbackClass='bad';
-      if(s.mode==='boss' && state.classId==='knight' && !s.shieldUsed){
-        s.shieldUsed=true;
-        resultBody += ' · Shield Block saved your HP.';
-      } else if(s.mode==='adventure'||s.mode==='boss'){
-        state.hp=Math.max(0,Math.round(state.hp)-1);
+      const sum=M.summary(state.mastery);
+      state.records.bestAccuracy=Math.max(state.records.bestAccuracy||0,sum.accuracy);
+      state.coach='Correct. Moving to the next question.';
+      modal='';
+      save(); render();
+      if(typeof window !== 'undefined' && window.setTimeout){
+        window.setTimeout(()=>window.Game.nextQuestion(), 550);
+      }else{
+        nextQuestion();
       }
+      return;
+    }
+
+    state.streak=0;
+    let resultBody = `${q.a} × ${q.b} = ${q.product}`;
+    s.feedbackClass='bad';
+    if(s.mode==='boss' && state.classId==='knight' && !s.shieldUsed){
+      s.shieldUsed=true;
+      resultBody += ' · Shield Block saved your HP.';
+    } else if(s.mode==='adventure'||s.mode==='boss'){
+      state.hp=Math.max(0,Math.round(state.hp)-1);
     }
     const sum=M.summary(state.mastery);
     state.records.bestAccuracy=Math.max(state.records.bestAccuracy||0,sum.accuracy);
-    state.coach=correct?'Nice hit. Keep going.':'Check the product before choosing.';
+    state.coach='Review the correct answer, then continue.';
     modal=`<div class="modal-backdrop answer-modal-backdrop" onclick="event.stopPropagation()">
       <div class="modal answer-result-modal" onclick="event.stopPropagation()">
-        <h2 class="${correct?'good':'bad'}">${resultTitle}</h2>
-        ${correct?'<p class="muted">Nice work.</p>':`<p class="answer-correction">${esc(resultBody)}</p>`}
+        <h2 class="bad">Not quite</h2>
+        <p class="answer-correction">${esc(resultBody)}</p>
         <div class="modal-actions"><button class="primary" onclick="Game.nextQuestion()">Next Question</button></div>
       </div>
     </div>`;
@@ -413,7 +423,6 @@
     if(it.slot==='frame') ov.frame=it.id;
     if(it.slot==='aura') ov.aura=it.id;
     if(it.slot==='pet') ov.pet=it.id;
-    if(it.slot==='trail') ov.trail=it.id;
     const statText = Object.keys(it.stats||{}).length ? Object.entries(it.stats).map(([k,v])=>`+${v} ${cap(k)}`).join(' · ') : 'Visual only';
     const preview = it.slot==='aura' && auraSpritePath(it.id)
       ? `<div class="aura-preview-box">${battleHeroStack('preview-battle', ov)}</div>`

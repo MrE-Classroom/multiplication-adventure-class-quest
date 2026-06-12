@@ -997,3 +997,69 @@ button{font:inherit;font-weight:900;border:1px solid var(--line);border-radius:1
     font-size:.68rem !important;
   }
 }
+
+
+/* v30 fixes: reliable center-panel scrolling, no trail/cosmetic UI, static aura shop icons */
+.layout,
+.panel,
+.center-panel,
+.center-panel .panel-body{
+  min-height:0 !important;
+}
+.center-panel > .panel-body.scroll-body{
+  height:100% !important;
+  min-height:0 !important;
+  max-height:100% !important;
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+  padding:0 0 96px 0 !important;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+}
+.center-panel > .panel-body.combat-body{
+  height:100% !important;
+  min-height:0 !important;
+  max-height:100% !important;
+  overflow:hidden !important;
+  padding:0 !important;
+}
+.center-panel > .panel-body.scroll-body .center-pad,
+.center-panel > .panel-body.scroll-body .shop-content,
+.center-panel > .panel-body.scroll-body .area-grid,
+.center-panel > .panel-body.scroll-body .mastery-screen-v27{
+  padding-bottom:120px !important;
+}
+.shop-content{
+  min-height:max-content !important;
+}
+.item-grid,
+.grid2,
+.area-grid{
+  padding-bottom:80px !important;
+}
+.aura-static-sheet{
+  width:86px;
+  height:86px;
+  max-width:86px;
+  max-height:86px;
+  border-radius:14px;
+  overflow:hidden;
+  background-repeat:no-repeat;
+  background-size:1000% 100%;
+  background-position:0% 0%;
+  background-color:#11172a;
+}
+.aura-static-icon{
+  width:86px;
+  height:86px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:2.3rem;
+  border-radius:14px;
+  background:radial-gradient(circle,#ffe07a55,#202640 70%);
+}
+.item-card .aura-shop-sprite,
+.item-card .aura-shop-frame{
+  animation:none !important;
+}

@@ -106,3 +106,18 @@ Included changes:
 - Potion buying is allowed only in Town or Shop.
 - Using owned potions remains available during Town, Adventure, or Boss.
 - Added JavaScript aura frame stepping so the spritesheet advances frame by frame.
+
+
+## v30 Code-Only Rebuild
+
+This ZIP intentionally does not include the `assets/` folder.
+
+Included changes:
+- Fixed non-combat center-panel scrolling for Town, Shop, Map, Mastery, and Settings.
+- Kept combat screens no-scroll.
+- Correct answers auto-advance without a pop-up.
+- Wrong answers show a pop-up with the correct answer and Next Question.
+- Removed Trail tab from the shop.
+- Removed Cosmetic tab from the shop.
+- Hidden old trail/cosmetic equipment from visible inventory/equipment.
+- Aura shop icons are static preview icons, not animated full spritesheets.
