@@ -1,9 +1,9 @@
 
 window.GameData = (() => {
   const classes = {
-    knight: { id:'knight', name:'Knight', icon:'🛡️', difficulty:'★★☆☆☆', hp:5, mana:2, portraits:{boy:'assets/heroes/knight-boy.png', girl:'assets/heroes/knight-girl.png'}, heroNames:{boy:'Leo Shieldheart', girl:'Aria Shieldheart'}, stats:{attack:2,defense:4,speed:1,focus:1}, ability:'Shield Block', abilityText:'Blocks one wrong boss answer.' },
-    archer: { id:'archer', name:'Archer', icon:'🏹', difficulty:'★★★☆☆', hp:4, mana:3, portraits:{boy:'assets/heroes/archer-boy.png', girl:'assets/heroes/archer-girl.png'}, heroNames:{boy:'Theo Swiftshot', girl:'Maya Swiftshot'}, stats:{attack:3,defense:2,speed:4,focus:2}, ability:'Streak Shot', abilityText:'+2 coins every 3 correct in a row.' },
-    mage: { id:'mage', name:'Mage', icon:'🔮', difficulty:'★★★★☆', hp:3, mana:5, portraits:{boy:'assets/heroes/mage-boy.png', girl:'assets/heroes/mage-girl.png'}, heroNames:{boy:'Nico Starspell', girl:'Luna Starspell'}, stats:{attack:4,defense:1,speed:2,focus:5}, ability:'Focus Spell', abilityText:'Spend 1 mana to remove two wrong choices.' }
+    knight: { id:'knight', name:'Knight', icon:'🛡️', difficulty:'★★☆☆☆', hp:5, mana:2, portraits:{boy:'assets/heroes/portraits/knight-boy.png', girl:'assets/heroes/portraits/knight-girl.png'}, heroNames:{boy:'Leo Shieldheart', girl:'Aria Shieldheart'}, stats:{attack:2,defense:4,speed:1,focus:1}, ability:'Shield Block', abilityText:'Blocks one wrong boss answer.' },
+    archer: { id:'archer', name:'Archer', icon:'🏹', difficulty:'★★★☆☆', hp:4, mana:3, portraits:{boy:'assets/heroes/portraits/archer-boy.png', girl:'assets/heroes/portraits/archer-girl.png'}, heroNames:{boy:'Theo Swiftshot', girl:'Maya Swiftshot'}, stats:{attack:3,defense:2,speed:4,focus:2}, ability:'Streak Shot', abilityText:'+2 coins every 3 correct in a row.' },
+    mage: { id:'mage', name:'Mage', icon:'🔮', difficulty:'★★★★☆', hp:3, mana:5, portraits:{boy:'assets/heroes/portraits/mage-boy.png', girl:'assets/heroes/portraits/mage-girl.png'}, heroNames:{boy:'Nico Starspell', girl:'Luna Starspell'}, stats:{attack:4,defense:1,speed:2,focus:5}, ability:'Focus Spell', abilityText:'Spend 1 mana to remove two wrong choices.' }
   };
 
   const battleModels = {
@@ -69,12 +69,12 @@ window.GameData = (() => {
   const items = [
     {id:'wood_sword',name:'Wooden Sword',type:'weapon',slot:'weapon',cls:['knight'],cost:15,rarity:'Common',unlock:'start',stats:{attack:1},desc:'A beginner sword.'},
     {id:'simple_helmet',name:'Simple Helmet',type:'head',slot:'head',cls:['knight'],cost:18,rarity:'Common',unlock:'start',stats:{defense:1},desc:'Basic knight protection.'},
-    {id:'training_shield',name:'Training Shield',type:'shield',slot:'cosmetic',cls:['knight'],cost:25,rarity:'Common',unlock:'start',stats:{defense:1},desc:'A practice shield.'},
+    {id:'training_shield',name:'Training Shield',type:'body',slot:'body',cls:['knight'],cost:25,rarity:'Common',unlock:'start',stats:{defense:1},desc:'A practice shield.'},
     {id:'iron_sword',name:'Iron Sword',type:'weapon',slot:'weapon',cls:['knight'],cost:45,rarity:'Uncommon',unlock:'meadow',stats:{attack:2},desc:'A stronger knight weapon.'},
     {id:'iron_helmet',name:'Iron Helmet',type:'head',slot:'head',cls:['knight'],cost:30,rarity:'Uncommon',unlock:'meadow',stats:{defense:2},desc:'Heavy knight helmet.'},
     {id:'steel_armor',name:'Steel Armor',type:'body',slot:'body',cls:['knight'],cost:55,rarity:'Rare',unlock:'forest',stats:{defense:3},desc:'Strong knight armor.'},
     {id:'knight_boots',name:'Knight Boots',type:'legs',slot:'legs',cls:['knight'],cost:40,rarity:'Rare',unlock:'forest',stats:{defense:1,speed:1},desc:'Sturdy knight boots.'},
-    {id:'royal_shield',name:'Royal Shield',type:'shield',slot:'cosmetic',cls:['knight'],cost:75,rarity:'Epic',unlock:'cave',stats:{defense:3},desc:'A royal shield.'},
+    {id:'royal_shield',name:'Royal Shield',type:'body',slot:'body',cls:['knight'],cost:75,rarity:'Epic',unlock:'cave',stats:{defense:3},desc:'A royal shield.'},
     {id:'dragon_plate',name:'Dragon Plate Armor',type:'body',slot:'body',cls:['knight'],cost:110,rarity:'Legendary',unlock:'castle',stats:{defense:5,attack:1},desc:'Legendary dragon armor.'},
     {id:'practice_bow',name:'Practice Bow',type:'weapon',slot:'weapon',cls:['archer'],cost:15,rarity:'Common',unlock:'start',stats:{attack:1,speed:1},desc:'A beginner bow.'},
     {id:'leather_hood',name:'Leather Hood',type:'head',slot:'head',cls:['archer'],cost:25,rarity:'Common',unlock:'start',stats:{speed:1},desc:'Light archer head gear.'},
@@ -84,16 +84,16 @@ window.GameData = (() => {
     {id:'reinforced_leather',name:'Reinforced Leather',type:'body',slot:'body',cls:['archer'],cost:65,rarity:'Rare',unlock:'forest',stats:{defense:2,speed:2},desc:'Strong light armor.'},
     {id:'ranger_hood',name:'Ranger Hood',type:'head',slot:'head',cls:['archer'],cost:55,rarity:'Rare',unlock:'forest',stats:{speed:2,focus:1},desc:'A focused ranger hood.'},
     {id:'castle_longbow',name:'Castle Longbow',type:'weapon',slot:'weapon',cls:['archer'],cost:85,rarity:'Epic',unlock:'cave',stats:{attack:3,speed:2},desc:'A powerful longbow.'},
-    {id:'dragon_quiver',name:'Dragon Quiver',type:'cosmetic',slot:'cosmetic',cls:['archer'],cost:100,rarity:'Legendary',unlock:'castle',stats:{attack:2,speed:3},desc:'Legendary archer gear.'},
+    {id:'dragon_quiver',name:'Dragon Quiver',type:'weapon',slot:'weapon',cls:['archer'],cost:100,rarity:'Legendary',unlock:'castle',stats:{attack:2,speed:3},desc:'Legendary archer gear.'},
     {id:'training_wand',name:'Training Wand',type:'weapon',slot:'weapon',cls:['mage'],cost:15,rarity:'Common',unlock:'start',stats:{focus:1,attack:1},desc:'A beginner wand.'},
     {id:'apprentice_hat',name:'Apprentice Hat',type:'head',slot:'head',cls:['mage'],cost:20,rarity:'Common',unlock:'start',stats:{focus:1},desc:'A simple mage hat.'},
     {id:'blue_robe',name:'Blue Robe',type:'body',slot:'body',cls:['mage'],cost:40,rarity:'Common',unlock:'start',stats:{focus:1,defense:1},desc:'Cloth armor for mages.'},
     {id:'star_staff',name:'Star Staff',type:'weapon',slot:'weapon',cls:['mage'],cost:50,rarity:'Uncommon',unlock:'meadow',stats:{focus:2,attack:1},desc:'A stronger magical tool.'},
     {id:'magic_shoes',name:'Magic Shoes',type:'legs',slot:'legs',cls:['mage'],cost:35,rarity:'Uncommon',unlock:'meadow',stats:{focus:1,speed:1},desc:'Light magical shoes.'},
     {id:'moon_robe',name:'Moon Robe',type:'body',slot:'body',cls:['mage'],cost:65,rarity:'Rare',unlock:'forest',stats:{focus:3,defense:1},desc:'A stronger robe.'},
-    {id:'spell_book',name:'Spell Book',type:'cosmetic',slot:'cosmetic',cls:['mage'],cost:55,rarity:'Rare',unlock:'forest',stats:{focus:2},desc:'A focus-boosting spell book.'},
+    {id:'spell_book',name:'Spell Book',type:'weapon',slot:'weapon',cls:['mage'],cost:55,rarity:'Rare',unlock:'forest',stats:{focus:2},desc:'A focus-boosting spell book.'},
     {id:'crystal_staff',name:'Crystal Staff',type:'weapon',slot:'weapon',cls:['mage'],cost:90,rarity:'Epic',unlock:'cave',stats:{focus:3,attack:2},desc:'A powerful staff.'},
-    {id:'dragon_spellbook',name:'Dragon Spellbook',type:'cosmetic',slot:'cosmetic',cls:['mage'],cost:105,rarity:'Legendary',unlock:'castle',stats:{focus:4,attack:1},desc:'Legendary mage gear.'},
+    {id:'dragon_spellbook',name:'Dragon Spellbook',type:'weapon',slot:'weapon',cls:['mage'],cost:105,rarity:'Legendary',unlock:'castle',stats:{focus:4,attack:1},desc:'Legendary mage gear.'},
     {id:'tiny_dragon',name:'Tiny Dragon Pet',type:'pet',slot:'pet',cls:['all'],cost:60,rarity:'Epic',unlock:'meadow',stats:{},cosmetic:true,desc:'A friendly dragon companion.'},
     {id:'tiny_phoenix',name:'Tiny Phoenix Pet',type:'pet',slot:'pet',cls:['all'],cost:65,rarity:'Epic',unlock:'forest',stats:{},cosmetic:true,desc:'A bright phoenix companion.'},
     {id:'crystal_cat',name:'Crystal Cat Pet',type:'pet',slot:'pet',cls:['all'],cost:55,rarity:'Rare',unlock:'meadow',stats:{},cosmetic:true,desc:'A sparkling cat companion.'},
