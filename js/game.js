@@ -4,7 +4,7 @@
   const M = window.Mastery;
   const S = window.GameStorage;
   const app = document.getElementById('app');
-  const VERSION = 25;
+  const VERSION = 26;
   const slots = ['weapon','head','body','legs','pet','aura','frame','trail','cosmetic'];
   const filters = ['all','weapon','head','body','legs','pet','aura','frame','trail','cosmetic'];
   let state = S.load();
@@ -236,16 +236,119 @@
   function unequip(slot){ state.equipped[slot]=null; state.coach=`Unequipped ${cap(slot)}.`; save(); render(); }
   function showNotice(title,body){ modal=`<div class="modal-backdrop" onclick="Game.closeModal(event)"><div class="modal" onclick="event.stopPropagation()"><h2>${esc(title)}</h2><p>${esc(body)}</p><div class="modal-actions"><button class="primary" onclick="Game.closeModal()">OK</button></div></div></div>`; render(); }
   function resetModal(){ modal=`<div class="modal-backdrop" onclick="Game.closeModal(event)"><div class="modal" onclick="event.stopPropagation()"><h2>Reset Game</h2><p>This erases progress, gear, coins, mastery, and quests on this browser.</p><div class="modal-actions"><button onclick="Game.closeModal()">Cancel</button><button class="danger" onclick="Game.confirmReset()">Reset</button></div></div></div>`; render(); }
-  function renderSelect(){ const active=D.classes[selectedClass]; app.innerHTML=`<div class="hero-select"><div class="select-card"><h1>Multiplication Adventure</h1><div class="select-topline"><p class="muted">Choose your hero style and class.</p><button class="primary start-game-btn" onclick="Game.startNew('${selectedClass}','${selectedGender}')">Start as ${esc(active.heroNames[selectedGender])}</button></div><div class="avatar-picks">${['boy','girl'].map(g=>`<button class="choice-btn ${selectedGender===g?'active':''}" onclick="Game.pickGender('${g}')">${portraitStackSelect(selectedClass,g)}<b>${cap(g)} Hero</b></button>`).join('')}</div><div class="class-choices">${Object.values(D.classes).map(k=>`<div class="class-choice ${selectedClass===k.id?'active':''}" onclick="Game.pickClass('${k.id}')">${portraitStackSelect(k.id,selectedGender)}<h2>${esc(k.name)}</h2><div>${k.difficulty}</div><p><b>${esc(k.ability)}:</b> ${esc(k.abilityText)}</p><p class="muted">${esc(k.heroNames[selectedGender])} · HP ${k.hp} · Mana ${k.mana}</p></div>`).join('')}</div></div></div>`; }
+  function renderSelect(){
+    const active = D.classes[selectedClass];
+    const hero = active.heroNames[selectedGender];
+    const portrait = active.portraits[selectedGender];
+    const otherGender = selectedGender === 'boy' ? 'girl' : 'boy';
+    app.innerHTML = `<div class="hero-select select-v26">
+      <div class="select-shell">
+        <div class="select-header-v26">
+          <div>
+            <h1>Multiplication Adventure</h1>
+            <p class="select-subtitle">Choose your hero, class, and play style.</p>
+          </div>
+          <button class="primary start-game-btn-v26" onclick="Game.startNew('${selectedClass}','${selectedGender}')">Start as ${esc(hero)}</button>
+        </div>
+
+        <div class="selected-hero-card-v26">
+          <div class="selected-portrait-wrap-v26">${portraitStackSelect(selectedClass, selectedGender)}</div>
+          <div class="selected-hero-info-v26">
+            <div class="eyebrow-v26">Selected Hero</div>
+            <h2>${esc(hero)}</h2>
+            <div class="selected-meta-v26">
+              <span>${esc(active.name)}</span>
+              <span>HP ${active.hp}</span>
+              <span>Mana ${active.mana}</span>
+              <span>${active.difficulty}</span>
+            </div>
+            <p><b>${esc(active.ability)}:</b> ${esc(active.abilityText)}</p>
+          </div>
+        </div>
+
+        <div class="select-options-grid-v26">
+          <section class="select-panel-v26 hero-choice-panel-v26">
+            <div class="panel-heading-v26">
+              <h3>Hero Style</h3>
+              <span>Pick one</span>
+            </div>
+            <div class="gender-grid-v26">
+              ${['boy','girl'].map(g=>`
+                <button class="gender-choice-v26 ${selectedGender===g?'active':''}" onclick="Game.pickGender('${g}')">
+                  ${portraitStackSelect(selectedClass,g)}
+                  <b>${cap(g)} Hero</b>
+                  <span>${esc(active.heroNames[g])}</span>
+                </button>
+              `).join('')}
+            </div>
+          </section>
+
+          <section class="select-panel-v26 class-choice-panel-v26">
+            <div class="panel-heading-v26">
+              <h3>Class</h3>
+              <span>Choose your strategy</span>
+            </div>
+            <div class="class-grid-v26">
+              ${Object.values(D.classes).map(k=>`
+                <button class="class-choice-v26 ${selectedClass===k.id?'active':''}" onclick="Game.pickClass('${k.id}')">
+                  <div class="class-top-v26">
+                    ${portraitStackSelect(k.id, selectedGender)}
+                    <div>
+                      <h4>${esc(k.name)}</h4>
+                      <div class="stars-v26">${k.difficulty}</div>
+                    </div>
+                  </div>
+                  <p><b>${esc(k.ability)}:</b> ${esc(k.abilityText)}</p>
+                  <div class="stat-row-v26">
+                    <span>HP ${k.hp}</span>
+                    <span>Mana ${k.mana}</span>
+                    <span>${esc(k.heroNames[selectedGender])}</span>
+                  </div>
+                </button>
+              `).join('')}
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>`;
+  };
+
+
   function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
   function setScreen(screen){ state.screen=screen; state.session=null; modal=''; save(); render(); }
 
   window.Game = {
-    pickGender:g=>{selectedGender=g;renderSelect();}, pickClass:c=>{selectedClass=c;renderSelect();}, startNew:(c,g)=>{state=freshState(c,g);save();render();},
-    goTown:()=>setScreen('town'), goMap:()=>setScreen('map'), goShop:()=>setScreen('shop'), goInventory:()=>setScreen('inventory'), goMastery:()=>setScreen('mastery'), goRecords:()=>setScreen('records'), goSettings:()=>setScreen('settings'),
-    setShopFilter:f=>{shopFilter=filters.includes(f)?f:'all';render();}, startTraining:()=>startSession('training'), startArea:id=>startSession('adventure',id), startBoss:id=>startSession('boss',id), answer:submitAnswer, nextQuestion, focusSpell, claimQuest,
-    previewItem,buy,equip,unequip,resetModal,confirmReset:()=>{S.clear();state=null;modal='';renderSelect();},closeModal:(e)=>{if(e&&e.target!==e.currentTarget)return;modal='';render();},
-    _state:()=>state,_render:render,_fresh:freshState,_shopHTML:renderShop,_auraSpritePath:auraSpritePath,_battleHeroStack:battleHeroStack
+    pickGender:g=>{selectedGender=g;renderSelect();},
+    pickClass:c=>{selectedClass=c;renderSelect();},
+    startNew:(c,g)=>{state=freshState(c,g);save();render();},
+    goTown:()=>setScreen('town'),
+    goMap:()=>setScreen('map'),
+    goShop:()=>setScreen('shop'),
+    goInventory:()=>setScreen('inventory'),
+    goMastery:()=>setScreen('mastery'),
+    goRecords:()=>setScreen('records'),
+    goSettings:()=>setScreen('settings'),
+    setShopFilter:f=>{shopFilter=filters.includes(f)?f:'all';render();},
+    startTraining:()=>startSession('training'),
+    startArea:id=>startSession('adventure',id),
+    startBoss:id=>startSession('boss',id),
+    answer:submitAnswer,
+    nextQuestion,
+    focusSpell,
+    claimQuest,
+    previewItem,
+    buy,
+    equip,
+    unequip,
+    resetModal,
+    confirmReset:()=>{S.clear();state=null;modal='';renderSelect();},
+    closeModal:(e)=>{if(e&&e.target!==e.currentTarget)return;modal='';render();},
+    _state:()=>state,
+    _render:render,
+    _fresh:freshState,
+    _shopHTML:renderShop,
+    _auraSpritePath:auraSpritePath,
+    _battleHeroStack:battleHeroStack
   };
 
   migrate();

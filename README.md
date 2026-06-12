@@ -40,3 +40,15 @@ Changes:
 - Auras render only through real battle spritesheet assets.
 - Previous shop aura IDs map to the real new aura spritesheets.
 - Shop aura preview is clipped inside a fixed preview box so it does not cover item text.
+
+
+## v26 Code-Only Rebuild
+
+This ZIP intentionally does not include the `assets/` folder.
+
+Changes:
+- Rebuilt character select as a responsive, non-overlapping layout.
+- Added selected hero preview card with class, HP, Mana, stars, and ability.
+- Reworked gender and class choices into separate panels.
+- Reduced oversized class cards and fixed viewport scaling.
+- Preserved v25 aura fixes and portrait path fallback behavior.
