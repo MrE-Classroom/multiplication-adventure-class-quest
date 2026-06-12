@@ -4,7 +4,7 @@
   const M = window.Mastery;
   const S = window.GameStorage;
   const app = document.getElementById('app');
-  const VERSION = 28;
+  const VERSION = 29;
   const slots = ['weapon','head','body','legs','pet','aura','frame','trail','cosmetic'];
   const filters = ['all','weapon','head','body','legs','item','pet','aura','frame','trail','cosmetic'];
   let state = S.load();
@@ -15,8 +15,8 @@
   let modal = '';
   const REST_COST = 10;
   const POTIONS = {
-    hp_potion:{id:'hp_potion',name:'HP Potion',kind:'hp',cost:15,amount:2,icon:'❤️',desc:'Restore 2 HP.'},
-    mana_potion:{id:'mana_potion',name:'Mana Potion',kind:'mana',cost:15,amount:2,icon:'💧',desc:'Restore 2 Mana.'}
+    hp_potion:{id:'hp_potion',name:'HP Potion',kind:'hp',type:'item',slot:'item',cls:['all'],cost:15,amount:2,icon:'❤️',image:'assets/items/potions/hp-potion.png',rarity:'Common',unlock:'start',stats:{},desc:'Restore 2 HP.'},
+    mana_potion:{id:'mana_potion',name:'Mana Potion',kind:'mana',type:'item',slot:'item',cls:['all'],cost:15,amount:2,icon:'💧',image:'assets/items/potions/mana-potion.png',rarity:'Common',unlock:'start',stats:{},desc:'Restore 2 Mana.'}
   };
   const fantasyNames = ['Ari Swiftleaf','Nova Starfall','Kai Moonbow','Milo Brightshield','Luna Fernsong','Theo Emberstep','Maya Sunwhisper','Nico Stormspark','Zara Mistvale','Leo Riverblade','Aria Cloudrunner','Sage Greenflame'];
 
@@ -118,6 +118,7 @@
   function restoreVitals(){ state.hp = maxHp(); state.mana = maxMana(); }
   function restoreHpOnly(){ state.hp = maxHp(); }
   function potionCount(id){ return Math.max(0, Math.floor(state.consumables?.[id] || 0)); }
+  function canBuyPotions(){ return !!state && !state.session && (state.screen==='town' || state.screen==='shop'); }
   function addXp(n){ state.xp += n; while(state.xp >= 100){ state.xp -= 100; state.level += 1; state.coins += 25; } }
   function canUseItem(it){ return Array.isArray(it?.cls) && (it.cls.includes('all') || it.cls.includes(state.classId)); }
   function isUnlocked(it){ return it.unlock === 'start' || !!state.bosses[it.unlock]; }
@@ -149,7 +150,10 @@
   }
   function itemIcon(it){
     if(!it) return '';
-    if(it.id && POTIONS[it.id]) return `<div class="icon-token potion-token">${POTIONS[it.id].icon}</div>`;
+    if(it.id && POTIONS[it.id]){
+      const p=POTIONS[it.id];
+      return `<div class="icon-token potion-token">${p.image ? `<img src="${esc(p.image)}" alt="${esc(p.name)}" onerror="this.replaceWith(document.createTextNode('${p.icon}'))">` : p.icon}</div>`;
+    }
     if(it.slot === 'aura'){
       const sprite = firstAuraSpritePath(it.id);
       return sprite ? `<div class="icon-token aura-token"><div class="aura-shop-sprite"><div class="aura-shop-frame" style="background-image:url('${esc(sprite)}')"></div></div></div>` : `<div class="icon-token aura-token">${it.image ? img(it.image,'',it.name) : ''}</div>`;
@@ -167,7 +171,7 @@
       const c=currentClass(); const sum=M.summary(state.mastery);
       app.innerHTML = `<div class="game">
         <header class="topbar"><div class="top-left"><span class="pill">${c.icon} ${esc(c.name)}</span><span class="pill">${img(D.ui.map,'tiny-icon','map')} Area: ${esc(areaTitle())}</span><span class="pill">${img(D.ui.coin,'tiny-icon','coins')} ${state.coins}</span><span class="pill">${img(D.ui.key,'tiny-icon','key')} ${bossReadyText()}</span></div><div class="top-right"><button onclick="Game.goTown()">Town</button><button onclick="Game.goMap()">Map</button><button onclick="Game.goMastery()">Mastery</button><button onclick="Game.goSettings()">⚙ Settings</button></div></header>
-        <section class="layout"><aside class="panel hero-mini-panel"><div class="panel-title">Hero</div><div class="panel-body hero-mini-body">${renderHero()}</div></aside><main class="panel center-panel"><div class="panel-title">${esc(centerTitle())}</div><div class="panel-body">${renderCenter()}</div></main><aside class="panel quest-panel"><div class="panel-title">Quests + Coach</div><div class="panel-body">${renderQuests()}</div></aside></section>
+        <section class="layout"><aside class="panel hero-mini-panel"><div class="panel-title">Hero</div><div class="panel-body hero-mini-body">${renderHero()}</div></aside><main class="panel center-panel"><div class="panel-title">${esc(centerTitle())}</div><div class="panel-body ${state.session?'combat-body':'scroll-body'}">${renderCenter()}</div></main><aside class="panel quest-panel"><div class="panel-title">Quests + Coach</div><div class="panel-body">${renderQuests()}</div></aside></section>
         <footer class="statusbar"><span class="pill">${img(D.ui.heart,'tiny-icon','heart')} HP ${state.hp}</span><span class="pill">${img(D.ui.mana,'tiny-icon','mana')} Mana ${state.mana}</span><span class="pill">${img(D.ui.star,'tiny-icon','level')} Level ${state.level}</span><span class="pill">XP ${state.xp}/100</span><span class="pill">Streak ${state.streak}</span><span class="pill">Accuracy ${sum.accuracy}%</span><span class="pill">${img(D.ui.mastery,'tiny-icon','mastery')} Mastered ${sum.mastered}/121</span></footer>
         ${modal}
       </div>`;
@@ -212,12 +216,26 @@
   }
   function townCard(title,desc,src,action,label,contain=''){ return `<div class="card menu-card"><div class="menu-art ${contain}">${img(src,'',title)}</div><h3>${title}</h3><p class="muted">${desc}</p><button class="primary" onclick="${action}">${label}</button></div>`; }
   function renderMap(){ return `<div class="center-pad"><div class="area-grid">${D.areas.map(a=>{const locked=a.unlockAfter&&!state.bosses[a.unlockAfter];const p=state.areaProgress[a.id]||{};return `<div class="card"><div class="menu-art">${img(a.background,'',a.name)}</div><h3>${a.name}</h3><p class="muted">Focus facts: ${a.focus.join(', ')}</p><p>${locked?`Locked: ${D.unlockLabels[a.unlockAfter]}`:`Progress: ${p.rounds||0} sets`}</p><button class="primary" ${locked?'disabled':''} onclick="Game.startArea('${a.id}')">Adventure</button> <button ${locked||!readyForBoss(a)?'disabled':''} onclick="Game.startBoss('${a.id}')">Boss</button></div>`}).join('')}</div></div>`; }
+  function isPotionId(id){ return !!POTIONS[id]; }
+  function potionShopItems(){ return Object.values(POTIONS); }
+  function shopVisibleItems(){
+    const gear = D.items.filter(it => canUseItem(it) && (shopFilter==='all' || it.slot===shopFilter || it.type===shopFilter));
+    const pots = (shopFilter==='all' || shopFilter==='item') ? potionShopItems() : [];
+    return [...gear, ...pots];
+  }
   function renderShop(){
     let items=[];
-    try{ items = D.items.filter(it => canUseItem(it) && (shopFilter==='all' || it.slot===shopFilter || it.type===shopFilter)); }catch(e){ console.error('Shop filter failed', e); }
+    try{ items = shopVisibleItems(); }catch(e){ console.error('Shop filter failed', e); }
     return `<div class="shop-content"><div class="tabs">${filters.map(f=>`<button class="${shopFilter===f?'active':''}" onclick="Game.setShopFilter('${f}')">${cap(f)}</button>`).join('')}</div><div class="shop-message">Showing ${items.length} item${items.length===1?'':'s'} for <b>${cap(shopFilter)}</b>.</div><div class="item-grid" style="margin-top:10px">${items.length?items.map(renderItemCard).join(''):'<div class="card">No items found for this filter.</div>'}</div></div>`;
   }
-  function renderItemCard(it){ const locked=!isUnlocked(it), owned=state.inventory.includes(it.id); return `<div class="item-card card ${locked?'locked':''}">${itemIcon(it)}<h3>${esc(it.name)} ${locked?'🔒':''}</h3><div>${esc(it.rarity)} · ${it.cost} coins</div><div class="muted">${esc(it.desc)}</div><div>${locked?'Locked: '+esc(D.unlockLabels[it.unlock] || it.unlock):(owned?'Owned':'Available')}</div><button class="primary" onclick="Game.previewItem('${it.id}')">Preview</button></div>`; }
+  function renderItemCard(it){
+    if(POTIONS[it.id]){
+      const owned=potionCount(it.id);
+      return `<div class="item-card card">${itemIcon(it)}<h3>${esc(it.name)}</h3><div>${esc(it.rarity)} · ${it.cost} coins</div><div class="muted">${esc(it.desc)}</div><div>Owned: ${owned}</div><button class="primary" onclick="Game.previewItem('${it.id}')">Preview</button></div>`;
+    }
+    const locked=!isUnlocked(it), owned=state.inventory.includes(it.id);
+    return `<div class="item-card card ${locked?'locked':''}">${itemIcon(it)}<h3>${esc(it.name)} ${locked?'🔒':''}</h3><div>${esc(it.rarity)} · ${it.cost} coins</div><div class="muted">${esc(it.desc)}</div><div>${locked?'Locked: '+esc(D.unlockLabels[it.unlock] || it.unlock):(owned?'Owned':'Available')}</div><button class="primary" onclick="Game.previewItem('${it.id}')">Preview</button></div>`;
+  }
   function renderInventory(){ const owned=state.inventory.map(itemById).filter(Boolean); return `<div class="center-pad"><h3>Equipped</h3>${slots.map(slot=>{const it=itemById(state.equipped[slot]);return `<div class="gear-row"><span>${cap(slot)}</span><b>${it?esc(it.name):'None'}</b>${it?`<button onclick="Game.unequip('${slot}')">Unequip</button>`:'<span></span>'}</div>`}).join('')}<h3>Inventory</h3><div class="inventory-grid">${owned.length?owned.map(it=>`<div class="card">${itemIcon(it)}<h3>${esc(it.name)}</h3><button class="primary" onclick="Game.equip('${it.id}')">Equip</button></div>`).join(''):'<p class="muted">No items yet.</p>'}</div></div>`; }
   function renderMastery(){
     const facts = state.mastery;
@@ -381,8 +399,9 @@
           <p>Cost: ${potion.cost} coins · Owned: ${potionCount(id)}</p>
           <div class="modal-actions">
             <button onclick="Game.closeModal()">Close</button>
-            <button class="primary" ${state.coins<potion.cost?'disabled':''} onclick="Game.buyPotion('${id}')">Buy</button>
+            <button class="primary" ${!canBuyPotions()||state.coins<potion.cost?'disabled':''} onclick="Game.buyPotion('${id}')">Buy</button>
             <button class="primary" ${potionCount(id)<1?'disabled':''} onclick="Game.usePotion('${id}')">Use</button>
+            ${canBuyPotions()?'':'<p class="muted">Potions can only be bought in Town or Shop.</p>'}
           </div>
         </div>
       </div>`;
@@ -442,7 +461,7 @@
     save(); render();
   }
   function buyPotion(id){
-    const p=POTIONS[id]; if(!p || state.coins < p.cost) return;
+    const p=POTIONS[id]; if(!p || !canBuyPotions() || state.coins < p.cost) return;
     state.coins -= p.cost;
     state.consumables = state.consumables || {hp_potion:0,mana_potion:0};
     state.consumables[id] = potionCount(id) + 1;
@@ -464,21 +483,22 @@
     save(); openItemsModal();
   }
   function openItemsModal(){
+    const buyingAllowed = canBuyPotions();
     const rows = Object.values(POTIONS).map(p=>{
       const owned = potionCount(p.id);
       const isFull = p.kind==='hp' ? state.hp >= maxHp() : state.mana >= maxMana();
       const useDisabled = owned<1 || isFull;
       return `<div class="potion-row card">
-        <div class="potion-icon">${p.icon}</div>
+        <div class="potion-icon">${p.image ? `<img src="${esc(p.image)}" alt="${esc(p.name)}" onerror="this.replaceWith(document.createTextNode('${p.icon}'))">` : p.icon}</div>
         <div><b>${esc(p.name)}</b><div class="muted">${esc(p.desc)} Owned: ${owned}</div></div>
-        <button ${state.coins<p.cost?'disabled':''} onclick="Game.buyPotion('${p.id}')">Buy ${p.cost}</button>
+        ${buyingAllowed ? `<button ${state.coins<p.cost?'disabled':''} onclick="Game.buyPotion('${p.id}')">Buy ${p.cost}</button>` : '<button disabled>Buy</button>'}
         <button class="primary" ${useDisabled?'disabled':''} onclick="Game.usePotion('${p.id}')">Use</button>
       </div>`;
     }).join('');
     modal=`<div class="modal-backdrop" onclick="Game.closeModal(event)">
       <div class="modal side-action-modal" onclick="event.stopPropagation()">
         <h2>Items</h2>
-        <p class="muted">Use potions without leaving the current screen.</p>
+        <p class="muted">${buyingAllowed?'Buy or use potions.':'Use owned potions. Potions can only be bought in Town or Shop.'}</p>
         <div class="modal-stack">${rows}</div>
         <div class="modal-actions"><button class="primary" onclick="Game.closeModal()">Close</button></div>
       </div>
@@ -607,6 +627,17 @@
   }
   function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
   function setScreen(screen){ state.screen=screen; state.session=null; modal=''; save(); render(); }
+
+  let auraFrame = 0;
+  function tickAuraFrames(){
+    if(typeof document === 'undefined' || !document.querySelectorAll) return;
+    auraFrame = (auraFrame + 1) % 10;
+    const pos = `${auraFrame * (100/9)}% 0%`;
+    document.querySelectorAll('.battle-aura-sprite,.aura-shop-frame').forEach(el => { el.style.backgroundPosition = pos; });
+  }
+  if(typeof document !== 'undefined' && document.querySelectorAll && typeof window !== 'undefined' && window.setInterval){
+    window.setInterval(tickAuraFrames, 90);
+  }
 
   window.Game = {
     pickGender:g=>{selectedGender=g;renderSelect();},

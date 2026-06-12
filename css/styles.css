@@ -825,3 +825,175 @@ button{font:inherit;font-weight:900;border:1px solid var(--line);border-radius:1
   .summary-grid{grid-template-columns:1fr;}
   .potion-row,.inventory-modal-card{grid-template-columns:auto minmax(0,1fr); }
 }
+
+
+/* v29 fixes: scroll normal screens, keep combat no-scroll, optimize select, JS-driven aura frames */
+.center-panel .panel-body.scroll-body{
+  overflow:auto !important;
+  padding:0 0 22px 0 !important;
+}
+.center-panel .panel-body.combat-body{
+  overflow:hidden !important;
+  padding:0 !important;
+}
+.scroll-body .center-pad,
+.scroll-body .shop-content{
+  padding-bottom:34px !important;
+}
+.combat-body .combat-screen{
+  height:100%;
+  max-height:100%;
+  overflow:hidden !important;
+}
+.battle-aura-sprite,
+.aura-shop-frame{
+  animation:none !important;
+  background-repeat:no-repeat !important;
+  background-size:1000% 100% !important;
+}
+.battle-aura-viewport,
+.aura-shop-sprite{
+  overflow:hidden !important;
+}
+.potion-token img,
+.potion-icon img{
+  width:58px;
+  height:58px;
+  object-fit:contain;
+}
+
+/* tighter character select; reduce empty space and make lower choices fill the container */
+.hero-select.select-v28{
+  padding:clamp(6px,1vh,12px) !important;
+}
+.select-v28 .select-shell{
+  width:min(1180px,96vw) !important;
+  max-height:calc(100dvh - 12px) !important;
+  padding:clamp(8px,1.2vh,14px) !important;
+  gap:clamp(6px,.9vh,9px) !important;
+  grid-template-rows:auto auto auto minmax(0,1fr) !important;
+}
+.select-v28 .select-header-v26{
+  align-items:center !important;
+}
+.select-v28 h1{
+  font-size:clamp(2rem,4.2vw,3.35rem) !important;
+  line-height:.9 !important;
+}
+.select-v28 .select-subtitle{
+  margin:2px 0 0 !important;
+}
+.select-v28 .name-panel-v28{
+  padding:6px 8px !important;
+  min-height:0 !important;
+}
+.select-v28 .selected-hero-card-v26{
+  min-height:0 !important;
+  padding:7px 9px !important;
+  grid-template-columns:auto minmax(0,1fr) !important;
+  align-items:center !important;
+}
+.select-v28 .selected-portrait-wrap-v26{
+  width:62px !important;
+  height:62px !important;
+}
+.select-v28 .selected-hero-info-v26 h2{
+  margin:0 0 3px !important;
+  font-size:clamp(1.25rem,2.2vw,1.7rem) !important;
+}
+.select-v28 .selected-hero-info-v26 p{
+  display:none !important;
+}
+.select-v28 .selected-meta-v26{
+  gap:5px !important;
+}
+.select-v28 .selected-meta-v26 span{
+  padding:3px 8px !important;
+  font-size:.78rem !important;
+}
+.select-v28 .select-options-grid-v26{
+  min-height:0 !important;
+  grid-template-columns:minmax(245px,.72fr) minmax(0,1.75fr) !important;
+  gap:8px !important;
+}
+.select-v28 .select-panel-v26{
+  padding:8px !important;
+  min-height:0 !important;
+}
+.select-v28 .panel-heading-v26{
+  margin-bottom:6px !important;
+}
+.select-v28 .gender-grid-v26{
+  gap:7px !important;
+}
+.select-v28 .gender-choice-v26{
+  min-height:76px !important;
+  padding:8px !important;
+  grid-template-columns:auto minmax(0,1fr) !important;
+  text-align:left !important;
+}
+.select-v28 .class-grid-v26{
+  gap:8px !important;
+  height:100% !important;
+}
+.select-v28 .class-choice-v26{
+  min-height:0 !important;
+  padding:8px !important;
+  align-content:start !important;
+  gap:5px !important;
+}
+.select-v28 .class-top-v26{
+  gap:8px !important;
+}
+.select-v28 .class-top-v26 h4{
+  font-size:clamp(1rem,1.5vw,1.25rem) !important;
+}
+.select-v28 .class-choice-v26 p{
+  font-size:clamp(.72rem,.95vw,.88rem) !important;
+  line-height:1.15 !important;
+}
+.select-v28 .portrait-stack.medium{
+  --pw:54px !important;
+  --ph:54px !important;
+}
+.select-v28 .portrait-stack.medium .hero-img{
+  width:48px !important;
+  height:48px !important;
+}
+@media(max-height:760px){
+  .select-v28 .select-shell{
+    padding:6px 10px !important;
+    gap:5px !important;
+  }
+  .select-v28 h1{
+    font-size:clamp(1.65rem,3.7vw,2.6rem) !important;
+  }
+  .select-v28 .name-panel-v28{
+    grid-template-columns:auto minmax(190px,1fr) minmax(150px,1fr) !important;
+    padding:5px 7px !important;
+  }
+  .real-name-warning-v28{
+    font-size:.75rem !important;
+  }
+  .select-v28 .selected-hero-card-v26{
+    padding:5px 7px !important;
+  }
+  .select-v28 .selected-portrait-wrap-v26{
+    width:52px !important;
+    height:52px !important;
+  }
+  .select-v28 .portrait-stack.medium{
+    --pw:46px !important;
+    --ph:46px !important;
+  }
+  .select-v28 .portrait-stack.medium .hero-img{
+    width:42px !important;
+    height:42px !important;
+  }
+  .select-v28 .gender-choice-v26{
+    min-height:62px !important;
+  }
+  .select-v28 .class-choice-v26 p{
+    font-size:.68rem !important;
+  }
+}

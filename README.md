@@ -91,3 +91,18 @@ Included changes:
 - Mastery table shows products with simple summary.
 - Aura spritesheets are forced into a clipped one-frame viewport.
 - Stat gear moved out of Cosmetic category.
+
+
+## v29 Code-Only Rebuild
+
+This ZIP intentionally does not include the `assets/` folder.
+
+Included changes:
+- Optimized character select to reduce empty space.
+- Restored scrolling for normal screens such as Town, Shop, Map, and Mastery.
+- Kept combat screens no-scroll.
+- Added universal HP Potion and Mana Potion to Shop → Item.
+- Potion assets are referenced from `assets/items/potions/hp-potion.png` and `assets/items/potions/mana-potion.png`.
+- Potion buying is allowed only in Town or Shop.
+- Using owned potions remains available during Town, Adventure, or Boss.
+- Added JavaScript aura frame stepping so the spritesheet advances frame by frame.
