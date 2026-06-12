@@ -801,3 +801,61 @@ button{font:inherit;font-weight:900;border:1px solid var(--line);border-radius:1
     grid-template-columns:1fr;
   }
 }
+
+
+/* v27 mastery screen: products inside cells, simple required summary only */
+.mastery-screen-v27{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  min-height:0;
+}
+.mastery-summary-v27{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+}
+.mastery-summary-v27 .card{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  min-height:0;
+  padding:12px;
+}
+.mastery-summary-v27 .card b{
+  font-size:.9rem;
+  color:var(--muted);
+}
+.mastery-summary-v27 .card span{
+  font-size:1.15rem;
+  font-weight:900;
+  overflow-wrap:anywhere;
+}
+.mastery-focus-card-v27 span{
+  font-size:1rem !important;
+}
+.mastery-table-wrap-v27{
+  overflow:auto;
+  max-width:100%;
+  border-radius:14px;
+}
+.mastery-table td .fact-product{
+  display:block;
+  font-size:clamp(.9rem,1.4vw,1.25rem);
+  font-weight:900;
+  line-height:1;
+}
+.mastery-table td{
+  text-align:center;
+  vertical-align:middle;
+}
+@media(max-width:900px){
+  .mastery-summary-v27{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+@media(max-width:560px){
+  .mastery-summary-v27{
+    grid-template-columns:1fr;
+  }
+}

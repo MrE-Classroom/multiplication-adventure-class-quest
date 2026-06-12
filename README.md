@@ -52,3 +52,17 @@ Changes:
 - Reworked gender and class choices into separate panels.
 - Reduced oversized class cards and fixed viewport scaling.
 - Preserved v25 aura fixes and portrait path fallback behavior.
+
+
+## v27 Code-Only Rebuild
+
+This ZIP intentionally does not include the `assets/` folder.
+
+Changes:
+- Mastery table cells now show multiplication products instead of mastery level numbers.
+- Mastery progress still controls the cell color.
+- Mastery summary now shows only:
+  - Mastered facts
+  - Accuracy
+  - Facts practiced
+  - Current focus facts

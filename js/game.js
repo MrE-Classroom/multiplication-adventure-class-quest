@@ -4,7 +4,7 @@
   const M = window.Mastery;
   const S = window.GameStorage;
   const app = document.getElementById('app');
-  const VERSION = 26;
+  const VERSION = 27;
   const slots = ['weapon','head','body','legs','pet','aura','frame','trail','cosmetic'];
   const filters = ['all','weapon','head','body','legs','pet','aura','frame','trail','cosmetic'];
   let state = S.load();
@@ -183,7 +183,40 @@
   }
   function renderItemCard(it){ const locked=!isUnlocked(it), owned=state.inventory.includes(it.id); return `<div class="item-card card ${locked?'locked':''}">${itemIcon(it)}<h3>${esc(it.name)} ${locked?'🔒':''}</h3><div>${esc(it.rarity)} · ${it.cost} coins</div><div class="muted">${esc(it.desc)}</div><div>${locked?'Locked: '+esc(D.unlockLabels[it.unlock] || it.unlock):(owned?'Owned':'Available')}</div><button class="primary" onclick="Game.previewItem('${it.id}')">Preview</button></div>`; }
   function renderInventory(){ const owned=state.inventory.map(itemById).filter(Boolean); return `<div class="center-pad"><h3>Equipped</h3>${slots.map(slot=>{const it=itemById(state.equipped[slot]);return `<div class="gear-row"><span>${cap(slot)}</span><b>${it?esc(it.name):'None'}</b>${it?`<button onclick="Game.unequip('${slot}')">Unequip</button>`:'<span></span>'}</div>`}).join('')}<h3>Inventory</h3><div class="inventory-grid">${owned.length?owned.map(it=>`<div class="card">${itemIcon(it)}<h3>${esc(it.name)}</h3><button class="primary" onclick="Game.equip('${it.id}')">Equip</button></div>`).join(''):'<p class="muted">No items yet.</p>'}</div></div>`; }
-  function renderMastery(){ const facts=state.mastery, sum=M.summary(facts); let rows=''; for(let a=0;a<=10;a++){ rows += `<tr><th>${a}</th>`; for(let b=0;b<=10;b++){ rows += `<td class="m${facts[M.key(a,b)]?.level||0}">${facts[M.key(a,b)]?.level||0}</td>`; } rows += '</tr>'; } return `<div class="center-pad"><div class="grid2"><div class="card">Mastered: ${sum.mastered}/121</div><div class="card">Accuracy: ${sum.accuracy}%</div></div><div style="overflow:auto;margin-top:12px"><table class="mastery-table"><tr><th>×</th>${Array.from({length:11},(_,i)=>`<th>${i}</th>`).join('')}</tr>${rows}</table></div></div>`; }
+  function renderMastery(){
+    const facts = state.mastery;
+    const sum = M.summary(facts);
+    const activeArea = state.session?.areaId ? areaById(state.session.areaId) : areaById(state.areaId);
+    const focusLabel = state.areaId === 'training'
+      ? 'All facts'
+      : (activeArea?.focus?.length ? `${activeArea.name}: ${activeArea.focus.join(', ')}` : 'All facts');
+    let rows = '';
+    for(let a=0;a<=10;a++){
+      rows += `<tr><th>${a}</th>`;
+      for(let b=0;b<=10;b++){
+        const f = facts[M.key(a,b)] || {level:0,attempts:0,correct:0};
+        const product = a * b;
+        const factAccuracy = f.attempts ? Math.round((f.correct / f.attempts) * 100) : 0;
+        const title = `${a} × ${b} = ${product} · ${f.attempts || 0} practiced · ${factAccuracy}% correct`;
+        rows += `<td class="m${f.level || 0}" title="${esc(title)}"><span class="fact-product">${product}</span></td>`;
+      }
+      rows += '</tr>';
+    }
+    return `<div class="center-pad mastery-screen-v27">
+      <div class="mastery-summary-v27">
+        <div class="card"><b>Mastered facts</b><span>${sum.mastered}/121</span></div>
+        <div class="card"><b>Accuracy</b><span>${sum.accuracy}%</span></div>
+        <div class="card"><b>Facts practiced</b><span>${sum.practiced}/121</span></div>
+        <div class="card mastery-focus-card-v27"><b>Current focus facts</b><span>${esc(focusLabel)}</span></div>
+      </div>
+      <div class="mastery-table-wrap-v27">
+        <table class="mastery-table">
+          <tr><th>×</th>${Array.from({length:11},(_,i)=>`<th>${i}</th>`).join('')}</tr>
+          ${rows}
+        </table>
+      </div>
+    </div>`;
+  }
   function renderRecords(){ const sum=M.summary(state.mastery); return `<div class="center-pad"><div class="card"><h3>Records</h3><p>Best streak: ${state.records.bestStreak||0}</p><p>Best accuracy: ${state.records.bestAccuracy||0}%</p><p>Total attempts: ${sum.attempts}</p></div></div>`; }
   function renderSettings(){ return `<div class="center-pad"><div class="card"><h3>Settings</h3><p class="muted">Use this screen to reset progress or return to Town.</p><button class="danger" onclick="Game.resetModal()">Reset Game</button> <button onclick="Game.goTown()">Back to Town</button></div></div>`; }
   function renderBattle(){ const s=state.session, a=areaById(s.areaId), q=s.question; const areaName=esc(a?.name || 'Training'); return `<section class="scene-panel combat-screen" style="${sceneStyle()}"><div class="combat-stage transparent-stage"><div class="combat-area-badge">${areaName} Adventure</div><div class="combat-fighters"><div class="combat-hero">${battleHeroStack('battle-model')}<span>${esc(heroName())}</span></div><div class="combat-versus">×</div><div class="combat-enemy">${enemyArt(s.enemy, `${a?.name || 'Training'} Enemy`)}</div></div></div><div class="combat-question-zone">${questionCard(`${areaName} · Question ${s.index+1}/${s.total}`)}</div></section>`; }
