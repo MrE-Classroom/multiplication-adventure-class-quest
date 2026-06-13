@@ -1,8 +1,9 @@
 (function () {
   'use strict';
 
-  const SAVE_KEY = 'multiplication-adventure-class-quest-save-v33';
+  const SAVE_KEY = 'multiplication-adventure-class-quest-save-v34';
   const LEGACY_KEYS = [
+    'multiplication-adventure-class-quest-save-v33',
     'multiplication-adventure-class-quest-save-v32',
     'multiplication-adventure-class-quest-save-v31',
     'multiplication-adventure-class-quest-save-v30',

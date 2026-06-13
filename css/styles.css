@@ -1827,7 +1827,7 @@ button.danger-btn {
   }
 }
 
-/* v33 correction: combat side panel and precise missing-art labels */
+/* v34 correction: combat side panel and precise missing-art labels */
 .combat-grid {
   height: 100%;
   min-height: 0;

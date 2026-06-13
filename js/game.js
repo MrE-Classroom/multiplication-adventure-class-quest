@@ -4,7 +4,7 @@
   const DATA = window.MULTIPLICATION_ADVENTURE_DATA;
   const STORAGE = window.MA_STORAGE;
   const MASTERY = window.MA_MASTERY;
-  const VERSION = 33;
+  const VERSION = 34;
   const AUTO_ADVANCE_MS = 1250;
 
   const app = document.getElementById('app');
@@ -192,80 +192,26 @@
     return uniqueList([
       current,
       ...pathVariants(current),
-      ...basePath('assets/heroes/portraits', [
+      ...basePath('assets/heroes', [
         `${classId}-${gender}`,
-        `${classId}_${gender}`,
-        `${classId}-${gender}-portrait`,
-        `${classId}_${gender}_portrait`,
-        `portrait-${classId}-${gender}`,
-        `portrait_${classId}_${gender}`
+        `${classId}_${gender}`
       ])
     ]);
   }
 
   function enemySources(area, primary) {
-    if (!primary || !area) return [];
-    const areaId = area.id || 'meadow';
-    const areaAlt = areaId === 'dragon' ? 'dragon-mountain' : areaId;
-    const primaryStem = stemName(primary);
-    const indexMatch = primaryStem.match(/(\d+)$/);
-    const index = indexMatch ? String(Number(indexMatch[1])) : '1';
-    const padded = index.padStart(2, '0');
-    const names = [
-      primaryStem,
-      primaryStem.replace(/-/g, '_'),
-      `${areaId}-${index}`,
-      `${areaId}_${index}`,
-      `${areaId}${index}`,
-      `${areaId}-${padded}`,
-      `${areaId}_${padded}`,
-      `${areaId}-enemy-${index}`,
-      `${areaId}_enemy_${index}`,
-      `${areaId}-enemy-${padded}`,
-      `${areaId}_enemy_${padded}`,
-      `enemy-${areaId}-${index}`,
-      `enemy_${areaId}_${index}`,
-      `enemy-${areaId}-${padded}`,
-      `enemy_${areaId}_${padded}`,
-      `${areaAlt}-${index}`,
-      `${areaAlt}_${index}`,
-      `${areaAlt}-enemy-${index}`,
-      `${areaAlt}_enemy_${index}`,
-      `enemy-${areaAlt}-${index}`,
-      `enemy_${areaAlt}_${index}`
-    ];
-    return uniqueList([
-      primary,
-      ...pathVariants(primary),
-      ...basePath('assets/enemies', names)
-    ]);
+    if (!primary) return [];
+    return uniqueList([primary, ...pathVariants(primary)]);
   }
 
   function bossSources(boss) {
     if (!boss?.asset) return [];
-    const id = boss.id || stemName(boss.asset);
-    return uniqueList([
-      boss.asset,
-      ...pathVariants(boss.asset),
-      ...basePath('assets/bosses', [
-        id,
-        id.replace(/-/g, '_'),
-        `${id}-boss`,
-        `${id}_boss`,
-        `boss-${id}`,
-        `boss_${id.replace(/-/g, '_')}`
-      ])
-    ]);
+    return uniqueList([boss.asset, ...pathVariants(boss.asset)]);
   }
 
   function itemImageSources(item) {
     if (!item?.asset) return [];
-    const sources = [item.asset, ...pathVariants(item.asset)];
-    if (item.category === 'frame') {
-      const stem = stemName(item.asset);
-      sources.push(...basePath('assets/ui/hero-frames', [stem, stem.replace(/-frame$/, ''), stem.replace(/_/g, '-'), stem.replace(/-/g, '_')]));
-    }
-    return uniqueList(sources);
+    return uniqueList([item.asset, ...pathVariants(item.asset)]);
   }
 
   function imgTag(sources, className, alt, kind) {
@@ -638,7 +584,7 @@
     if (state.coachKey === 'correct') return { primary: 'Correct! Great work.', detail: 'Get ready for the next fact. Your mastery grows when you keep a strong streak.' };
     if (state.coachKey === 'wrong') return { primary: 'Not quite. Study the correction before moving on.', detail: 'This fact may come back again because missed facts are added to extra practice.' };
     if (state.coachKey === 'bossReady') return { primary: 'You are ready for a boss challenge.', detail: 'Open the Map when you want to challenge the boss and unlock the next area.' };
-    if (state.coachKey === 'shop') return { primary: 'Shop tip: gear changes stats.', detail: 'Frames, pets, and auras are visual upgrades. Auras animate in battle but use a static preview in the shop.' };
+    if (state.coachKey === 'shop') return { primary: 'Shop tip: gear changes stats.', detail: 'Frames and auras are visual upgrades. Auras animate in battle but use a static preview in the shop.' };
     if (state.coachKey === 'potionBlocked') return { primary: 'Potion buying is blocked during battle.', detail: 'You can use potions you already own, but new potions can only be bought in Town or Shop.' };
     if (state.coachKey === 'levelUp') return { primary: 'Level up! Your hero is growing.', detail: 'Keep practicing focus facts to unlock stronger mastery and boss progress.' };
     if (lowHp) return { primary: 'Your HP is low.', detail: 'Use an owned HP Potion or return to Town to rest before starting a harder challenge.' };
@@ -732,7 +678,7 @@
         <section class="panel-card shop-header">
           <div>
             <h2>Shop</h2>
-            <p>Buy class gear, potions, frames, auras, and pets. Trail and Cosmetic tabs are intentionally hidden.</p>
+            <p>Buy class gear, potions, frames, and auras. Trail and Cosmetic tabs are intentionally hidden.</p>
           </div>
           <div class="coin-chip">${state.coins} coins</div>
         </section>
@@ -788,7 +734,6 @@
     if (item.description) return item.description;
     if (item.category === 'frame') return 'Visual portrait frame. Preview shows how it appears around the hero portrait.';
     if (item.category === 'aura') return 'Visual battle aura. Preview shows one hero battle pose with the aura behind the hero.';
-    if (item.category === 'pet') return 'Visual pet companion shown on the hero portrait.';
     if (item.stats) return 'Gear upgrade that changes hero stats after it is equipped.';
     return 'Shop item.';
   }
@@ -815,18 +760,14 @@
       `;
     }
 
-    if (['frame', 'pet'].includes(item.category)) {
-      const portraitPath = DATA.ASSETS.portraits[heroKey()];
-      const frame = item.category === 'frame' ? item : itemById(state.equipped.frame);
-      const pet = item.category === 'pet' ? item : itemById(state.equipped.pet);
+    if (item.category === 'frame') {
       return `
         <div class="preview-portrait-card">
           <div class="portrait-stage preview-portrait-stage">
             ${imgTag(heroPortraitSources(), '', `${state.hero?.name || 'Hero'} portrait preview`, 'Portrait')}
-            ${frame ? `${imgTag(itemImageSources(frame), 'portrait-frame', frame.label, 'Frame')}` : ''}
-            ${pet ? `${imgTag(itemImageSources(pet), 'portrait-pet', pet.label, 'Pet')}` : ''}
+            ${imgTag(itemImageSources(item), 'portrait-frame', item.label, 'Frame')}
           </div>
-          <small>${item.category === 'frame' ? 'Frame preview' : 'Pet preview'}</small>
+          <small>Frame preview</small>
         </div>
       `;
     }
@@ -927,7 +868,7 @@
         </section>
         <section class="panel-card">
           <h2>Build Notes</h2>
-          <p>Version ${VERSION}: restored dark RPG full-screen shell, town graphics, item preview modal, correct-answer blocking popup, wrong-answer correction modal, safer non-combat scrolling, compact quests, expanded Coach panel, hidden Trail/Cosmetic tabs, and static aura shop previews.</p>
+          <p>Version ${VERSION}: corrected the code asset manifest to the provided assets.zip tree, restoring hero portraits, battle poses, enemies, bosses, frames, item icons, and aura paths while keeping the dark RPG shell and answer popups.</p>
         </section>
       </div>
     `;
@@ -1447,7 +1388,7 @@
   }
 
   function openInventory() {
-    const equipmentRows = ['weapon', 'head', 'body', 'legs', 'frame', 'aura', 'pet'].map((slot) => {
+    const equipmentRows = ['weapon', 'head', 'body', 'legs', 'frame', 'aura'].map((slot) => {
       const item = itemById(state.equipped[slot]);
       return `<div class="inventory-row"><strong>${slot.toUpperCase()}</strong><span>${item ? escapeHTML(item.label) : 'Empty'}</span></div>`;
     }).join('');

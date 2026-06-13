@@ -1,15 +1,18 @@
-# Multiplication Adventure: Class Quest v33 Code-Only Rebuild
+# Multiplication Adventure: Class Quest v34 Code-Only Rebuild
 
 This ZIP is code-only and intentionally does not include the `assets/` folder. Upload the contents of this folder to the GitHub repository root, replacing matching files. Keep the existing root-level `assets/` folder in place.
 
-## v33 fixes
+## v34 fixes
 
-- Corrected the v32 asset-loading regression by adding resilient image fallback handling for hero portraits, hero battle art, enemies, bosses, frames, pets, and item icons.
-- Enemy, boss, and hero image fallbacks now try common hyphen/underscore, padded-number, and extension variants before showing a missing-art label.
-- Missing opponent art is now labeled correctly as `Enemy art missing` or `Boss art missing`; it no longer reports enemy failures as `Hero art missing`.
-- Restored visible combat-side support: hero portrait panel, Coach panel, and compact Quest Log now appear during battle/boss screens.
-- Removed duplicate bottom status bar render from v32.
-- Kept the dark RPG-style full-screen UI, Town graphics, item preview modal, correct-answer blocking popup with auto-advance, wrong-answer correction popup, shop scrolling, and hidden Cosmetic/Trail tabs.
+- Replaced the guessed asset manifest with paths verified against the provided `assets.zip`.
+- Corrected hero portraits from `assets/heroes/portraits/...` to the real `assets/heroes/...` structure.
+- Corrected boss art to the real files: `meadow-boss.png`, `forest-boss.png`, `cave-boss.png`, `castle-boss.png`, and `dragon-boss.png`.
+- Corrected enemy art to the real files such as `meadow-enemy-1.png` and `dragon-mountain-enemy-1.png`.
+- Corrected hero frame assets to `assets/ui/hero-frames/...`.
+- Corrected item icons to the real class item folders and removed nonexistent item paths such as `assets/items/potions/...`.
+- Kept potions functional by using existing UI assets: `heart.png` and `mana.png`.
+- Removed pet shop entries because no pet asset folder exists in the provided asset package.
+- Kept the dark RPG-style full-screen UI, Town graphics, item preview modal, correct-answer blocking popup with auto-advance, wrong-answer correction popup, shop scrolling, Coach panel, Quest Log, and hidden Cosmetic/Trail tabs.
 
 ## Deployment
 
