@@ -1,123 +1,58 @@
-# Multiplication Adventure Class Quest
+# Multiplication Adventure: Class Quest — v31 Code-Only Rebuild
 
-A browser-based multiplication fluency game for students.
+This package is a code-only rebuild for the GitHub Pages browser game. It intentionally does **not** include the `assets/` folder. Keep the existing live repository `assets/` directory in place and upload/replace these files at the repository root.
 
-## How to Play
+## Version
 
-Students choose a hero, practice multiplication facts, earn coins, unlock gear, complete quests, and battle bosses.
+- `const VERSION = 31;`
+- Query strings in `index.html` use `?v=31`.
 
-## Hosting
-
-This game is designed to run on GitHub Pages.
-
-Required root files and folders:
+## Files included
 
 ```text
 index.html
-css/
-js/
-data/
-assets/
+README.md
+css/styles.css
+data/gameData.js
+js/game.js
+js/mastery.js
+js/storage.js
 ```
 
-## Saving Progress
+## v31 changes
 
-Student progress saves locally in the browser using localStorage.
+- Correct answers now show a green blocking “Correct” popup.
+- The correct popup blocks other input and auto-advances after a short delay.
+- Wrong answers show a correction modal with the full equation and a Next Question button.
+- Town, Shop, Map, Mastery, Settings, and Summary use a scrollable screen body.
+- Battle and Boss screens remain no-scroll and fit into the available viewport.
+- Shop tabs no longer include Trail or Cosmetic.
+- Aura shop previews use a static first-frame preview so the full spritesheet does not appear.
+- Battle auras render behind the battle hero only and animate from the 10-frame spritesheet.
+- Quest cards are compact rows with inline claim buttons.
+- Coach panel appears above the Quest Log and uses expanded action-specific guidance.
+- Potions are universal items and can be used in battle if owned.
+- Buying items during an active battle is blocked.
 
-## Current Build
+## Deployment
 
-v24 — aura correction: auras are battle-only and old shop aura IDs map to real spritesheet assets.
+Upload the contents of this folder directly to the GitHub repository root. Do not upload the outer folder as a nested directory. The repository root should contain `index.html`.
 
+## Asset expectations
 
-## v24 — aura correction: auras are battle-only and old shop aura IDs map to real spritesheet assets.
+This code references the existing project asset paths such as:
 
-Auras now live only in:
+- `assets/backgrounds/meadow.jpg`
+- `assets/backgrounds/town.jpg`
+- `assets/heroes/portraits/knight-boy.png`
+- `assets/heroes/battle/battle_knight_boy_sword.png`
+- `assets/items/potions/hp-potion.png`
+- `assets/items/potions/mana-potion.png`
+- `assets/cosmetics/auras/option_01_prismatic_rose/..._pulse_sheet.png`
 
-```text
-assets/cosmetics/auras/
-```
+GitHub Pages paths are case-sensitive, so filenames must match the code exactly.
 
-Hero assets are split into:
+## Verification completed before packaging
 
-```text
-assets/heroes/portraits/
-assets/heroes/battle/
-```
-
-The previous incorrect aura folder has been removed:
-
-```text
-assets/effects/auras/
-```
-
-The six outline aura options are implemented as 10-frame horizontal spritesheets. Each sheet is 12540 × 1254, with each frame 1254 × 1254.
-
-
-## GitHub-Ready Optimization
-
-This build preserves the same paths and game code behavior, but the large aura spritesheets were optimized as indexed PNGs with alpha transparency. The files remain transparent in the browser and keep the same 12540 × 1254 spritesheet size.
-
-
-## v24 — aura correction: auras are battle-only and old shop aura IDs map to real spritesheet assets.
-
-- Character select screen scales to the visible device height.
-- Hero portraits are kept in both `assets/heroes/portraits/` and `assets/heroes/` so the browser has a fallback path.
-- Image tags now use a fallback for hero portrait paths before removing the image.
-
-
-## v24 Aura Fix
-
-- Auras no longer render on hero portrait cards or the side hero panel.
-- Old shop aura IDs now map to the new real aura spritesheet assets.
-- Battle auras use `assets/cosmetics/auras/option_*/aura_*_pulse_sheet.png`.
-- CSS-only aura rendering has been removed from battle.
-
-
-## v28 Code-Only Rebuild
-
-This ZIP intentionally does not include the `assets/` folder.
-
-Included changes:
-- Hero name input, random name button, and real-name warning on character select.
-- Character select compact full-screen layout.
-- Battle screens constrained to avoid center-panel scrolling.
-- Answer result pop-up with only correct/incorrect, answer if wrong, and Next Question.
-- End-of-round summary with coins, XP, accuracy, and correct count.
-- Hero side-panel buttons: Inventory, Items, Ability.
-- Inventory and item windows open as modals and preserve the current screen.
-- Rest at Town costs 10 coins and restores HP/Mana.
-- HP Potion and Mana Potion added through the Items window.
-- Boss defeat restores HP only.
-- Mastery table shows products with simple summary.
-- Aura spritesheets are forced into a clipped one-frame viewport.
-- Stat gear moved out of Cosmetic category.
-
-
-## v29 Code-Only Rebuild
-
-This ZIP intentionally does not include the `assets/` folder.
-
-Included changes:
-- Optimized character select to reduce empty space.
-- Restored scrolling for normal screens such as Town, Shop, Map, and Mastery.
-- Kept combat screens no-scroll.
-- Added universal HP Potion and Mana Potion to Shop → Item.
-- Potion assets are referenced from `assets/items/potions/hp-potion.png` and `assets/items/potions/mana-potion.png`.
-- Potion buying is allowed only in Town or Shop.
-- Using owned potions remains available during Town, Adventure, or Boss.
-- Added JavaScript aura frame stepping so the spritesheet advances frame by frame.
-
-
-## v30 Code-Only Rebuild
-
-This ZIP intentionally does not include the `assets/` folder.
-
-Included changes:
-- Fixed non-combat center-panel scrolling for Town, Shop, Map, Mastery, and Settings.
-- Kept combat screens no-scroll.
-- Correct answers auto-advance without a pop-up.
-- Wrong answers show a pop-up with the correct answer and Next Question.
-- Removed Trail tab from the shop.
-- Removed Cosmetic tab from the shop.
-- Hidden old trail/cosmetic equipment from visible inventory/equipment.
-- Aura shop icons are static preview icons, not animated full spritesheets.
+- JavaScript syntax check with `node --check`.
+- Static smoke validation for required version strings, hidden Trail/Cosmetic shop tabs, correct-answer modal strings, wrong-answer modal strings, scroll-screen and combat-screen classes, potion item data, and aura static/battle classes.
