@@ -225,7 +225,7 @@
   ];
 
   window.MULTIPLICATION_ADVENTURE_DATA = {
-    VERSION: 32,
+    VERSION: 33,
     ASSETS,
     HERO_CLASSES,
     AREAS,

@@ -1,62 +1,30 @@
-# Multiplication Adventure: Class Quest — v32 Code-Only Rebuild
+# Multiplication Adventure: Class Quest v33 Code-Only Rebuild
 
-This package is a code-only rebuild for the GitHub Pages browser game. It intentionally does **not** include the `assets/` folder. Keep the existing live repository `assets/` directory in place and upload/replace these files at the repository root.
+This ZIP is code-only and intentionally does not include the `assets/` folder. Upload the contents of this folder to the GitHub repository root, replacing matching files. Keep the existing root-level `assets/` folder in place.
 
-## Version
+## v33 fixes
 
-- `const VERSION = 32;`
-- Query strings in `index.html` use `?v=32`.
-
-## Files included
-
-```text
-index.html
-README.md
-css/styles.css
-data/gameData.js
-js/game.js
-js/mastery.js
-js/storage.js
-```
-
-## v32 changes
-
-- Restores the dark RPG-style full-screen shell after the v31 light-layout regression.
-- Restores a graphical Town Center using `assets/backgrounds/town.jpg`.
-- Restores shop item preview through a blocking preview window with item art, price, owned/equipped status, description, effect, and Buy/Equip/Unequip actions.
-- Correct answers now show a green blocking “Correct” popup.
-- The correct popup blocks other input and auto-advances after a short delay.
-- Wrong answers show a correction modal with the full equation and a Next Question button.
-- Town, Shop, Map, Mastery, Settings, and Summary use a scrollable screen body.
-- Battle and Boss screens remain no-scroll and fit into the available viewport.
-- Shop tabs no longer include Trail or Cosmetic.
-- Aura shop previews use a static first-frame preview so the full spritesheet does not appear.
-- Battle auras render behind the battle hero only and animate from the 10-frame spritesheet.
-- Quest cards are compact rows with inline claim buttons.
-- Coach panel appears above the Quest Log and uses expanded action-specific guidance.
-- Potions are universal items and can be used in battle if owned.
-- Buying items during an active battle is blocked.
+- Corrected the v32 asset-loading regression by adding resilient image fallback handling for hero portraits, hero battle art, enemies, bosses, frames, pets, and item icons.
+- Enemy, boss, and hero image fallbacks now try common hyphen/underscore, padded-number, and extension variants before showing a missing-art label.
+- Missing opponent art is now labeled correctly as `Enemy art missing` or `Boss art missing`; it no longer reports enemy failures as `Hero art missing`.
+- Restored visible combat-side support: hero portrait panel, Coach panel, and compact Quest Log now appear during battle/boss screens.
+- Removed duplicate bottom status bar render from v32.
+- Kept the dark RPG-style full-screen UI, Town graphics, item preview modal, correct-answer blocking popup with auto-advance, wrong-answer correction popup, shop scrolling, and hidden Cosmetic/Trail tabs.
 
 ## Deployment
 
-Upload the contents of this folder directly to the GitHub repository root. Do not upload the outer folder as a nested directory. The repository root should contain `index.html`.
+Expected root structure after upload:
 
-## Asset expectations
+```text
+repository-root/
+  index.html
+  README.md
+  css/styles.css
+  data/gameData.js
+  js/game.js
+  js/mastery.js
+  js/storage.js
+  assets/
+```
 
-This code references the existing project asset paths such as:
-
-- `assets/backgrounds/meadow.jpg`
-- `assets/backgrounds/town.jpg`
-- `assets/heroes/portraits/knight-boy.png`
-- `assets/heroes/battle/battle_knight_boy_sword.png`
-- `assets/items/potions/hp-potion.png`
-- `assets/items/potions/mana-potion.png`
-- `assets/cosmetics/auras/option_01_prismatic_rose/..._pulse_sheet.png`
-
-GitHub Pages paths are case-sensitive, so filenames must match the code exactly.
-
-## Verification completed before packaging
-
-- JavaScript syntax check with `node --check`.
-- Runtime smoke render with a stub DOM to verify the select screen renders without exceptions.
-- Static smoke validation for required version strings, hidden Trail/Cosmetic shop tabs, correct-answer modal strings, wrong-answer modal strings, scroll-screen and combat-screen classes, potion item data, and aura static/battle classes.
+Do not upload the outer folder as the GitHub Pages root.

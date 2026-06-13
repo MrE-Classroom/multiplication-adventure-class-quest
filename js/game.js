@@ -4,7 +4,7 @@
   const DATA = window.MULTIPLICATION_ADVENTURE_DATA;
   const STORAGE = window.MA_STORAGE;
   const MASTERY = window.MA_MASTERY;
-  const VERSION = 32;
+  const VERSION = 33;
   const AUTO_ADVANCE_MS = 1250;
 
   const app = document.getElementById('app');
@@ -13,10 +13,27 @@
   document.addEventListener('error', (event) => {
     const target = event.target;
     if (!target || target.tagName !== 'IMG') return;
+
+    const fallbacks = (target.dataset.fallbacks || '')
+      .split('|')
+      .map(item => item.trim())
+      .filter(Boolean);
+    const currentIndex = Number(target.dataset.fallbackIndex || '0');
+    const nextIndex = currentIndex + 1;
+
+    if (fallbacks[nextIndex]) {
+      target.dataset.fallbackIndex = String(nextIndex);
+      target.src = fallbacks[nextIndex];
+      return;
+    }
+
     target.classList.add('broken-asset');
     target.alt = '';
     const holder = target.closest('.portrait-stage, .item-icon, .preview-icon, .preview-hero-stage, .battle-hero-wrap, .opponent-wrap');
-    if (holder) holder.classList.add('asset-missing');
+    if (holder) {
+      holder.classList.add('asset-missing');
+      holder.dataset.missingLabel = target.dataset.missingLabel || 'Art missing';
+    }
   }, true);
 
   let state = hydrateState();
@@ -102,6 +119,169 @@
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;');
   }
+  function escapeAttribute(value) {
+    return escapeHTML(value).replace(/`/g, '&#96;');
+  }
+
+  function uniqueList(list) {
+    return [...new Set(list.filter(Boolean))];
+  }
+
+  function withExtensionVariants(paths) {
+    const output = [];
+    paths.forEach((path) => {
+      if (!path) return;
+      output.push(path);
+      const match = path.match(/^(.*)\.([A-Za-z0-9]+)$/);
+      if (!match) return;
+      const stem = match[1];
+      ['png', 'PNG', 'jpg', 'JPG', 'jpeg', 'JPEG', 'webp', 'WEBP'].forEach(ext => output.push(`${stem}.${ext}`));
+    });
+    return uniqueList(output);
+  }
+
+  function pathName(path) {
+    return String(path || '').split('/').pop() || '';
+  }
+
+  function stemName(path) {
+    return pathName(path).replace(/\.[^.]+$/, '');
+  }
+
+  function basePath(folder, baseNames) {
+    return withExtensionVariants(baseNames.map(name => `${folder}/${name}.png`));
+  }
+
+  function pathVariants(path) {
+    if (!path) return [];
+    const folder = String(path).split('/').slice(0, -1).join('/');
+    const stem = stemName(path);
+    const variants = [stem, stem.replace(/-/g, '_'), stem.replace(/_/g, '-'), stem.toLowerCase(), stem.toUpperCase()];
+    return basePath(folder, uniqueList(variants));
+  }
+
+  function heroBattleSources() {
+    const key = heroKey();
+    const [classId, gender] = key.split('-');
+    const current = DATA.ASSETS.battle[key];
+    const classAttack = {
+      knight: gender === 'girl' ? 'knight_girl_sword' : 'knight_boy_sword',
+      archer: gender === 'girl' ? 'archer_girl_arrow' : 'archer_boy_arrow',
+      mage: gender === 'girl' ? 'mage_purple_spell' : 'mage_blue_spell'
+    }[classId] || 'knight_boy_sword';
+    return uniqueList([
+      current,
+      ...pathVariants(current),
+      ...basePath('assets/heroes/battle', [
+        `battle_${classAttack}`,
+        `battle-${classAttack.replace(/_/g, '-')}`,
+        `${classAttack}_battle`,
+        `${classAttack.replace(/_/g, '-')}-battle`,
+        `${classId}_${gender}`,
+        `${classId}-${gender}`,
+        `${classId}_${gender}_battle`,
+        `${classId}-${gender}-battle`
+      ])
+    ]);
+  }
+
+  function heroPortraitSources() {
+    const key = heroKey();
+    const [classId, gender] = key.split('-');
+    const current = DATA.ASSETS.portraits[key];
+    return uniqueList([
+      current,
+      ...pathVariants(current),
+      ...basePath('assets/heroes/portraits', [
+        `${classId}-${gender}`,
+        `${classId}_${gender}`,
+        `${classId}-${gender}-portrait`,
+        `${classId}_${gender}_portrait`,
+        `portrait-${classId}-${gender}`,
+        `portrait_${classId}_${gender}`
+      ])
+    ]);
+  }
+
+  function enemySources(area, primary) {
+    if (!primary || !area) return [];
+    const areaId = area.id || 'meadow';
+    const areaAlt = areaId === 'dragon' ? 'dragon-mountain' : areaId;
+    const primaryStem = stemName(primary);
+    const indexMatch = primaryStem.match(/(\d+)$/);
+    const index = indexMatch ? String(Number(indexMatch[1])) : '1';
+    const padded = index.padStart(2, '0');
+    const names = [
+      primaryStem,
+      primaryStem.replace(/-/g, '_'),
+      `${areaId}-${index}`,
+      `${areaId}_${index}`,
+      `${areaId}${index}`,
+      `${areaId}-${padded}`,
+      `${areaId}_${padded}`,
+      `${areaId}-enemy-${index}`,
+      `${areaId}_enemy_${index}`,
+      `${areaId}-enemy-${padded}`,
+      `${areaId}_enemy_${padded}`,
+      `enemy-${areaId}-${index}`,
+      `enemy_${areaId}_${index}`,
+      `enemy-${areaId}-${padded}`,
+      `enemy_${areaId}_${padded}`,
+      `${areaAlt}-${index}`,
+      `${areaAlt}_${index}`,
+      `${areaAlt}-enemy-${index}`,
+      `${areaAlt}_enemy_${index}`,
+      `enemy-${areaAlt}-${index}`,
+      `enemy_${areaAlt}_${index}`
+    ];
+    return uniqueList([
+      primary,
+      ...pathVariants(primary),
+      ...basePath('assets/enemies', names)
+    ]);
+  }
+
+  function bossSources(boss) {
+    if (!boss?.asset) return [];
+    const id = boss.id || stemName(boss.asset);
+    return uniqueList([
+      boss.asset,
+      ...pathVariants(boss.asset),
+      ...basePath('assets/bosses', [
+        id,
+        id.replace(/-/g, '_'),
+        `${id}-boss`,
+        `${id}_boss`,
+        `boss-${id}`,
+        `boss_${id.replace(/-/g, '_')}`
+      ])
+    ]);
+  }
+
+  function itemImageSources(item) {
+    if (!item?.asset) return [];
+    const sources = [item.asset, ...pathVariants(item.asset)];
+    if (item.category === 'frame') {
+      const stem = stemName(item.asset);
+      sources.push(...basePath('assets/ui/hero-frames', [stem, stem.replace(/-frame$/, ''), stem.replace(/_/g, '-'), stem.replace(/-/g, '_')]));
+    }
+    return uniqueList(sources);
+  }
+
+  function imgTag(sources, className, alt, kind) {
+    const list = Array.isArray(sources) ? uniqueList(sources) : uniqueList([sources]);
+    if (!list.length) return '';
+    const attrs = [
+      `src="${escapeAttribute(list[0])}"`,
+      `alt="${escapeAttribute(alt || kind || 'Game art')}"`,
+      `data-fallbacks="${escapeAttribute(list.join('|'))}"`,
+      'data-fallback-index="0"',
+      `data-missing-label="${escapeAttribute(kind || 'Art')} missing"`
+    ];
+    if (className) attrs.push(`class="${escapeAttribute(className)}"`);
+    return `<img ${attrs.join(' ')} />`;
+  }
+
 
   function clamp(number, min, max) {
     return Math.max(min, Math.min(max, number));
@@ -313,7 +493,7 @@
 
           <div class="hero-builder">
             <div class="portrait-stage select-portrait">
-              <img src="${heroPath}" alt="Selected ${escapeHTML(cls.label)} portrait" />
+              ${imgTag(heroPortraitSources(), '', `Selected ${cls.label} portrait`, 'Portrait')}
               ${renderEquippedFramePreview()}
             </div>
 
@@ -405,7 +585,7 @@
     return `
       <section class="panel-card hero-panel">
         <div class="portrait-stage">
-          <img src="${portraitPath}" alt="${escapeHTML(state.hero?.name || 'Hero')} portrait" />
+          ${imgTag(heroPortraitSources(), '', `${state.hero?.name || 'Hero'} portrait`, 'Portrait')}
           ${renderEquippedFramePreview()}
           ${renderEquippedPetPreview()}
         </div>
@@ -428,12 +608,12 @@
 
   function renderEquippedFramePreview() {
     const frame = itemById(state.equipped?.frame);
-    return frame ? `<img class="portrait-frame" src="${frame.asset}" alt="${escapeHTML(frame.label)}" />` : '';
+    return frame ? `${imgTag(itemImageSources(frame), 'portrait-frame', frame.label, 'Frame')}` : '';
   }
 
   function renderEquippedPetPreview() {
     const pet = itemById(state.equipped?.pet);
-    return pet ? `<img class="portrait-pet" src="${pet.asset}" alt="${escapeHTML(pet.label)}" />` : '';
+    return pet ? `${imgTag(itemImageSources(pet), 'portrait-pet', pet.label, 'Pet')}` : '';
   }
 
   function renderCoachPanel() {
@@ -618,7 +798,7 @@
       const path = DATA.auraSheetPath(item, heroKey());
       return `<div class="item-icon aura-static-sheet" style="background-image:url('${path}')" role="img" aria-label="${escapeHTML(item.label)} preview"></div>`;
     }
-    return `<div class="item-icon"><img src="${item.asset}" alt="${escapeHTML(item.label)}" /></div>`;
+    return `<div class="item-icon">${imgTag(itemImageSources(item), '', item.label, 'Item icon')}</div>`;
   }
 
   function renderPreviewVisual(item) {
@@ -628,7 +808,7 @@
         <div class="preview-battle-card">
           <div class="preview-hero-stage">
             <div class="battle-aura-viewport" aria-hidden="true"><div class="battle-aura-sheet" style="background-image:url('${path}')"></div></div>
-            <img class="preview-battle-hero" src="${DATA.ASSETS.battle[heroKey()]}" alt="${escapeHTML(state.hero?.name || 'Hero')} battle preview" />
+            ${imgTag(heroBattleSources(), 'preview-battle-hero', `${state.hero?.name || 'Hero'} battle preview`, 'Hero art')}
           </div>
           <small>Aura preview behind hero</small>
         </div>
@@ -642,9 +822,9 @@
       return `
         <div class="preview-portrait-card">
           <div class="portrait-stage preview-portrait-stage">
-            <img src="${portraitPath}" alt="${escapeHTML(state.hero?.name || 'Hero')} portrait preview" />
-            ${frame ? `<img class="portrait-frame" src="${frame.asset}" alt="${escapeHTML(frame.label)}" />` : ''}
-            ${pet ? `<img class="portrait-pet" src="${pet.asset}" alt="${escapeHTML(pet.label)}" />` : ''}
+            ${imgTag(heroPortraitSources(), '', `${state.hero?.name || 'Hero'} portrait preview`, 'Portrait')}
+            ${frame ? `${imgTag(itemImageSources(frame), 'portrait-frame', frame.label, 'Frame')}` : ''}
+            ${pet ? `${imgTag(itemImageSources(pet), 'portrait-pet', pet.label, 'Pet')}` : ''}
           </div>
           <small>${item.category === 'frame' ? 'Frame preview' : 'Pet preview'}</small>
         </div>
@@ -763,17 +943,18 @@
       : `Question ${round.index + 1}/${round.total}`;
 
     return `
-      <div class="battle-layout">
-        <div class="battle-scene" style="background-image:linear-gradient(180deg, rgba(9,20,42,.15), rgba(9,20,42,.72)), url('${area.background}')">
+      <div class="combat-grid">
+        <div class="battle-layout">
+          <div class="battle-scene" style="background-image:linear-gradient(180deg, rgba(9,20,42,.15), rgba(9,20,42,.72)), url('${area.background}')">
           <div class="battle-hud top-left">${escapeHTML(area.label)}</div>
           <div class="battle-hud top-right">${escapeHTML(progressLabel)}</div>
           <div class="battle-hero-wrap">
             ${renderBattleAura()}
-            <img class="battle-hero" src="${DATA.ASSETS.battle[heroKey()]}" alt="${escapeHTML(state.hero.name)} battle pose" />
+            ${imgTag(heroBattleSources(), 'battle-hero', `${state.hero.name} battle pose`, 'Hero art')}
           </div>
           ${renderOpponent(round, area)}
-        </div>
-        <div class="question-panel">
+          </div>
+          <div class="question-panel">
           <div class="question-header">
             <div>
               <span class="eyebrow">${escapeHTML(round.mode === 'boss' ? 'Boss battle' : round.mode === 'training' ? 'Training' : 'Adventure')}</span>
@@ -795,6 +976,12 @@
           </div>
         </div>
       </div>
+      <aside class="combat-side" aria-label="Hero guidance and quests">
+        ${renderHeroPanel()}
+        ${renderCoachPanel()}
+        ${renderQuestPanel()}
+      </aside>
+    </div>
     `;
   }
 
@@ -815,7 +1002,7 @@
       return `
         <div class="opponent-wrap boss-wrap">
           <div class="opponent-hp"><span>${escapeHTML(round.boss.label)}</span><div><b style="width:${pct}%"></b></div></div>
-          <img class="opponent-img" src="${round.boss.asset}" alt="${escapeHTML(round.boss.label)}" />
+          ${imgTag(bossSources(round.boss), 'opponent-img', round.boss.label, 'Boss art')}
         </div>
       `;
     }
@@ -823,7 +1010,7 @@
     const enemy = round.enemy || randomFrom(area.enemies || []);
     return enemy ? `
       <div class="opponent-wrap">
-        <img class="opponent-img" src="${enemy}" alt="Area enemy" />
+        ${imgTag(enemySources(area, enemy), 'opponent-img', `${area.label} enemy`, 'Enemy art')}
       </div>
     ` : `<div class="training-orb">×</div>`;
   }

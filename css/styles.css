@@ -1826,3 +1826,193 @@ button.danger-btn {
     height: min(165px, 34vw);
   }
 }
+
+/* v33 correction: combat side panel and precise missing-art labels */
+.combat-grid {
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 350px);
+  gap: .65rem;
+  overflow: hidden;
+}
+
+.combat-grid > .battle-layout {
+  min-width: 0;
+  min-height: 0;
+}
+
+.combat-side {
+  min-height: 0;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: .55rem;
+}
+
+.combat-side .panel-card {
+  padding: .72rem;
+}
+
+.combat-side .hero-panel {
+  grid-template-columns: 74px minmax(0, 1fr);
+  gap: .65rem;
+}
+
+.combat-side .portrait-stage {
+  width: 74px;
+  height: 74px;
+  border-radius: 18px;
+}
+
+.combat-side .hero-meta h2 {
+  font-size: 1rem;
+  line-height: 1.08;
+}
+
+.combat-side .hero-meta p,
+.combat-side .mini-stats,
+.combat-side .hero-buttons {
+  font-size: .72rem;
+}
+
+.combat-side .mini-stats {
+  gap: .32rem;
+}
+
+.combat-side .mini-stats span {
+  padding: .25rem .4rem;
+  font-size: .68rem;
+}
+
+.combat-side .hero-buttons button {
+  padding: .34rem .45rem;
+  border-radius: 10px;
+  font-size: .68rem;
+}
+
+.combat-side .coach-panel p {
+  margin: .32rem 0 0;
+  font-size: .83rem;
+  line-height: 1.22;
+}
+
+.combat-side .coach-detail {
+  font-size: .78rem;
+}
+
+.combat-side .quest-panel {
+  overflow: hidden;
+}
+
+.combat-side .quest-list {
+  overflow: hidden;
+  gap: .34rem;
+}
+
+.combat-side .quest-row {
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding: .42rem;
+  gap: .3rem;
+}
+
+.combat-side .quest-row strong {
+  font-size: .76rem;
+}
+
+.combat-side .quest-row span,
+.combat-side .quest-row small {
+  font-size: .66rem;
+}
+
+.combat-side .quest-row button {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  padding: .28rem .38rem;
+  font-size: .64rem;
+}
+
+.asset-missing::after {
+  content: attr(data-missing-label);
+}
+
+.battle-hero-wrap.asset-missing::after,
+.opponent-wrap.asset-missing::after,
+.preview-hero-stage.asset-missing::after {
+  content: attr(data-missing-label);
+}
+
+@media (max-width: 1100px) {
+  .combat-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 280px);
+  }
+
+  .combat-side .hero-panel {
+    grid-template-columns: 58px minmax(0, 1fr);
+  }
+
+  .combat-side .portrait-stage {
+    width: 58px;
+    height: 58px;
+  }
+}
+
+@media (max-width: 860px) {
+  .combat-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+
+  .combat-side {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto;
+    overflow: hidden;
+  }
+
+  .combat-side .hero-panel {
+    display: none;
+  }
+
+  .combat-side .quest-panel {
+    display: none;
+  }
+
+  .combat-side .coach-panel {
+    min-width: 0;
+  }
+}
+
+@media (max-height: 700px) and (orientation: landscape) {
+  .combat-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
+    gap: .45rem;
+  }
+
+  .combat-side {
+    gap: .38rem;
+  }
+
+  .combat-side .panel-card {
+    padding: .5rem;
+  }
+
+  .combat-side .hero-panel {
+    grid-template-columns: 52px minmax(0, 1fr);
+  }
+
+  .combat-side .portrait-stage {
+    width: 52px;
+    height: 52px;
+  }
+
+  .combat-side .coach-panel p,
+  .combat-side .quest-row strong {
+    font-size: .7rem;
+  }
+
+  .combat-side .coach-detail,
+  .combat-side .quest-row span,
+  .combat-side .quest-row small {
+    font-size: .62rem;
+  }
+}
