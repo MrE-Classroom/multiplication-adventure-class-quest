@@ -4,11 +4,20 @@
   const DATA = window.MULTIPLICATION_ADVENTURE_DATA;
   const STORAGE = window.MA_STORAGE;
   const MASTERY = window.MA_MASTERY;
-  const VERSION = 31;
+  const VERSION = 32;
   const AUTO_ADVANCE_MS = 1250;
 
   const app = document.getElementById('app');
   const modalRoot = document.getElementById('modal-root');
+
+  document.addEventListener('error', (event) => {
+    const target = event.target;
+    if (!target || target.tagName !== 'IMG') return;
+    target.classList.add('broken-asset');
+    target.alt = '';
+    const holder = target.closest('.portrait-stage, .item-icon, .preview-icon, .preview-hero-stage, .battle-hero-wrap, .opponent-wrap');
+    if (holder) holder.classList.add('asset-missing');
+  }, true);
 
   let state = hydrateState();
   let modalTimer = null;
@@ -344,24 +353,41 @@
 
   function renderTown() {
     const area = currentArea();
+    const nextArea = nextLockedArea();
+    const defeatedHere = isBossDefeated(area);
     return `
       <div class="town-grid">
         <div class="left-stack">
+          <section class="town-scene panel-card" style="background-image:linear-gradient(90deg, rgba(13,10,28,.94), rgba(13,10,28,.62), rgba(13,10,28,.25)), url('${DATA.ASSETS.backgrounds.town}')">
+            <div class="town-scene-content">
+              <span class="eyebrow">Town Center</span>
+              <h2>Welcome back, ${escapeHTML(state.hero?.name || 'hero')}.</h2>
+              <p>Rest, train, shop for gear, or open the map. Your next focus is ${escapeHTML(area.label)}: ${area.focusFacts.join(', ')} facts.</p>
+              <div class="town-scene-actions">
+                <button class="primary-btn" data-action="start-training">Training Area</button>
+                <button data-action="start-area" data-area="${area.id}">Adventure in ${escapeHTML(area.label)}</button>
+                <button data-action="goto" data-screen="map">World Map</button>
+                <button data-action="goto" data-screen="shop">Shop</button>
+              </div>
+            </div>
+          </section>
           ${renderHeroPanel()}
-          <section class="panel-card">
-            <h2>Town Center</h2>
-            <p>Rest, open the map, visit the shop, or train with mixed multiplication facts.</p>
+          <section class="panel-card town-actions-card">
+            <div class="panel-heading">
+              <h2>Quick Actions</h2>
+              <span>${escapeHTML(defeatedHere ? 'Boss cleared' : 'Boss ready when practiced')}</span>
+            </div>
             <div class="action-grid">
-              <button class="primary-btn" data-action="start-training">Training Area</button>
-              <button data-action="start-area" data-area="${area.id}">Adventure in ${escapeHTML(area.label)}</button>
-              <button data-action="goto" data-screen="map">Choose Area</button>
               <button data-action="rest">Rest for 10 coins</button>
+              <button data-action="open-items">Use Items</button>
+              <button data-action="open-inventory">Inventory</button>
+              <button data-action="goto" data-screen="mastery">Mastery Board</button>
             </div>
           </section>
           <section class="panel-card compact-tip">
             <h2>Current Focus</h2>
             <p>${escapeHTML(area.label)} facts: ${area.focusFacts.join(', ')}.</p>
-            <p>Missed facts will appear more often until they improve.</p>
+            <p>Missed facts will appear more often until they improve.${nextArea ? ` Defeat the ${escapeHTML(area.boss.label)} to move toward ${escapeHTML(nextArea.label)}.` : ''}</p>
           </section>
         </div>
         <aside class="right-stack">
@@ -551,9 +577,9 @@
     const ownedCount = state.inventory[item.id] || 0;
     const owned = ownedCount > 0;
     const equipped = state.equipped[item.slot] === item.id;
-    const statsText = item.stats ? Object.entries(item.stats).map(([key, value]) => `+${value} ${key.toUpperCase()}`).join(' · ') : (item.description || 'Visual upgrade');
+    const statsText = itemStatsText(item);
     return `
-      <section class="shop-card">
+      <section class="shop-card" data-action="preview-item" data-item="${item.id}" tabindex="0" role="button" aria-label="Preview ${escapeHTML(item.label)}">
         ${renderItemIcon(item)}
         <div class="shop-item-body">
           <h3>${escapeHTML(item.label)}</h3>
@@ -563,6 +589,7 @@
             <span>${owned ? `Owned${ownedCount > 1 ? ` ×${ownedCount}` : ''}` : 'Not owned'}</span>
           </div>
           <div class="shop-buttons">
+            <button data-action="preview-item" data-item="${item.id}">Preview</button>
             <button data-action="buy-item" data-item="${item.id}" ${state.coins >= item.cost ? '' : 'disabled'}>Buy</button>
             ${item.slot !== 'item' ? `<button data-action="toggle-equip" data-item="${item.id}" ${owned ? '' : 'disabled'}>${equipped ? 'Unequip' : 'Equip'}</button>` : ''}
           </div>
@@ -571,12 +598,95 @@
     `;
   }
 
+  function itemStatsText(item) {
+    if (item.stats) return Object.entries(item.stats).map(([key, value]) => `+${value} ${key.toUpperCase()}`).join(' · ');
+    if (item.effect) return Object.entries(item.effect).map(([key, value]) => `Restores ${value} ${key.toUpperCase()}`).join(' · ');
+    return item.description || 'Visual upgrade';
+  }
+
+  function itemDescription(item) {
+    if (item.description) return item.description;
+    if (item.category === 'frame') return 'Visual portrait frame. Preview shows how it appears around the hero portrait.';
+    if (item.category === 'aura') return 'Visual battle aura. Preview shows one hero battle pose with the aura behind the hero.';
+    if (item.category === 'pet') return 'Visual pet companion shown on the hero portrait.';
+    if (item.stats) return 'Gear upgrade that changes hero stats after it is equipped.';
+    return 'Shop item.';
+  }
+
   function renderItemIcon(item) {
     if (item.assetType === 'aura') {
       const path = DATA.auraSheetPath(item, heroKey());
       return `<div class="item-icon aura-static-sheet" style="background-image:url('${path}')" role="img" aria-label="${escapeHTML(item.label)} preview"></div>`;
     }
     return `<div class="item-icon"><img src="${item.asset}" alt="${escapeHTML(item.label)}" /></div>`;
+  }
+
+  function renderPreviewVisual(item) {
+    if (item.category === 'aura') {
+      const path = DATA.auraSheetPath(item, heroKey());
+      return `
+        <div class="preview-battle-card">
+          <div class="preview-hero-stage">
+            <div class="battle-aura-viewport" aria-hidden="true"><div class="battle-aura-sheet" style="background-image:url('${path}')"></div></div>
+            <img class="preview-battle-hero" src="${DATA.ASSETS.battle[heroKey()]}" alt="${escapeHTML(state.hero?.name || 'Hero')} battle preview" />
+          </div>
+          <small>Aura preview behind hero</small>
+        </div>
+      `;
+    }
+
+    if (['frame', 'pet'].includes(item.category)) {
+      const portraitPath = DATA.ASSETS.portraits[heroKey()];
+      const frame = item.category === 'frame' ? item : itemById(state.equipped.frame);
+      const pet = item.category === 'pet' ? item : itemById(state.equipped.pet);
+      return `
+        <div class="preview-portrait-card">
+          <div class="portrait-stage preview-portrait-stage">
+            <img src="${portraitPath}" alt="${escapeHTML(state.hero?.name || 'Hero')} portrait preview" />
+            ${frame ? `<img class="portrait-frame" src="${frame.asset}" alt="${escapeHTML(frame.label)}" />` : ''}
+            ${pet ? `<img class="portrait-pet" src="${pet.asset}" alt="${escapeHTML(pet.label)}" />` : ''}
+          </div>
+          <small>${item.category === 'frame' ? 'Frame preview' : 'Pet preview'}</small>
+        </div>
+      `;
+    }
+
+    return `<div class="preview-icon">${renderItemIcon(item)}</div>`;
+  }
+
+  function previewItem(itemId) {
+    const item = itemById(itemId);
+    if (!item) return;
+    const ownedCount = state.inventory[item.id] || 0;
+    const owned = ownedCount > 0;
+    const equipped = state.equipped[item.slot] === item.id;
+    const canBuyNow = !isRoundActive() && state.coins >= item.cost;
+    const status = item.slot === 'item'
+      ? `${owned ? `Owned ×${ownedCount}` : 'Not owned'}`
+      : `${owned ? `Owned${equipped ? ' · Equipped' : ''}` : 'Not owned'}`;
+    const equipButton = item.slot !== 'item'
+      ? [{ label: equipped ? 'Unequip' : 'Equip', action: 'preview-toggle-equip', item: item.id, primary: owned, disabled: !owned }]
+      : [];
+    const buttons = [
+      { label: 'Close', action: 'close-modal' },
+      { label: 'Buy', action: 'preview-buy-item', item: item.id, primary: !owned, disabled: !canBuyNow },
+      ...equipButton
+    ];
+
+    const body = `
+      <div class="preview-grid">
+        <div class="preview-visual">${renderPreviewVisual(item)}</div>
+        <div class="preview-copy">
+          <p class="preview-status">${escapeHTML(status)}</p>
+          <div class="preview-price"><strong>${item.cost}</strong><span>coins</span></div>
+          <p>${escapeHTML(itemDescription(item))}</p>
+          <div class="preview-detail-row"><strong>Category</strong><span>${escapeHTML(item.category)}</span></div>
+          <div class="preview-detail-row"><strong>Effect</strong><span>${escapeHTML(itemStatsText(item))}</span></div>
+          ${item.slot !== 'item' ? '<p class="preview-note">Buying does not auto-equip. Use Equip after purchase.</p>' : '<p class="preview-note">Potions can be used from Items when owned.</p>'}
+        </div>
+      </div>
+    `;
+    showModal({ title: item.label, body, buttons, extraClass: 'preview-modal', blocking: true });
   }
 
   function renderMastery() {
@@ -637,7 +747,7 @@
         </section>
         <section class="panel-card">
           <h2>Build Notes</h2>
-          <p>Version ${VERSION}: correct-answer blocking popup, wrong-answer correction modal, fixed scroll behavior for non-combat screens, compact quests, expanded Coach panel, hidden Trail/Cosmetic tabs, and static aura shop previews.</p>
+          <p>Version ${VERSION}: restored dark RPG full-screen shell, town graphics, item preview modal, correct-answer blocking popup, wrong-answer correction modal, safer non-combat scrolling, compact quests, expanded Coach panel, hidden Trail/Cosmetic tabs, and static aura shop previews.</p>
         </section>
       </div>
     `;
@@ -1057,11 +1167,11 @@
     clearTimeout(modalTimer);
     const renderedButtons = buttons.map((button) => {
       const dataAttrs = Object.entries(button)
-        .filter(([key]) => !['label', 'primary', 'extraClass'].includes(key))
+        .filter(([key]) => !['label', 'primary', 'extraClass', 'disabled'].includes(key))
         .map(([key, value]) => `data-${key.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`)}="${escapeHTML(value)}"`)
         .join(' ');
       const classes = `${button.primary ? 'primary-btn' : ''} ${button.extraClass || ''}`.trim();
-      return `<button class="${classes}" ${dataAttrs}>${escapeHTML(button.label)}</button>`;
+      return `<button class="${classes}" ${dataAttrs} ${button.disabled ? 'disabled' : ''}>${escapeHTML(button.label)}</button>`;
     }).join('');
 
     modalRoot.innerHTML = `
@@ -1275,6 +1385,14 @@
       state.coachKey = 'shop';
       persist();
       render();
+    } else if (action === 'preview-item') {
+      previewItem(button.dataset.item);
+    } else if (action === 'preview-buy-item') {
+      buyItem(button.dataset.item);
+      if (!isRoundActive()) previewItem(button.dataset.item);
+    } else if (action === 'preview-toggle-equip') {
+      toggleEquip(button.dataset.item);
+      previewItem(button.dataset.item);
     } else if (action === 'buy-item') {
       buyItem(button.dataset.item);
     } else if (action === 'toggle-equip') {

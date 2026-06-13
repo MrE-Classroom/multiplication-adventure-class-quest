@@ -1,11 +1,11 @@
-# Multiplication Adventure: Class Quest — v31 Code-Only Rebuild
+# Multiplication Adventure: Class Quest — v32 Code-Only Rebuild
 
 This package is a code-only rebuild for the GitHub Pages browser game. It intentionally does **not** include the `assets/` folder. Keep the existing live repository `assets/` directory in place and upload/replace these files at the repository root.
 
 ## Version
 
-- `const VERSION = 31;`
-- Query strings in `index.html` use `?v=31`.
+- `const VERSION = 32;`
+- Query strings in `index.html` use `?v=32`.
 
 ## Files included
 
@@ -19,8 +19,11 @@ js/mastery.js
 js/storage.js
 ```
 
-## v31 changes
+## v32 changes
 
+- Restores the dark RPG-style full-screen shell after the v31 light-layout regression.
+- Restores a graphical Town Center using `assets/backgrounds/town.jpg`.
+- Restores shop item preview through a blocking preview window with item art, price, owned/equipped status, description, effect, and Buy/Equip/Unequip actions.
 - Correct answers now show a green blocking “Correct” popup.
 - The correct popup blocks other input and auto-advances after a short delay.
 - Wrong answers show a correction modal with the full equation and a Next Question button.
@@ -55,4 +58,5 @@ GitHub Pages paths are case-sensitive, so filenames must match the code exactly.
 ## Verification completed before packaging
 
 - JavaScript syntax check with `node --check`.
+- Runtime smoke render with a stub DOM to verify the select screen renders without exceptions.
 - Static smoke validation for required version strings, hidden Trail/Cosmetic shop tabs, correct-answer modal strings, wrong-answer modal strings, scroll-screen and combat-screen classes, potion item data, and aura static/battle classes.
