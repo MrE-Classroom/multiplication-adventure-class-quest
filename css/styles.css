@@ -1259,7 +1259,7 @@ button.danger-btn {
   }
 }
 
-/* v32 restoration: dark RPG shell, full-screen scaling, town graphics, and item preview */
+/* v35: canonical assets, stronger town hub, static aura icons, and cropped aura frame rendering */
 :root {
   color-scheme: dark;
   --ink: #fff7df;
@@ -2014,5 +2014,149 @@ button.danger-btn {
   .combat-side .quest-row span,
   .combat-side .quest-row small {
     font-size: .62rem;
+  }
+}
+
+
+/* v35 visual restoration and aura safety */
+.town-scene-expanded {
+  min-height: clamp(420px, 58vh, 740px);
+  align-items: end;
+}
+
+.town-location-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(150px, 1fr));
+  gap: .75rem;
+  margin-top: 1rem;
+}
+
+.town-location-card {
+  min-height: 128px;
+  align-content: end;
+  justify-items: start;
+  text-align: left;
+  background-size: cover;
+  background-position: center;
+  border-radius: 18px;
+  padding: .9rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.town-location-card span,
+.town-location-card small {
+  position: relative;
+  z-index: 1;
+  display: block;
+}
+
+.town-location-card span {
+  font-size: 1.05rem;
+  font-weight: 950;
+}
+
+.town-location-card small {
+  margin-top: .18rem;
+  color: #ead9a2;
+  font-weight: 800;
+}
+
+.town-location-card:not([style]) {
+  background:
+    linear-gradient(rgba(18,12,36,.28), rgba(18,12,36,.88)),
+    radial-gradient(circle at 30% 15%, rgba(247,189,43,.22), transparent 42%),
+    linear-gradient(135deg, rgba(124,58,237,.35), rgba(6,4,13,.9));
+}
+
+.shop-header-v35 {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+
+.shop-header-icon {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: rgba(247,189,43,.12);
+  border: 1px solid rgba(247,189,43,.18);
+}
+
+.shop-header-icon img {
+  width: 72%;
+  height: 72%;
+  object-fit: contain;
+}
+
+.aura-icon-tile {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(247,189,43,.18), transparent 54%),
+    linear-gradient(135deg, rgba(21,15,39,.95), rgba(68,39,105,.72));
+}
+
+.aura-icon-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+}
+
+.battle-aura-viewport,
+.one-frame-aura-viewport {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.battle-aura-sheet {
+  width: 1000%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  transform: translateX(0);
+}
+
+.aura-animated-sheet {
+  animation: auraPulse 1s steps(10) infinite;
+}
+
+.aura-one-frame {
+  animation: none !important;
+  transform: translateX(0) !important;
+}
+
+.preview-hero-stage .battle-aura-viewport {
+  width: 100%;
+  height: 100%;
+}
+
+.battle-hero-wrap.asset-missing::after,
+.opponent-wrap.asset-missing::after,
+.preview-hero-stage.asset-missing::after {
+  content: attr(data-missing-label);
+}
+
+@media (max-width: 1080px) {
+  .town-location-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .town-location-grid {
+    grid-template-columns: 1fr;
+  }
+  .town-scene-expanded {
+    min-height: 560px;
+  }
+  .shop-header-v35 {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .shop-header-v35 .coin-chip {
+    grid-column: 1 / -1;
+    justify-self: start;
   }
 }

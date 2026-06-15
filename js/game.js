@@ -4,7 +4,7 @@
   const DATA = window.MULTIPLICATION_ADVENTURE_DATA;
   const STORAGE = window.MA_STORAGE;
   const MASTERY = window.MA_MASTERY;
-  const VERSION = 34;
+  const VERSION = 35;
   const AUTO_ADVANCE_MS = 1250;
 
   const app = document.getElementById('app');
@@ -162,41 +162,14 @@
 
   function heroBattleSources() {
     const key = heroKey();
-    const [classId, gender] = key.split('-');
     const current = DATA.ASSETS.battle[key];
-    const classAttack = {
-      knight: gender === 'girl' ? 'knight_girl_sword' : 'knight_boy_sword',
-      archer: gender === 'girl' ? 'archer_girl_arrow' : 'archer_boy_arrow',
-      mage: gender === 'girl' ? 'mage_purple_spell' : 'mage_blue_spell'
-    }[classId] || 'knight_boy_sword';
-    return uniqueList([
-      current,
-      ...pathVariants(current),
-      ...basePath('assets/heroes/battle', [
-        `battle_${classAttack}`,
-        `battle-${classAttack.replace(/_/g, '-')}`,
-        `${classAttack}_battle`,
-        `${classAttack.replace(/_/g, '-')}-battle`,
-        `${classId}_${gender}`,
-        `${classId}-${gender}`,
-        `${classId}_${gender}_battle`,
-        `${classId}-${gender}-battle`
-      ])
-    ]);
+    return uniqueList([current, ...pathVariants(current)]);
   }
 
   function heroPortraitSources() {
     const key = heroKey();
-    const [classId, gender] = key.split('-');
     const current = DATA.ASSETS.portraits[key];
-    return uniqueList([
-      current,
-      ...pathVariants(current),
-      ...basePath('assets/heroes', [
-        `${classId}-${gender}`,
-        `${classId}_${gender}`
-      ])
-    ]);
+    return uniqueList([current, ...pathVariants(current)]);
   }
 
   function enemySources(area, primary) {
@@ -482,18 +455,26 @@
     const nextArea = nextLockedArea();
     const defeatedHere = isBossDefeated(area);
     return `
-      <div class="town-grid">
+      <div class="town-grid town-grid-v35">
         <div class="left-stack">
-          <section class="town-scene panel-card" style="background-image:linear-gradient(90deg, rgba(13,10,28,.94), rgba(13,10,28,.62), rgba(13,10,28,.25)), url('${DATA.ASSETS.backgrounds.town}')">
+          <section class="town-scene panel-card town-scene-expanded" style="background-image:linear-gradient(90deg, rgba(13,10,28,.96), rgba(13,10,28,.66), rgba(13,10,28,.22)), url('${DATA.ASSETS.backgrounds.town}')">
             <div class="town-scene-content">
               <span class="eyebrow">Town Center</span>
               <h2>Welcome back, ${escapeHTML(state.hero?.name || 'hero')}.</h2>
-              <p>Rest, train, shop for gear, or open the map. Your next focus is ${escapeHTML(area.label)}: ${area.focusFacts.join(', ')} facts.</p>
-              <div class="town-scene-actions">
-                <button class="primary-btn" data-action="start-training">Training Area</button>
-                <button data-action="start-area" data-area="${area.id}">Adventure in ${escapeHTML(area.label)}</button>
-                <button data-action="goto" data-screen="map">World Map</button>
-                <button data-action="goto" data-screen="shop">Shop</button>
+              <p>Choose a location in town, train weak facts, shop for gear, rest, or open the map. Your next focus is ${escapeHTML(area.label)}: ${area.focusFacts.join(', ')} facts.</p>
+              <div class="town-location-grid" aria-label="Town locations">
+                <button class="town-location-card primary-location" data-action="start-training" style="background-image:linear-gradient(rgba(18,12,36,.38), rgba(18,12,36,.86)), url('${DATA.ASSETS.backgrounds.training}')">
+                  <span>Training Area</span><small>Practice weak and mixed facts</small>
+                </button>
+                <button class="town-location-card" data-action="start-area" data-area="${area.id}" style="background-image:linear-gradient(rgba(18,12,36,.38), rgba(18,12,36,.86)), url('${area.background}')">
+                  <span>Adventure Gate</span><small>${escapeHTML(area.label)} facts: ${area.focusFacts.join(', ')}</small>
+                </button>
+                <button class="town-location-card" data-action="goto" data-screen="shop">
+                  <span>Shop</span><small>Gear, items, frames, and auras</small>
+                </button>
+                <button class="town-location-card" data-action="goto" data-screen="map">
+                  <span>World Map</span><small>Bosses and unlocked areas</small>
+                </button>
               </div>
             </div>
           </section>
@@ -675,7 +656,8 @@
     const items = DATA.ITEMS.filter(item => item.category === category && canShowItem(item));
     return `
       <div class="shop-screen">
-        <section class="panel-card shop-header">
+        <section class="panel-card shop-header shop-header-v35">
+          <div class="shop-header-icon">${imgTag([DATA.ASSETS.ui.shop], '', 'Shop icon', 'Shop icon')}</div>
           <div>
             <h2>Shop</h2>
             <p>Buy class gear, potions, frames, and auras. Trail and Cosmetic tabs are intentionally hidden.</p>
@@ -740,8 +722,7 @@
 
   function renderItemIcon(item) {
     if (item.assetType === 'aura') {
-      const path = DATA.auraSheetPath(item, heroKey());
-      return `<div class="item-icon aura-static-sheet" style="background-image:url('${path}')" role="img" aria-label="${escapeHTML(item.label)} preview"></div>`;
+      return `<div class="item-icon aura-icon-tile">${imgTag([item.icon], 'aura-icon-img', item.label, 'Aura icon')}</div>`;
     }
     return `<div class="item-icon">${imgTag(itemImageSources(item), '', item.label, 'Item icon')}</div>`;
   }
@@ -752,7 +733,7 @@
       return `
         <div class="preview-battle-card">
           <div class="preview-hero-stage">
-            <div class="battle-aura-viewport" aria-hidden="true"><div class="battle-aura-sheet" style="background-image:url('${path}')"></div></div>
+            <div class="battle-aura-viewport one-frame-aura-viewport" aria-hidden="true"><div class="battle-aura-sheet aura-one-frame" style="background-image:url('${path}')"></div></div>
             ${imgTag(heroBattleSources(), 'preview-battle-hero', `${state.hero?.name || 'Hero'} battle preview`, 'Hero art')}
           </div>
           <small>Aura preview behind hero</small>
@@ -868,7 +849,7 @@
         </section>
         <section class="panel-card">
           <h2>Build Notes</h2>
-          <p>Version ${VERSION}: corrected the code asset manifest to the provided assets.zip tree, restoring hero portraits, battle poses, enemies, bosses, frames, item icons, and aura paths while keeping the dark RPG shell and answer popups.</p>
+          <p>Version ${VERSION}: uses data/assetManifest.js with the canonical v35 asset tree, static aura shop icons, cropped aura preview/battle rendering, visual Town hub actions, and corrected paths for characters, cosmetics, UI icons, items, and potions.</p>
         </section>
       </div>
     `;
@@ -932,7 +913,7 @@
     const path = DATA.auraSheetPath(aura, heroKey());
     return `
       <div class="battle-aura-viewport" aria-hidden="true">
-        <div class="battle-aura-sheet" style="background-image:url('${path}')"></div>
+        <div class="battle-aura-sheet aura-animated-sheet" style="background-image:url('${path}')"></div>
       </div>
     `;
   }

@@ -1,33 +1,33 @@
-# Multiplication Adventure: Class Quest v34 Code-Only Rebuild
+# Multiplication Adventure: Class Quest v35
 
-This ZIP is code-only and intentionally does not include the `assets/` folder. Upload the contents of this folder to the GitHub repository root, replacing matching files. Keep the existing root-level `assets/` folder in place.
+This is the latest rebuild aligned to the updated continuation guide.
 
-## v34 fixes
+## Package type
 
-- Replaced the guessed asset manifest with paths verified against the provided `assets.zip`.
-- Corrected hero portraits from `assets/heroes/portraits/...` to the real `assets/heroes/...` structure.
-- Corrected boss art to the real files: `meadow-boss.png`, `forest-boss.png`, `cave-boss.png`, `castle-boss.png`, and `dragon-boss.png`.
-- Corrected enemy art to the real files such as `meadow-enemy-1.png` and `dragon-mountain-enemy-1.png`.
-- Corrected hero frame assets to `assets/ui/hero-frames/...`.
-- Corrected item icons to the real class item folders and removed nonexistent item paths such as `assets/items/potions/...`.
-- Kept potions functional by using existing UI assets: `heart.png` and `mana.png`.
-- Removed pet shop entries because no pet asset folder exists in the provided asset package.
-- Kept the dark RPG-style full-screen UI, Town graphics, item preview modal, correct-answer blocking popup with auto-advance, wrong-answer correction popup, shop scrolling, Coach panel, Quest Log, and hidden Cosmetic/Trail tabs.
+This ZIP is code-only. It does not include `assets/`.
 
-## Deployment
+For this version to load correctly, the deployment must use the v35 canonical asset tree. The matching full deploy package generated in this rebuild includes that reorganized tree and the new static aura shop icons.
 
-Expected root structure after upload:
+## Key v35 changes
+
+- Adds `data/assetManifest.js` as the source of truth for all asset paths.
+- Uses canonical character paths under `assets/characters/`.
+- Uses canonical cosmetic paths under `assets/cosmetics/`.
+- Uses static aura icons for shop cards.
+- Uses cropped one-frame aura rendering for item preview and cropped animated aura rendering in battle.
+- Restores Town as a larger RPG hub scene with visual location cards.
+- Keeps Coach above Quest Log and compact quest cards.
+- Keeps correct-answer green blocking popup with auto-advance and wrong-answer correction popup.
+- Keeps Trail and Cosmetic tabs hidden.
+
+## Required root structure
 
 ```text
-repository-root/
-  index.html
-  README.md
-  css/styles.css
-  data/gameData.js
-  js/game.js
-  js/mastery.js
-  js/storage.js
-  assets/
+index.html
+css/
+data/
+js/
+assets/
 ```
 
-Do not upload the outer folder as the GitHub Pages root.
+Do not deploy a nested folder as the site root.
