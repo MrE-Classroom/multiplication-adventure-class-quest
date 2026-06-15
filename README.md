@@ -1,27 +1,10 @@
-# Multiplication Adventure: Class Quest v35
+# Multiplication Adventure: Class Quest v36 Code Only
 
-This is the latest rebuild aligned to the updated continuation guide.
+This package contains only code files. It expects the canonical v36 `assets/` tree to already exist at the deployment root.
 
-## Package type
-
-This ZIP is code-only. It does not include `assets/`.
-
-For this version to load correctly, the deployment must use the v35 canonical asset tree. The matching full deploy package generated in this rebuild includes that reorganized tree and the new static aura shop icons.
-
-## Key v35 changes
-
-- Adds `data/assetManifest.js` as the source of truth for all asset paths.
-- Uses canonical character paths under `assets/characters/`.
-- Uses canonical cosmetic paths under `assets/cosmetics/`.
-- Uses static aura icons for shop cards.
-- Uses cropped one-frame aura rendering for item preview and cropped animated aura rendering in battle.
-- Restores Town as a larger RPG hub scene with visual location cards.
-- Keeps Coach above Quest Log and compact quest cards.
-- Keeps correct-answer green blocking popup with auto-advance and wrong-answer correction popup.
-- Keeps Trail and Cosmetic tabs hidden.
+Use the full deploy ZIP if your repo/assets are not already reorganized.
 
 ## Required root structure
-
 ```text
 index.html
 css/
@@ -30,4 +13,13 @@ js/
 assets/
 ```
 
-Do not deploy a nested folder as the site root.
+## v36 changes
+- Added Pet shop category and starter pet icon references.
+- Expanded boots gear lists for Knight, Archer, and Mage.
+- Added visible area/boss progress panel during battles.
+- Added Challenge Boss button to the round summary when an area round is complete.
+- Improved wrong-answer Coach hints with fact-specific strategies.
+- Fixed town Shop and World Map cards to show visual icons.
+- Fixed aura rendering so preview and battle use cropped animated frame cycling instead of showing the full spritesheet.
+- Kept shop aura cards static.
+- Kept Trail and generic Cosmetic tabs hidden.

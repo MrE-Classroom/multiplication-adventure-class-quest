@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  // v35+ canonical asset manifest. All game modules should reference this file instead of guessed paths.
+  // v36+ canonical asset manifest. All game modules should reference this file instead of guessed paths.
   window.MA_ASSET_MANIFEST = {
     backgrounds: {
       town: 'assets/backgrounds/town.jpg',
@@ -95,6 +95,13 @@
       },
       animatedRoot: 'assets/cosmetics/auras/animated'
     },
+    pets: {
+      icons: {
+        starSprite: 'assets/cosmetics/pets/icons/star-sprite.png',
+        moonOwl: 'assets/cosmetics/pets/icons/moon-owl.png',
+        leafDragon: 'assets/cosmetics/pets/icons/leaf-dragon.png'
+      }
+    },
     items: {
       knight: {
         weapons: {
@@ -112,7 +119,9 @@
           ironHelmet: 'assets/items/knight/helmets/iron-helmet.png'
         },
         boots: {
-          knightBoots: 'assets/items/knight/boots/knight-boots.png'
+          knightBoots: 'assets/items/knight/boots/knight-boots.png',
+          ironBoots: 'assets/items/knight/boots/iron-boots.png',
+          guardianBoots: 'assets/items/knight/boots/guardian-boots.png'
         }
       },
       archer: {
@@ -131,7 +140,9 @@
           rangerHood: 'assets/items/archer/helmets/ranger-hood.png'
         },
         boots: {
-          scoutBoots: 'assets/items/archer/boots/scout-boots.png'
+          scoutBoots: 'assets/items/archer/boots/scout-boots.png',
+          swiftBoots: 'assets/items/archer/boots/swift-boots.png',
+          rangerBoots: 'assets/items/archer/boots/ranger-boots.png'
         }
       },
       mage: {
@@ -152,7 +163,9 @@
           moonRobe: 'assets/items/mage/armor/moon-robe.png'
         },
         boots: {
-          magicShoes: 'assets/items/mage/boots/magic-shoes.png'
+          magicShoes: 'assets/items/mage/boots/magic-shoes.png',
+          spellShoes: 'assets/items/mage/boots/spell-shoes.png',
+          starShoes: 'assets/items/mage/boots/star-shoes.png'
         }
       },
       universal: {

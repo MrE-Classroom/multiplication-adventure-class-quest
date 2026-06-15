@@ -1259,7 +1259,7 @@ button.danger-btn {
   }
 }
 
-/* v35: canonical assets, stronger town hub, static aura icons, and cropped aura frame rendering */
+/* v36: canonical assets, stronger town hub, static aura icons, and cropped aura frame rendering */
 :root {
   color-scheme: dark;
   --ink: #fff7df;
@@ -2018,7 +2018,7 @@ button.danger-btn {
 }
 
 
-/* v35 visual restoration and aura safety */
+/* v36 visual restoration and aura safety */
 .town-scene-expanded {
   min-height: clamp(420px, 58vh, 740px);
   align-items: end;
@@ -2069,7 +2069,7 @@ button.danger-btn {
     linear-gradient(135deg, rgba(124,58,237,.35), rgba(6,4,13,.9));
 }
 
-.shop-header-v35 {
+.shop-header-v36 {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
 }
@@ -2152,11 +2152,125 @@ button.danger-btn {
   .town-scene-expanded {
     min-height: 560px;
   }
-  .shop-header-v35 {
+  .shop-header-v36 {
     grid-template-columns: auto minmax(0, 1fr);
   }
-  .shop-header-v35 .coin-chip {
+  .shop-header-v36 .coin-chip {
     grid-column: 1 / -1;
     justify-self: start;
   }
+}
+
+/* v36 fixes: town card icons, cropped animated aura viewport, visible area progress, pets, and shop consistency */
+.town-icon-location {
+  display: grid;
+  grid-template-rows: auto auto auto;
+  gap: .35rem;
+  min-height: 128px;
+  background:
+    linear-gradient(rgba(18,12,36,.28), rgba(18,12,36,.88)),
+    radial-gradient(circle at 28% 20%, rgba(247,189,43,.26), transparent 42%),
+    linear-gradient(135deg, rgba(124,58,237,.35), rgba(6,4,13,.9)) !important;
+}
+.town-card-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: grid !important;
+  place-items: center;
+  background: rgba(247,189,43,.14);
+  border: 1px solid rgba(247,189,43,.22);
+  box-shadow: 0 10px 28px rgba(0,0,0,.22);
+}
+.town-card-icon img {
+  width: 72%;
+  height: 72%;
+  object-fit: contain;
+}
+.area-progress-panel {
+  display: grid;
+  gap: .35rem;
+  margin: .65rem 0 .75rem;
+  padding: .65rem .75rem;
+  border-radius: 16px;
+  background: rgba(255,255,255,.055);
+  border: 1px solid rgba(247,189,43,.18);
+}
+.area-progress-copy {
+  display: flex;
+  justify-content: space-between;
+  gap: .65rem;
+  align-items: baseline;
+  font-weight: 900;
+}
+.area-progress-copy span,
+.area-progress-panel small {
+  color: #e9dcaa;
+  font-size: .82rem;
+  font-weight: 800;
+}
+.area-progress-bar {
+  height: 9px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255,255,255,.13);
+}
+.area-progress-bar b {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #f7bd2b, #a855f7);
+}
+.boss-progress-panel .area-progress-bar b {
+  background: linear-gradient(90deg, #fb7185, #f97316);
+}
+.battle-aura-viewport.aura-frame-viewport,
+.preview-hero-stage .battle-aura-viewport.aura-frame-viewport {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 1;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+}
+.battle-aura-sheet.aura-sprite-runner {
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: 1000% 100%;
+  background-position: 0% 50%;
+  animation: auraFrameCycle 950ms steps(10) infinite;
+  transform: none !important;
+}
+@keyframes auraFrameCycle {
+  from { background-position: 0% 50%; }
+  to { background-position: 100% 50%; }
+}
+.preview-hero-stage .preview-aura-layer .aura-sprite-runner,
+.battle-aura-layer .aura-sprite-runner {
+  animation: auraFrameCycle 950ms steps(10) infinite;
+}
+.preview-battle-card small {
+  display: block;
+  text-align: center;
+  margin-top: .35rem;
+  color: #e9dcaa;
+  font-weight: 900;
+}
+.shop-tab[data-category="pet"] {
+  border-color: rgba(247,189,43,.28);
+}
+.portrait-pet {
+  position: absolute;
+  right: -10px;
+  bottom: -8px;
+  width: 42%;
+  height: 42%;
+  object-fit: contain;
+  z-index: 4;
+  filter: drop-shadow(0 8px 10px rgba(0,0,0,.25));
+}
+@media (max-width: 720px) {
+  .area-progress-copy { flex-direction: column; gap: .15rem; }
 }

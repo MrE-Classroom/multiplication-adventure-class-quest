@@ -4,7 +4,7 @@
   const DATA = window.MULTIPLICATION_ADVENTURE_DATA;
   const STORAGE = window.MA_STORAGE;
   const MASTERY = window.MA_MASTERY;
-  const VERSION = 35;
+  const VERSION = 36;
   const AUTO_ADVANCE_MS = 1250;
 
   const app = document.getElementById('app');
@@ -76,7 +76,8 @@
       },
       quests: DATA.QUESTS.map(quest => ({ id: quest.id, claimed: false })),
       currentRound: null,
-      answerLock: false
+      answerLock: false,
+      lastMissedFact: null
     };
   }
 
@@ -100,7 +101,8 @@
         return { id: quest.id, claimed: Boolean(existing?.claimed) };
       }),
       currentRound: null,
-      answerLock: false
+      answerLock: false,
+      lastMissedFact: null
     };
 
     if (!merged.hero) merged.screen = 'select';
@@ -244,6 +246,11 @@
 
   function currentArea() {
     return areaById(state.areaId);
+  }
+
+  function nextAreaAfter(area) {
+    const index = DATA.AREAS.findIndex(item => item.id === area?.id);
+    return index >= 0 ? DATA.AREAS[index + 1] || null : null;
   }
 
   function getStats() {
@@ -455,7 +462,7 @@
     const nextArea = nextLockedArea();
     const defeatedHere = isBossDefeated(area);
     return `
-      <div class="town-grid town-grid-v35">
+      <div class="town-grid town-grid-v36">
         <div class="left-stack">
           <section class="town-scene panel-card town-scene-expanded" style="background-image:linear-gradient(90deg, rgba(13,10,28,.96), rgba(13,10,28,.66), rgba(13,10,28,.22)), url('${DATA.ASSETS.backgrounds.town}')">
             <div class="town-scene-content">
@@ -469,10 +476,12 @@
                 <button class="town-location-card" data-action="start-area" data-area="${area.id}" style="background-image:linear-gradient(rgba(18,12,36,.38), rgba(18,12,36,.86)), url('${area.background}')">
                   <span>Adventure Gate</span><small>${escapeHTML(area.label)} facts: ${area.focusFacts.join(', ')}</small>
                 </button>
-                <button class="town-location-card" data-action="goto" data-screen="shop">
-                  <span>Shop</span><small>Gear, items, frames, and auras</small>
+                <button class="town-location-card town-icon-location" data-action="goto" data-screen="shop">
+                  <span class="town-card-icon">${imgTag([DATA.ASSETS.ui.shop], '', 'Shop icon', 'Shop icon')}</span>
+                  <span>Shop</span><small>Gear, items, frames, auras, and pets</small>
                 </button>
-                <button class="town-location-card" data-action="goto" data-screen="map">
+                <button class="town-location-card town-icon-location" data-action="goto" data-screen="map">
+                  <span class="town-card-icon">${imgTag([DATA.ASSETS.ui.map], '', 'Map icon', 'Map icon')}</span>
                   <span>World Map</span><small>Bosses and unlocked areas</small>
                 </button>
               </div>
@@ -557,13 +566,46 @@
     `;
   }
 
+  function missedFactCoachMessage() {
+    const fact = state.lastMissedFact;
+    if (!fact) return { primary: 'Not quite. Study the correction before moving on.', detail: 'This fact may come back again because missed facts are added to extra practice.' };
+    return {
+      primary: `Not quite. ${fact.a} × ${fact.b} = ${fact.correct}.`,
+      detail: factStrategy(fact.a, fact.b, fact.correct)
+    };
+  }
+
+  function factStrategy(a, b, product) {
+    if (a === 0 || b === 0) return 'Any number times 0 is 0. This fact will come back for extra practice.';
+    if (a === 1 || b === 1) return 'Any number times 1 stays the same. This fact will come back for extra practice.';
+    if (a === 2 || b === 2) {
+      const other = a === 2 ? b : a;
+      return `Double ${other}: ${other} + ${other} = ${product}. This fact will come back for extra practice.`;
+    }
+    if (a === 5 || b === 5) {
+      const other = a === 5 ? b : a;
+      return `Count by 5s ${other} times to land on ${product}. This fact will come back for extra practice.`;
+    }
+    if (a === 10 || b === 10) {
+      const other = a === 10 ? b : a;
+      return `${other} times 10 means ${other} tens, which is ${product}. This fact will come back for extra practice.`;
+    }
+    if (a === 9 || b === 9) {
+      const other = a === 9 ? b : a;
+      return `Use 10s: ${other} × 10 = ${other * 10}, then subtract ${other} to get ${product}.`;
+    }
+    const smaller = Math.min(a, b);
+    const bigger = Math.max(a, b);
+    return `Break it apart: ${smaller} groups of ${bigger}. Try ${smaller - 1} × ${bigger} = ${(smaller - 1) * bigger}, then add ${bigger} to get ${product}.`;
+  }
+
   function coachMessage() {
     const summary = MASTERY.getSummary(state.mastery);
     const area = currentArea();
     const lowHp = state.hp <= Math.max(1, Math.ceil(maxHp() / 3));
     const lowMana = maxMana() > 0 && state.mana <= 1;
     if (state.coachKey === 'correct') return { primary: 'Correct! Great work.', detail: 'Get ready for the next fact. Your mastery grows when you keep a strong streak.' };
-    if (state.coachKey === 'wrong') return { primary: 'Not quite. Study the correction before moving on.', detail: 'This fact may come back again because missed facts are added to extra practice.' };
+    if (state.coachKey === 'wrong') return missedFactCoachMessage();
     if (state.coachKey === 'bossReady') return { primary: 'You are ready for a boss challenge.', detail: 'Open the Map when you want to challenge the boss and unlock the next area.' };
     if (state.coachKey === 'shop') return { primary: 'Shop tip: gear changes stats.', detail: 'Frames and auras are visual upgrades. Auras animate in battle but use a static preview in the shop.' };
     if (state.coachKey === 'potionBlocked') return { primary: 'Potion buying is blocked during battle.', detail: 'You can use potions you already own, but new potions can only be bought in Town or Shop.' };
@@ -656,11 +698,11 @@
     const items = DATA.ITEMS.filter(item => item.category === category && canShowItem(item));
     return `
       <div class="shop-screen">
-        <section class="panel-card shop-header shop-header-v35">
+        <section class="panel-card shop-header shop-header-v36">
           <div class="shop-header-icon">${imgTag([DATA.ASSETS.ui.shop], '', 'Shop icon', 'Shop icon')}</div>
           <div>
             <h2>Shop</h2>
-            <p>Buy class gear, potions, frames, and auras. Trail and Cosmetic tabs are intentionally hidden.</p>
+            <p>Buy class gear, potions, frames, auras, and pets. Trail and Cosmetic tabs are intentionally hidden.</p>
           </div>
           <div class="coin-chip">${state.coins} coins</div>
         </section>
@@ -715,7 +757,8 @@
   function itemDescription(item) {
     if (item.description) return item.description;
     if (item.category === 'frame') return 'Visual portrait frame. Preview shows how it appears around the hero portrait.';
-    if (item.category === 'aura') return 'Visual battle aura. Preview shows one hero battle pose with the aura behind the hero.';
+    if (item.category === 'aura') return 'Visual battle aura. Preview and battle both animate the aura behind the hero.';
+    if (item.category === 'pet') return item.description || 'Visual pet companion for your hero.';
     if (item.stats) return 'Gear upgrade that changes hero stats after it is equipped.';
     return 'Shop item.';
   }
@@ -849,7 +892,7 @@
         </section>
         <section class="panel-card">
           <h2>Build Notes</h2>
-          <p>Version ${VERSION}: uses data/assetManifest.js with the canonical v35 asset tree, static aura shop icons, cropped aura preview/battle rendering, visual Town hub actions, and corrected paths for characters, cosmetics, UI icons, items, and potions.</p>
+          <p>Version ${VERSION}: uses data/assetManifest.js with the canonical v36 asset tree, static aura shop icons, animated cropped aura preview/battle rendering, visual Town hub icons, Pet tab, expanded gear lists, visible area progress, and Challenge Boss summary actions.</p>
         </section>
       </div>
     `;
@@ -887,6 +930,7 @@
               <span>Streak ${round.streak}</span>
             </div>
           </div>
+          ${renderRoundProgressPanel(round, area)}
           <div class="choice-grid">
             ${q.choices.map((choice, index) => `
               <button class="choice-btn ${q.hiddenChoices.includes(index) ? 'choice-hidden' : ''}" data-action="answer" data-index="${index}" ${state.answerLock || q.hiddenChoices.includes(index) ? 'disabled' : ''}>${choice}</button>
@@ -907,13 +951,42 @@
     `;
   }
 
+  function renderAuraLayer(path, extraClass = '') {
+    if (!path) return '';
+    return `
+      <div class="battle-aura-viewport aura-frame-viewport ${escapeAttribute(extraClass)}" aria-hidden="true">
+        <div class="battle-aura-sheet aura-sprite-runner" style="background-image:url('${escapeAttribute(path)}')"></div>
+      </div>
+    `;
+  }
+
   function renderBattleAura() {
     const aura = itemById(state.equipped.aura);
     if (!aura) return '';
     const path = DATA.auraSheetPath(aura, heroKey());
+    return renderAuraLayer(path, 'battle-aura-layer');
+  }
+
+  function renderRoundProgressPanel(round, area) {
+    if (!round || !area) return '';
+    if (round.mode === 'boss') {
+      const hpNow = Math.max(0, round.boss.hp);
+      const hpPct = Math.max(0, Math.min(100, Math.round((hpNow / round.boss.maxHp) * 100)));
+      return `
+        <div class="area-progress-panel boss-progress-panel">
+          <div class="area-progress-copy"><strong>${escapeHTML(round.boss.label)} Battle</strong><span>${hpNow}/${round.boss.maxHp} HP remaining</span></div>
+          <div class="area-progress-bar"><b style="width:${hpPct}%"></b></div>
+        </div>
+      `;
+    }
+    const current = Math.min(round.total, round.index + 1);
+    const pct = Math.round((current / round.total) * 100);
+    const next = nextAreaAfter(area);
     return `
-      <div class="battle-aura-viewport" aria-hidden="true">
-        <div class="battle-aura-sheet aura-animated-sheet" style="background-image:url('${path}')"></div>
+      <div class="area-progress-panel">
+        <div class="area-progress-copy"><strong>${escapeHTML(area.label)} Progress</strong><span>Question ${current}/${round.total} · Boss ready ${pct}%${next ? ` · Next: ${escapeHTML(next.label)}` : ''}</span></div>
+        <div class="area-progress-bar"><b style="width:${pct}%"></b></div>
+        <small>Focus facts: ${area.focusFacts.join(', ')}</small>
       </div>
     `;
   }
@@ -958,6 +1031,7 @@
           </div>
           <div class="summary-actions">
             <button class="primary-btn" data-action="goto" data-screen="town">Return to Town</button>
+            ${summary.challengeAreaId ? `<button class="primary-btn" data-action="start-boss" data-area="${escapeAttribute(summary.challengeAreaId)}">Challenge Boss</button>` : ''}
             <button data-action="goto" data-screen="map">Open Map</button>
             <button data-action="goto" data-screen="mastery">Check Mastery</button>
           </div>
@@ -1137,6 +1211,7 @@
 
     round.wrong += 1;
     round.streak = 0;
+    state.lastMissedFact = { a: q.a, b: q.b, correct: q.correct };
     state.coachKey = 'wrong';
     applyWrongDamage(round);
     persist();
@@ -1263,7 +1338,9 @@
       total,
       accuracy,
       coins: round.coins,
-      xp: round.xp
+      xp: round.xp,
+      areaId: round.areaId || state.areaId,
+      challengeAreaId: kind === 'complete' && round.areaId ? round.areaId : null
     };
     state.currentRound = null;
     state.answerLock = false;
@@ -1369,7 +1446,7 @@
   }
 
   function openInventory() {
-    const equipmentRows = ['weapon', 'head', 'body', 'legs', 'frame', 'aura'].map((slot) => {
+    const equipmentRows = ['weapon', 'head', 'body', 'legs', 'frame', 'aura', 'pet'].map((slot) => {
       const item = itemById(state.equipped[slot]);
       return `<div class="inventory-row"><strong>${slot.toUpperCase()}</strong><span>${item ? escapeHTML(item.label) : 'Empty'}</span></div>`;
     }).join('');

@@ -89,6 +89,8 @@
     { id: 'steel-armor', label: 'Steel Armor', cls: ['knight'], category: 'body', slot: 'body', cost: 26, stats: { hp: 1, defense: 1 }, asset: I.knight.armor.steelArmor },
     { id: 'dragon-plate-armor', label: 'Dragon Plate Armor', cls: ['knight'], category: 'body', slot: 'body', cost: 44, stats: { hp: 2, defense: 2 }, asset: I.knight.armor.dragonPlateArmor },
     { id: 'knight-boots', label: 'Knight Boots', cls: ['knight'], category: 'legs', slot: 'legs', cost: 18, stats: { speed: 1 }, asset: I.knight.boots.knightBoots },
+    { id: 'iron-boots', label: 'Iron Boots', cls: ['knight'], category: 'legs', slot: 'legs', cost: 26, stats: { speed: 1, defense: 1 }, asset: I.knight.boots.ironBoots },
+    { id: 'guardian-boots', label: 'Guardian Boots', cls: ['knight'], category: 'legs', slot: 'legs', cost: 34, stats: { speed: 1, defense: 2 }, asset: I.knight.boots.guardianBoots },
 
     { id: 'practice-bow', label: 'Practice Bow', cls: ['archer'], category: 'weapon', slot: 'weapon', cost: 12, stats: { attack: 1 }, asset: I.archer.weapons.practiceBow },
     { id: 'forest-bow', label: 'Forest Bow', cls: ['archer'], category: 'weapon', slot: 'weapon', cost: 26, stats: { attack: 2 }, asset: I.archer.weapons.forestBow },
@@ -99,6 +101,8 @@
     { id: 'leather-armor', label: 'Leather Armor', cls: ['archer'], category: 'body', slot: 'body', cost: 22, stats: { defense: 1 }, asset: I.archer.armor.leatherArmor },
     { id: 'reinforced-leather-armor', label: 'Reinforced Leather Armor', cls: ['archer'], category: 'body', slot: 'body', cost: 32, stats: { defense: 2 }, asset: I.archer.armor.reinforcedLeatherArmor },
     { id: 'scout-boots', label: 'Scout Boots', cls: ['archer'], category: 'legs', slot: 'legs', cost: 20, stats: { speed: 2 }, asset: I.archer.boots.scoutBoots },
+    { id: 'swift-boots', label: 'Swift Boots', cls: ['archer'], category: 'legs', slot: 'legs', cost: 28, stats: { speed: 3 }, asset: I.archer.boots.swiftBoots },
+    { id: 'ranger-boots', label: 'Ranger Boots', cls: ['archer'], category: 'legs', slot: 'legs', cost: 36, stats: { speed: 3, focus: 1 }, asset: I.archer.boots.rangerBoots },
 
     { id: 'training-wand', label: 'Training Wand', cls: ['mage'], category: 'weapon', slot: 'weapon', cost: 12, stats: { attack: 1 }, asset: I.mage.weapons.trainingWand },
     { id: 'crystal-staff', label: 'Crystal Staff', cls: ['mage'], category: 'weapon', slot: 'weapon', cost: 30, stats: { attack: 2, focus: 1 }, asset: I.mage.weapons.crystalStaff },
@@ -109,13 +113,18 @@
     { id: 'blue-robe', label: 'Blue Robe', cls: ['mage'], category: 'body', slot: 'body', cost: 22, stats: { mana: 1, defense: 1 }, asset: I.mage.armor.blueRobe },
     { id: 'moon-robe', label: 'Moon Robe', cls: ['mage'], category: 'body', slot: 'body', cost: 26, stats: { mana: 1, defense: 1 }, asset: I.mage.armor.moonRobe },
     { id: 'magic-shoes', label: 'Magic Shoes', cls: ['mage'], category: 'legs', slot: 'legs', cost: 18, stats: { speed: 1 }, asset: I.mage.boots.magicShoes },
+    { id: 'spell-shoes', label: 'Spell Shoes', cls: ['mage'], category: 'legs', slot: 'legs', cost: 26, stats: { speed: 1, mana: 1 }, asset: I.mage.boots.spellShoes },
+    { id: 'star-shoes', label: 'Star Shoes', cls: ['mage'], category: 'legs', slot: 'legs', cost: 34, stats: { speed: 2, focus: 1 }, asset: I.mage.boots.starShoes },
 
     { id: 'hp-potion', label: 'HP Potion', cls: ['all'], category: 'item', slot: 'item', cost: 8, effect: { hp: 2 }, asset: I.universal.potions.hpPotion, description: 'Restores 2 HP. Can be used in battle if owned.' },
     { id: 'mana-potion', label: 'Mana Potion', cls: ['all'], category: 'item', slot: 'item', cost: 8, effect: { mana: 2 }, asset: I.universal.potions.manaPotion, description: 'Restores 2 Mana. Can be used in battle if owned.' },
 
     ...FRAME_ITEMS.map(item => ({ ...item, cls: ['all'], category: 'frame', slot: 'frame', type: 'visual' })),
     { id: 'aura-silhouette', label: 'Silhouette Aura', cls: ['all'], category: 'aura', slot: 'aura', type: 'visual', assetType: 'aura', cost: 20, folder: 'silhouette', slug: '', icon: ASSETS.auras.icons.silhouette },
-    ...AURA_OPTIONS.map(item => ({ ...item, cls: ['all'], category: 'aura', slot: 'aura', type: 'visual', assetType: 'aura' }))
+    ...AURA_OPTIONS.map(item => ({ ...item, cls: ['all'], category: 'aura', slot: 'aura', type: 'visual', assetType: 'aura' })),
+    { id: 'pet-star-sprite', label: 'Star Sprite Pet', cls: ['all'], category: 'pet', slot: 'pet', type: 'visual', cost: 24, asset: ASSETS.pets.icons.starSprite, description: 'A tiny glowing helper that follows your hero in town.' },
+    { id: 'pet-moon-owl', label: 'Moon Owl Pet', cls: ['all'], category: 'pet', slot: 'pet', type: 'visual', cost: 30, asset: ASSETS.pets.icons.moonOwl, description: 'A calm night owl companion for focus and encouragement.' },
+    { id: 'pet-leaf-dragon', label: 'Leaf Dragon Pet', cls: ['all'], category: 'pet', slot: 'pet', type: 'visual', cost: 38, asset: ASSETS.pets.icons.leafDragon, description: 'A friendly little dragon companion for brave math quests.' }
   ];
 
   const SHOP_CATEGORIES = [
@@ -125,7 +134,8 @@
     { id: 'legs', label: 'Boots' },
     { id: 'item', label: 'Item' },
     { id: 'frame', label: 'Frame' },
-    { id: 'aura', label: 'Aura' }
+    { id: 'aura', label: 'Aura' },
+    { id: 'pet', label: 'Pet' }
   ];
 
   const QUESTS = [
@@ -135,7 +145,7 @@
   ];
 
   window.MULTIPLICATION_ADVENTURE_DATA = {
-    VERSION: 35,
+    VERSION: 36,
     ASSETS,
     HERO_CLASSES,
     AREAS,
